@@ -35,7 +35,7 @@ public class GuiPot extends GuiContainer {
 	private float fade = 0.2f;
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		drawDefaultBackground();
 		this.mc.getTextureManager().bindTexture(GUI_POT);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;

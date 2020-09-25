@@ -26,14 +26,14 @@ public class GuiRange extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		String guiName = I18n.format("range.gui");
-		this.fontRenderer.drawString(guiName, this.xSize / 2 - this.fontRenderer.getStringWidth(guiName) / 2, 5, 4210752);
-		this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRenderer.drawString(guiName, this.xSize / 2 - this.fontRenderer.getStringWidth(guiName) / 2, 5, 0x404040);
+		this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 0x404040);
 	}
 	
 	private float fade = 0.2f;
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		drawDefaultBackground();
 		this.mc.getTextureManager().bindTexture(GUI_PAN);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
