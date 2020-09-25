@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/cube",
 	"textures": {
 		"1": "exsartagine:blocks/cauldron_inner",
 		"2": "exsartagine:blocks/cauldron_side"
