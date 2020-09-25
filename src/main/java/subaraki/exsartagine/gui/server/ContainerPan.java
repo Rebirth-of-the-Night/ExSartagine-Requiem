@@ -36,7 +36,7 @@ public class ContainerPan extends Container{
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -54,8 +54,8 @@ public class ContainerPan extends Container{
             }
             else if (index != 0)
             {
-            	Slot input = (Slot)this.inventorySlots.get(0);
-                if (input instanceof SlotPanInput && ((SlotPanInput)input).isItemValid(itemstack1))
+            	Slot input = this.inventorySlots.get(0);
+                if (input instanceof SlotPanInput && input.isItemValid(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

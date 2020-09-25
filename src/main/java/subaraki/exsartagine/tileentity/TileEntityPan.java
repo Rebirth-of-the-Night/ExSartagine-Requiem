@@ -8,7 +8,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.ExSartagineBlock;
 import subaraki.exsartagine.gui.server.SlotPanInput;
 
-public class TileEntityPan extends TileEntityCooker{
+public class TileEntityPan extends TileEntityCooker {
 
 	public TileEntityPan() {
 		initInventory();
@@ -28,13 +28,12 @@ public class TileEntityPan extends TileEntityCooker{
 						ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(getEntry()).copy();
 						
 						setResult(itemstack.copy());
-						getEntry().shrink(1);
 					}
 					else
 					{
 						getResult().grow(1);
-						getEntry().shrink(1);
 					}
+					getEntry().shrink(1);
 				}
 			}
 			cookingTime = 0;

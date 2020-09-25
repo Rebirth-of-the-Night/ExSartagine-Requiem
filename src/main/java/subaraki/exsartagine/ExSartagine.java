@@ -8,6 +8,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -76,6 +77,11 @@ public class ExSartagine {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPan.class, new TileEntityRenderFood());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmelter.class, new TileEntityRenderFood());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new TileEntityRenderFood());
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent e) {
+        Recipes.init();
     }
 
 }
