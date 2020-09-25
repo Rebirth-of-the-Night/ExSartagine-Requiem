@@ -2,7 +2,6 @@ package subaraki.exsartagine.block;
 
 import java.util.Random;
 
-import lib.util.InventoryHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -25,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
@@ -124,7 +124,7 @@ public class BlockRange extends Block {
 
 		if (tileentity instanceof TileEntityRange)
 		{
-			InventoryHelper.dropInventoryItems(worldIn, pos, ((TileEntityRange)tileentity).getInventory());
+			Utils.scatter(worldIn, pos, ((TileEntityRange) tileentity).getInventory());
 		}
 
 		super.breakBlock(worldIn, pos, state);

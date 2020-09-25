@@ -1,33 +1,32 @@
 package subaraki.exsartagine.recipe;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
-public class SmelterEntries{
+public class SmelterRecipes {
 
-	private static final SmelterEntries INSTANCE = new SmelterEntries();
-	private ArrayList<SmelterEntry> smelterEntryList = new ArrayList<SmelterEntry>();
+	private static final SmelterRecipes INSTANCE = new SmelterRecipes();
+	private final ArrayList<SmelterRecipe> smelterRecipeList = new ArrayList<SmelterRecipe>();
 
-	public static SmelterEntries getInstance() {
+	public static SmelterRecipes getInstance() {
 		return INSTANCE;
 	}
 
 	public void addEntry(ItemStack entry){
-		SmelterEntry smelterEntry = new SmelterEntry(entry);
-		smelterEntryList.add(smelterEntry);
+		SmelterRecipe smelterRecipe = new SmelterRecipe(entry);
+		smelterRecipeList.add(smelterRecipe);
 	}
 
 	public void removeEntry(ItemStack entry){
-		SmelterEntry smelterEntry = new SmelterEntry(entry);
-		for(SmelterEntry se : smelterEntryList)
+		SmelterRecipe smelterRecipe = new SmelterRecipe(entry);
+		for(SmelterRecipe se : smelterRecipeList)
 		{
-			if(se.equals(smelterEntry))
+			if(se.equals(smelterRecipe))
 			{
-				smelterEntryList.remove(se);
+				smelterRecipeList.remove(se);
 				break;
 			}
 		}
@@ -35,9 +34,9 @@ public class SmelterEntries{
 
 	public ItemStack getResult(ItemStack stack)
 	{
-		SmelterEntry entry = new SmelterEntry(stack);
+		SmelterRecipe entry = new SmelterRecipe(stack);
 
-		if(smelterEntryList.contains(entry))
+		if(smelterRecipeList.contains(entry))
 		{
 			if(!FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty())
 				return FurnaceRecipes.instance().getSmeltingResult(stack);
@@ -46,22 +45,19 @@ public class SmelterEntries{
 		return ItemStack.EMPTY;
 	}
 
-	private boolean areEntriesEqual(SmelterEntry a, SmelterEntry b){
+	private static boolean areEntriesEqual(SmelterRecipe a, SmelterRecipe b){
 
-		if(a.meta == b.meta && a.item == b.item)
-			return true;
-
-		return false;
+		return a.meta == b.meta && a.item == b.item;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
-	private class SmelterEntry{
+	public static class SmelterRecipe {
 
 		int amount;
 		Item item;
 		int meta;
 
-		public SmelterEntry(ItemStack stack) {
+		public SmelterRecipe(ItemStack stack) {
 			amount = stack.getCount();
 			item = stack.getItem();
 			meta = stack.getMetadata();
@@ -73,13 +69,10 @@ public class SmelterEntries{
 
 		@Override
 		public boolean equals(Object obj) {
-			if(!(obj instanceof SmelterEntry))
+			if(!(obj instanceof SmelterRecipe))
 				return false;
 
-			if(!areEntriesEqual((SmelterEntry)obj, this))
-				return false;
-
-			return true;
+			return areEntriesEqual((SmelterRecipe) obj, this);
 		}
 	}
 }

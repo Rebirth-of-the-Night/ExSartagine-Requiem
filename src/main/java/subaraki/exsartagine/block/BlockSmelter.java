@@ -1,8 +1,5 @@
 package subaraki.exsartagine.block;
 
-import java.util.Random;
-
-import lib.util.InventoryHelper;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,9 +23,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 import subaraki.exsartagine.util.Reference;
+
+import java.util.Random;
 
 public class BlockSmelter extends BlockHeatable {
 
@@ -75,7 +75,7 @@ public class BlockSmelter extends BlockHeatable {
 			if(te.getInventory() instanceof ItemStackHandler)
 			{
 				ItemStackHandler inventory = (ItemStackHandler) te.getInventory();
-				InventoryHelper.dropInventoryItems(worldIn, pos, inventory);
+				Utils.scatter(worldIn, pos, inventory);
 			}
 		}
 

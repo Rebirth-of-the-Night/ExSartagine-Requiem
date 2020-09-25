@@ -1,8 +1,7 @@
 package subaraki.exsartagine.block;
 
-import static lib.block.BlockRegistry.registerBlock;
-
 import net.minecraft.block.Block;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class ExSartagineBlock {
 
@@ -13,23 +12,23 @@ public class ExSartagineBlock {
 	public static Block range_extension;
 	public static Block range_extension_lit;
 
-	public static void load(){
+	public static void load(IForgeRegistry<Block> registry){
 		pan = new BlockPan();
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
 		range = new BlockRange();
 		range_extension = new BlockRangeExtension("range_extended");
 		range_extension_lit = new BlockRangeExtension("range_extended_lit");
-		register();
+		register(registry);
 	}
 	
-	private static void register(){
-		registerBlock(pan);
-		registerBlock(smelter);
-		registerBlock(pot);
-		registerBlock(range);
-		registerBlock(range_extension);
-		registerBlock(range_extension_lit);
+	private static void register(IForgeRegistry<Block> registry) {
+		registry.register(pan);
+		registry.register(smelter);
+		registry.register(pot);
+		registry.register(range);
+		registry.register(range_extension);
+		registry.register(range_extension_lit);
 
 	}
 }

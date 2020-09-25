@@ -1,13 +1,11 @@
 package subaraki.exsartagine.recipe;
 
-import lib.recipes.PotRecipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 public class Recipes {
@@ -23,22 +21,22 @@ public class Recipes {
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_meat_raw, new ItemStack(ExSartagineItems.bread_meat), 0.6f);
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_veggie_raw, new ItemStack(ExSartagineItems.bread_veggie), 0.6f);
 
-		PotRecipes.getInstance().addRecipe(new ItemStack(Items.EGG,1), new ItemStack(ExSartagineItems.boiled_egg,1));
-		PotRecipes.getInstance().addRecipe(new ItemStack(Items.BEETROOT_SEEDS,1), new ItemStack(ExSartagineItems.boiled_beans,1));
-		PotRecipes.getInstance().addRecipe(new ItemStack(Items.POTATO,1), new ItemStack(ExSartagineItems.boiled_potato,1));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg,1));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans,1));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.POTATO), new ItemStack(ExSartagineItems.boiled_potato,1));
 
-		PotRecipes.getInstance().addRecipe(new ItemStack(Blocks.STONE,1), new ItemStack(ExSartagineItems.salt,1));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Item.getItemFromBlock(Blocks.STONE)), new ItemStack(ExSartagineItems.salt,1));
 		
-		PotRecipes.getInstance().addRecipe(new ItemStack(ExSartagineItems.spaghetti_raw), new ItemStack(ExSartagineItems.spaghetti_cooked));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.spaghetti_raw), new ItemStack(ExSartagineItems.spaghetti_cooked));
 		
-		PotRecipes.getInstance().addRecipe(new ItemStack(ExSartagineItems.noodles_chicken), new ItemStack(ExSartagineItems.noodles_chicken_cooked));
-		PotRecipes.getInstance().addRecipe(new ItemStack(ExSartagineItems.noodles_fish), new ItemStack(ExSartagineItems.noodles_fish_cooked));
-		PotRecipes.getInstance().addRecipe(new ItemStack(ExSartagineItems.noodles_meat), new ItemStack(ExSartagineItems.noodles_meat_cooked));
-		PotRecipes.getInstance().addRecipe(new ItemStack(ExSartagineItems.noodles_veggie), new ItemStack(ExSartagineItems.noodles_veggie_cooked));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_chicken), new ItemStack(ExSartagineItems.noodles_chicken_cooked));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_fish), new ItemStack(ExSartagineItems.noodles_fish_cooked));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_meat), new ItemStack(ExSartagineItems.noodles_meat_cooked));
+		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_veggie), new ItemStack(ExSartagineItems.noodles_veggie_cooked));
 
-		SmelterEntries.getInstance().addEntry(new ItemStack(Blocks.IRON_ORE));
-		SmelterEntries.getInstance().addEntry(new ItemStack(Blocks.GOLD_ORE));
-		SmelterEntries.getInstance().addEntry(new ItemStack(Items.CLAY_BALL));
-		SmelterEntries.getInstance().addEntry(new ItemStack(Blocks.NETHERRACK));
+		SmelterRecipes.getInstance().addEntry(new ItemStack(Blocks.IRON_ORE));
+		SmelterRecipes.getInstance().addEntry(new ItemStack(Blocks.GOLD_ORE));
+		SmelterRecipes.getInstance().addEntry(new ItemStack(Items.CLAY_BALL));
+		SmelterRecipes.getInstance().addEntry(new ItemStack(Blocks.NETHERRACK));
 	}
 }

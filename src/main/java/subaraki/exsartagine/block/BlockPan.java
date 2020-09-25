@@ -1,9 +1,5 @@
 package subaraki.exsartagine.block;
 
-import java.util.Random;
-
-import lib.util.InventoryHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -12,7 +8,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -24,13 +19,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityPan;
-import subaraki.exsartagine.tileentity.TileEntityPot;
-import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
 import subaraki.exsartagine.util.Reference;
+
+import java.util.Random;
 
 public class BlockPan extends BlockHeatable {
 

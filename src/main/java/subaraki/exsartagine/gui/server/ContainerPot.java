@@ -1,17 +1,19 @@
 package subaraki.exsartagine.gui.server;
 
-import lib.recipes.PotRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.recipe.PotRecipes;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
-public class ContainerPot extends Container{
+public class ContainerPot extends Container {
+
+    private final TileEntityPot pot;
 
 	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
-		
+		this.pot = pot;
 		this.addSlotToContainer(new SlotPotInput(pot.getInventory(), 0, 56, 17));
         this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
 
@@ -34,7 +36,7 @@ public class ContainerPot extends Container{
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -52,7 +54,7 @@ public class ContainerPot extends Container{
             }
             else if (index != 0)
             {
-                if (!PotRecipes.getInstance().getCookingResult(itemstack1).isEmpty())
+                if (!PotRecipes.getInstance().getCookingResult(pot.getInventory()).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

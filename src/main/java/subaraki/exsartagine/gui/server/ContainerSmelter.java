@@ -1,16 +1,11 @@
 package subaraki.exsartagine.gui.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import subaraki.exsartagine.recipe.SmelterEntries;
+import subaraki.exsartagine.recipe.SmelterRecipes;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class ContainerSmelter extends Container{
@@ -59,7 +54,7 @@ public class ContainerSmelter extends Container{
 			}
 			else if (index != 0)// player inventory
 			{
-				if (!SmelterEntries.getInstance().getResult(slotStack).isEmpty()) //if the item clicked can be smolten
+				if (!SmelterRecipes.getInstance().getResult(slotStack).isEmpty()) //if the item clicked can be smolten
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
 					{

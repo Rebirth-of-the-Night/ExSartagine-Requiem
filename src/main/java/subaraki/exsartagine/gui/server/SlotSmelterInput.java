@@ -1,15 +1,12 @@
 package subaraki.exsartagine.gui.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import subaraki.exsartagine.recipe.SmelterEntries;
+import subaraki.exsartagine.recipe.SmelterRecipes;
 
 public class SlotSmelterInput extends SlotItemHandler {
 
@@ -22,7 +19,7 @@ public class SlotSmelterInput extends SlotItemHandler {
 	public boolean isItemValid(ItemStack stack) {
 		if(!stack.isEmpty())
 		{
-			boolean hasSmelterEntry = !SmelterEntries.getInstance().getResult(stack).isEmpty();
+			boolean hasSmelterEntry = !SmelterRecipes.getInstance().getResult(stack).isEmpty();
 
 			if(hasSmelterEntry)
 			{

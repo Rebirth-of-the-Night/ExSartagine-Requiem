@@ -1,19 +1,19 @@
 package subaraki.exsartagine.item;
 
-import static lib.item.ItemRegistry.registerItem;
-import static lib.item.ItemRegistry.registerRender;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.block.ExSartagineBlock;
-import static subaraki.exsartagine.util.Reference.*;
+
+import static subaraki.exsartagine.util.Reference.MODID;
 
 public class ExSartagineItems {
 
@@ -85,7 +85,7 @@ public class ExSartagineItems {
 			return new ItemStack(range);
 		}
 	};
-	public static void load(){
+	public static void load(IForgeRegistry<Item> registry) {
 		pan = new ItemBlock(ExSartagineBlock.pan).setRegistryName(ExSartagineBlock.pan.getRegistryName()).setCreativeTab(pots);
 		smelter = new ItemBlock(ExSartagineBlock.smelter).setRegistryName(ExSartagineBlock.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlock.pot).setRegistryName(ExSartagineBlock.pot.getRegistryName()).setCreativeTab(pots);
@@ -148,7 +148,7 @@ public class ExSartagineItems {
 		noodles_meat= new Item().setTranslationKey(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
 		noodles_veggie = new Item().setTranslationKey(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
 
-		register();
+		register(registry);
 
 		addToOreDict();
 	}
@@ -172,58 +172,58 @@ public class ExSartagineItems {
 		OreDictionary.registerOre("itemNoodles", dry_strings);
 	}
 
-	private static void register() {
-		registerItem(pan);	
-		registerItem(smelter);	
-		registerItem(pot);	
-		registerItem(range);	
+	private static void register(IForgeRegistry<Item> registry) {
+		registry.register(pan);
+		registry.register(smelter);
+		registry.register(pot);
+		registry.register(range);
 
-		registerItem(boiled_egg);
-		registerItem(boiled_beans);
-		registerItem(boiled_potato);
+		registry.register(boiled_egg);
+		registry.register(boiled_beans);
+		registry.register(boiled_potato);
 
-		registerItem(salt);
-		registerItem(flour);
-		registerItem(curd);
-		registerItem(yeast);
-		registerItem(dough);
+		registry.register(salt);
+		registry.register(flour);
+		registry.register(curd);
+		registry.register(yeast);
+		registry.register(dough);
 
-		registerItem(pizza_plain);
-		registerItem(pizza_chicken);
-		registerItem(pizza_chicken_raw);
-		registerItem(pizza_fish);
-		registerItem(pizza_fish_raw);
-		registerItem(pizza_meat);
-		registerItem(pizza_meat_raw);
-		registerItem(pizza_sweet);
-		registerItem(pizza_sweet_raw);
-		registerItem(pizza_dough);
+		registry.register(pizza_plain);
+		registry.register(pizza_chicken);
+		registry.register(pizza_chicken_raw);
+		registry.register(pizza_fish);
+		registry.register(pizza_fish_raw);
+		registry.register(pizza_meat);
+		registry.register(pizza_meat_raw);
+		registry.register(pizza_sweet);
+		registry.register(pizza_sweet_raw);
+		registry.register(pizza_dough);
 
-		registerItem(bread_dough);
-		registerItem(bread_fine);
-		registerItem(bread_meat);
-		registerItem(bread_meat_raw);
-		registerItem(bread_veggie);
-		registerItem(bread_veggie_raw);
+		registry.register(bread_dough);
+		registry.register(bread_fine);
+		registry.register(bread_meat);
+		registry.register(bread_meat_raw);
+		registry.register(bread_veggie);
+		registry.register(bread_veggie_raw);
 
-		registerItem(dry_strings);
+		registry.register(dry_strings);
 
-		registerItem(noodles_chicken);
-		registerItem(noodles_meat);
-		registerItem(noodles_fish);
-		registerItem(noodles_veggie);
+		registry.register(noodles_chicken);
+		registry.register(noodles_meat);
+		registry.register(noodles_fish);
+		registry.register(noodles_veggie);
 
-		registerItem(noodles_chicken_cooked);
-		registerItem(noodles_meat_cooked);
-		registerItem(noodles_fish_cooked);
-		registerItem(noodles_veggie_cooked);
+		registry.register(noodles_chicken_cooked);
+		registry.register(noodles_meat_cooked);
+		registry.register(noodles_fish_cooked);
+		registry.register(noodles_veggie_cooked);
 
-		registerItem(spaghetti_raw);
-		registerItem(spaghetti_cooked);
-		registerItem(spaghetti_sauced);
-		registerItem(spaghetti_bolognaise);
-		registerItem(spaghetti_cheese);
-		registerItem(spaghetti_veggie);
+		registry.register(spaghetti_raw);
+		registry.register(spaghetti_cooked);
+		registry.register(spaghetti_sauced);
+		registry.register(spaghetti_bolognaise);
+		registry.register(spaghetti_cheese);
+		registry.register(spaghetti_veggie);
 	}
 
 	public static void registerRenders(){
@@ -281,6 +281,9 @@ public class ExSartagineItems {
 		registerRender(spaghetti_bolognaise, "spaghetti_bolognaise", MODID);
 		registerRender(spaghetti_cheese, "spaghetti_cheese", MODID);
 		registerRender(spaghetti_veggie, "spaghetti_veggie", MODID);
+	}
 
+	public static void registerRender(Item item, String name, String modid) {
+		ModelLoader.setCustomModelResourceLocation(item,0,new ModelResourceLocation(new ResourceLocation(modid,name),"inventory"));
 	}
 }
