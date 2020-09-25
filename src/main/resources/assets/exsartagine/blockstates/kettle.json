@@ -1,0 +1,23 @@
+{
+    "variants": {
+        "normal": {
+             "model": "exsartagine:kettle" 
+         },
+        "facing=east": {
+            "model": "exsartagine:kettle",
+            "y": 90
+        },
+        "facing=west": {
+            "model": "exsartagine:kettle",
+            "y": 270
+        },
+        "facing=south": {
+            "model": "exsartagine:kettle",
+            "y": 180
+        },
+        "facing=north": {
+            "model": "exsartagine:kettle",
+            "y": 0
+        }
+    }
+}
