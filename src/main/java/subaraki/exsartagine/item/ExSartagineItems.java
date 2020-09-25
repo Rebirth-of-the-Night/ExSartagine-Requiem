@@ -74,14 +74,14 @@ public class ExSartagineItems {
 
 	public static CreativeTabs foods = new CreativeTabs("exsartaginefoods") {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(pizza_plain);
 		}
 	};
 
 	public static CreativeTabs pots = new CreativeTabs("potsnpans") {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(range);
 		}
 	};
@@ -91,13 +91,13 @@ public class ExSartagineItems {
 		pot = new ItemBlock(ExSartagineBlock.pot).setRegistryName(ExSartagineBlock.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlock.range).setRegistryName(ExSartagineBlock.range.getRegistryName()).setCreativeTab(pots);
 
-		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".egg.boiled").setRegistryName("egg.boiled");
-		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".beans.boiled").setRegistryName("beans.boiled");
-		boiled_potato = (ItemFood) new ItemFood(6, 0.5f,false).setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".potato.boiled").setRegistryName("potato.boiled");
+		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
+		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");
+		boiled_potato = (ItemFood) new ItemFood(6, 0.5f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".potato.boiled").setRegistryName("potato.boiled");
 
-		flour = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".flour").setRegistryName("flour");
-		salt = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".salt").setRegistryName("salt");
-		yeast = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".yeast").setRegistryName("yeast");
+		flour = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".flour").setRegistryName("flour");
+		salt = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".salt").setRegistryName("salt");
+		yeast = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".yeast").setRegistryName("yeast");
 		curd = new Item(){
 			public void addInformation(net.minecraft.item.ItemStack stack, net.minecraft.entity.player.EntityPlayer playerIn, java.util.List<String> tooltip, boolean advanced) {
 				String text = ChatFormatting.ITALIC + "Simple Cheese";
@@ -105,48 +105,48 @@ public class ExSartagineItems {
 				if(!tooltip.contains(text))
 					tooltip.add(text);
 			};
-		}.setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".curd").setRegistryName("curd").setCreativeTab(foods);
+		}.setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".curd").setRegistryName("curd").setCreativeTab(foods);
 
-		dough = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".dough").setRegistryName("dough").setCreativeTab(foods);
-		bread_dough = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".doughBread").setRegistryName("doughBread").setCreativeTab(foods);
+		dough = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".dough").setRegistryName("dough").setCreativeTab(foods);
+		bread_dough = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".doughBread").setRegistryName("doughBread").setCreativeTab(foods);
 
-		pizza_dough = new Item().setCreativeTab(CreativeTabs.FOOD).setUnlocalizedName(MODID+".doughPizza").setRegistryName("doughPizza").setCreativeTab(foods);
-		pizza_plain = (ItemFood)new ItemFood(6, 0.6f, false).setUnlocalizedName(MODID+".pizzaPlain").setRegistryName("pizzaPlain").setCreativeTab(foods);
-		pizza_meat = (ItemFood)new ItemFood(12, 0.9f, false).setUnlocalizedName(MODID+".pizzaMeat").setRegistryName("pizzaMeat").setCreativeTab(foods);
-		pizza_chicken = (ItemFood)new ItemFood(10, 0.9f, false).setUnlocalizedName(MODID+".pizzaChicken").setRegistryName("pizzaChicken").setCreativeTab(foods);
-		pizza_sweet = (ItemFood)new ItemFood(10, 0.7f, false).setUnlocalizedName(MODID+".pizzaSweet").setRegistryName("pizzaSweet").setCreativeTab(foods);
-		pizza_fish = (ItemFood)new ItemFood(9, 1.0f, false).setUnlocalizedName(MODID+".pizzaFish").setRegistryName("pizzaFish").setCreativeTab(foods);
+		pizza_dough = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".doughPizza").setRegistryName("doughPizza").setCreativeTab(foods);
+		pizza_plain = (ItemFood)new ItemFood(6, 0.6f, false).setTranslationKey(MODID+".pizzaPlain").setRegistryName("pizzaPlain").setCreativeTab(foods);
+		pizza_meat = (ItemFood)new ItemFood(12, 0.9f, false).setTranslationKey(MODID+".pizzaMeat").setRegistryName("pizzaMeat").setCreativeTab(foods);
+		pizza_chicken = (ItemFood)new ItemFood(10, 0.9f, false).setTranslationKey(MODID+".pizzaChicken").setRegistryName("pizzaChicken").setCreativeTab(foods);
+		pizza_sweet = (ItemFood)new ItemFood(10, 0.7f, false).setTranslationKey(MODID+".pizzaSweet").setRegistryName("pizzaSweet").setCreativeTab(foods);
+		pizza_fish = (ItemFood)new ItemFood(9, 1.0f, false).setTranslationKey(MODID+".pizzaFish").setRegistryName("pizzaFish").setCreativeTab(foods);
 
-		pizza_meat_raw = (ItemFood)new ItemFood(4, 0.3f, false).setUnlocalizedName(MODID+".pizzaMeatRaw").setRegistryName("pizzaMeatRaw").setCreativeTab(foods);
-		pizza_chicken_raw = (ItemFood)new ItemFood(3, 0.3f, false).setUnlocalizedName(MODID+".pizzaChickenRaw").setRegistryName("pizzaChickenRaw").setCreativeTab(foods);
-		pizza_sweet_raw = (ItemFood)new ItemFood(3, 0.2f, false).setUnlocalizedName(MODID+".pizzaSweetRaw").setRegistryName("pizzaSweetRaw").setCreativeTab(foods);
-		pizza_fish_raw = (ItemFood)new ItemFood(2, 0.4f, false).setUnlocalizedName(MODID+".pizzaFishRaw").setRegistryName("pizzaFishRaw").setCreativeTab(foods);
+		pizza_meat_raw = (ItemFood)new ItemFood(4, 0.3f, false).setTranslationKey(MODID+".pizzaMeatRaw").setRegistryName("pizzaMeatRaw").setCreativeTab(foods);
+		pizza_chicken_raw = (ItemFood)new ItemFood(3, 0.3f, false).setTranslationKey(MODID+".pizzaChickenRaw").setRegistryName("pizzaChickenRaw").setCreativeTab(foods);
+		pizza_sweet_raw = (ItemFood)new ItemFood(3, 0.2f, false).setTranslationKey(MODID+".pizzaSweetRaw").setRegistryName("pizzaSweetRaw").setCreativeTab(foods);
+		pizza_fish_raw = (ItemFood)new ItemFood(2, 0.4f, false).setTranslationKey(MODID+".pizzaFishRaw").setRegistryName("pizzaFishRaw").setCreativeTab(foods);
 
-		bread_fine = (ItemFood)new ItemFood(5, 0.8f, false).setUnlocalizedName(MODID+".breadFine").setRegistryName("breadFine").setCreativeTab(foods);
-		bread_meat = (ItemFood)new ItemFood(4, 0.45f, false).setUnlocalizedName(MODID+".breadMeat").setRegistryName("breadMeat").setCreativeTab(foods);
-		bread_veggie = (ItemFood)new ItemFood(8, 0.9f, false).setUnlocalizedName(MODID+".breadVeggie").setRegistryName("breadVeggie").setCreativeTab(foods);
+		bread_fine = (ItemFood)new ItemFood(5, 0.8f, false).setTranslationKey(MODID+".breadFine").setRegistryName("breadFine").setCreativeTab(foods);
+		bread_meat = (ItemFood)new ItemFood(4, 0.45f, false).setTranslationKey(MODID+".breadMeat").setRegistryName("breadMeat").setCreativeTab(foods);
+		bread_veggie = (ItemFood)new ItemFood(8, 0.9f, false).setTranslationKey(MODID+".breadVeggie").setRegistryName("breadVeggie").setCreativeTab(foods);
 
-		bread_meat_raw = (ItemFood)new ItemFood(2, 0.3f, false).setUnlocalizedName(MODID+".breadMeatRaw").setRegistryName("breadMeatRaw").setCreativeTab(foods);
-		bread_veggie_raw = (ItemFood)new ItemFood(3, 0.3f, false).setUnlocalizedName(MODID+".breadVeggieRaw").setRegistryName("breadVeggieRaw").setCreativeTab(foods);
+		bread_meat_raw = (ItemFood)new ItemFood(2, 0.3f, false).setTranslationKey(MODID+".breadMeatRaw").setRegistryName("breadMeatRaw").setCreativeTab(foods);
+		bread_veggie_raw = (ItemFood)new ItemFood(3, 0.3f, false).setTranslationKey(MODID+".breadVeggieRaw").setRegistryName("breadVeggieRaw").setCreativeTab(foods);
 
-		dry_strings = new Item().setUnlocalizedName(MODID+".dry_noodles").setRegistryName("dry_noodles").setCreativeTab(foods);
+		dry_strings = new Item().setTranslationKey(MODID+".dry_noodles").setRegistryName("dry_noodles").setCreativeTab(foods);
 
-		spaghetti_raw = new Item().setUnlocalizedName(MODID+".spaghetti_raw").setRegistryName("spaghetti_raw").setCreativeTab(foods);
-		spaghetti_cooked = (ItemNoodle)new ItemNoodle(3, 0.7f, false).setUnlocalizedName(MODID+".spaghetti_cooked").setRegistryName("spaghetti_cooked").setCreativeTab(foods);
-		spaghetti_sauced = (ItemNoodle)new ItemNoodle(5, 0.5f, false).setUnlocalizedName(MODID+".spaghetti_sauced").setRegistryName("spaghetti_sauced").setCreativeTab(foods);
-		spaghetti_bolognaise = (ItemNoodle)new ItemNoodle(5, 0.7f, false).setUnlocalizedName(MODID+".spaghetti_bolognaise").setRegistryName("spaghetti_bolognaise").setCreativeTab(foods);
-		spaghetti_cheese = (ItemNoodle)new ItemNoodle(5, 0.8f, false).setUnlocalizedName(MODID+".spaghetti_cheese").setRegistryName("spaghetti_cheese").setCreativeTab(foods);
-		spaghetti_veggie = (ItemNoodle)new ItemNoodle(8, 0.5f, false).setUnlocalizedName(MODID+".spaghetti_veggie").setRegistryName("spaghetti_veggie").setCreativeTab(foods);
+		spaghetti_raw = new Item().setTranslationKey(MODID+".spaghetti_raw").setRegistryName("spaghetti_raw").setCreativeTab(foods);
+		spaghetti_cooked = (ItemNoodle)new ItemNoodle(3, 0.7f, false).setTranslationKey(MODID+".spaghetti_cooked").setRegistryName("spaghetti_cooked").setCreativeTab(foods);
+		spaghetti_sauced = (ItemNoodle)new ItemNoodle(5, 0.5f, false).setTranslationKey(MODID+".spaghetti_sauced").setRegistryName("spaghetti_sauced").setCreativeTab(foods);
+		spaghetti_bolognaise = (ItemNoodle)new ItemNoodle(5, 0.7f, false).setTranslationKey(MODID+".spaghetti_bolognaise").setRegistryName("spaghetti_bolognaise").setCreativeTab(foods);
+		spaghetti_cheese = (ItemNoodle)new ItemNoodle(5, 0.8f, false).setTranslationKey(MODID+".spaghetti_cheese").setRegistryName("spaghetti_cheese").setCreativeTab(foods);
+		spaghetti_veggie = (ItemNoodle)new ItemNoodle(8, 0.5f, false).setTranslationKey(MODID+".spaghetti_veggie").setRegistryName("spaghetti_veggie").setCreativeTab(foods);
 
-		noodles_chicken_cooked = (ItemNoodle)new ItemNoodle(6, 0.7f, false).setUnlocalizedName(MODID+".noodles_chicken_cooked").setRegistryName("noodles_chicken_cooked").setCreativeTab(foods);
-		noodles_fish_cooked = (ItemNoodle)new ItemNoodle(6, 0.7f, false).setUnlocalizedName(MODID+".noodles_fish_cooked").setRegistryName("noodles_fish_cooked").setCreativeTab(foods);
-		noodles_meat_cooked = (ItemNoodle)new ItemNoodle(5, 0.8f, false).setUnlocalizedName(MODID+".noodles_meat_cooked").setRegistryName("noodles_meat_cooked").setCreativeTab(foods);
-		noodles_veggie_cooked = (ItemNoodle)new ItemNoodle(7, 0.7f, false).setUnlocalizedName(MODID+".noodles_veggie_cooked").setRegistryName("noodles_veggie_cooked").setCreativeTab(foods);
+		noodles_chicken_cooked = (ItemNoodle)new ItemNoodle(6, 0.7f, false).setTranslationKey(MODID+".noodles_chicken_cooked").setRegistryName("noodles_chicken_cooked").setCreativeTab(foods);
+		noodles_fish_cooked = (ItemNoodle)new ItemNoodle(6, 0.7f, false).setTranslationKey(MODID+".noodles_fish_cooked").setRegistryName("noodles_fish_cooked").setCreativeTab(foods);
+		noodles_meat_cooked = (ItemNoodle)new ItemNoodle(5, 0.8f, false).setTranslationKey(MODID+".noodles_meat_cooked").setRegistryName("noodles_meat_cooked").setCreativeTab(foods);
+		noodles_veggie_cooked = (ItemNoodle)new ItemNoodle(7, 0.7f, false).setTranslationKey(MODID+".noodles_veggie_cooked").setRegistryName("noodles_veggie_cooked").setCreativeTab(foods);
 
-		noodles_chicken = new Item().setUnlocalizedName(MODID+".noodles_chicken").setRegistryName("noodles_chicken").setCreativeTab(foods);
-		noodles_fish = new Item().setUnlocalizedName(MODID+".noodles_fish").setRegistryName("noodles_fish").setCreativeTab(foods);
-		noodles_meat= new Item().setUnlocalizedName(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
-		noodles_veggie = new Item().setUnlocalizedName(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
+		noodles_chicken = new Item().setTranslationKey(MODID+".noodles_chicken").setRegistryName("noodles_chicken").setCreativeTab(foods);
+		noodles_fish = new Item().setTranslationKey(MODID+".noodles_fish").setRegistryName("noodles_fish").setCreativeTab(foods);
+		noodles_meat= new Item().setTranslationKey(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
+		noodles_veggie = new Item().setTranslationKey(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
 
 		register();
 

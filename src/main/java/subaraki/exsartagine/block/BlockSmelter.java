@@ -44,7 +44,7 @@ public class BlockSmelter extends BlockHeatable {
 		setSoundType(SoundType.STONE);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setUnlocalizedName(Reference.MODID+".smelter");
+		setTranslationKey(Reference.MODID+".smelter");
 		setRegistryName("smelter");
 		setHardness(3.5f);
 		this.setLightOpacity(0);
@@ -163,7 +163,7 @@ public class BlockSmelter extends BlockHeatable {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(meta & 3); //untill third bit ? so facing only
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta & 3); //untill third bit ? so facing only
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{

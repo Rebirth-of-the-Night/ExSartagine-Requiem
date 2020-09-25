@@ -44,7 +44,7 @@ public class BlockPan extends BlockHeatable {
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setUnlocalizedName(Reference.MODID+".pan");
+		setTranslationKey(Reference.MODID+".pan");
 		setRegistryName("pan");
 		setHardness(3.5f);
 		this.setLightOpacity(0);
@@ -140,7 +140,7 @@ public class BlockPan extends BlockHeatable {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{

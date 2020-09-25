@@ -48,7 +48,7 @@ public class BlockPot extends BlockHeatable {
 		setSoundType(SoundType.STONE);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setUnlocalizedName(Reference.MODID+".pot");
+		setTranslationKey(Reference.MODID+".pot");
 		setRegistryName("pot");
 		setHardness(3.5f);
 		this.setLightOpacity(0);
@@ -171,7 +171,7 @@ public class BlockPot extends BlockHeatable {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(meta & 3);
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta & 3);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{

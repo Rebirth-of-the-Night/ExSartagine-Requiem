@@ -42,7 +42,7 @@ public class BlockRange extends Block {
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setUnlocalizedName(Reference.MODID+".range");
+		setTranslationKey(Reference.MODID+".range");
 		setRegistryName("range");
 		setHardness(3.5f);
 		this.setLightOpacity(0);
@@ -207,7 +207,7 @@ public class BlockRange extends Block {
 
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{

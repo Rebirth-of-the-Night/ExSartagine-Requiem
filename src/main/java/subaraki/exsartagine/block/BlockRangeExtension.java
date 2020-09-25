@@ -45,7 +45,7 @@ public class BlockRangeExtension extends Block {
 		setSoundType(SoundType.STONE);
 		setCreativeTab(CreativeTabs.TOOLS);
 		setHarvestLevel("pickaxe", 0);
-		setUnlocalizedName(Reference.MODID+"."+name);
+		setTranslationKey(Reference.MODID+"."+name);
 		setRegistryName(name);
 		setHardness(3.5f);
 		this.setLightOpacity(0);
@@ -260,7 +260,7 @@ public class BlockRangeExtension extends Block {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(meta & 3); //untill third bit ? so facing only
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta & 3); //untill third bit ? so facing only
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{
