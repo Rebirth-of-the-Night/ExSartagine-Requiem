@@ -9,8 +9,8 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
+import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 
 import static subaraki.exsartagine.util.Reference.MODID;
@@ -150,26 +150,7 @@ public class ExSartagineItems {
 
 		register(registry);
 
-		addToOreDict();
-	}
-
-	private static void addToOreDict() {
-		OreDictionary.registerOre("egg", boiled_egg);
-		OreDictionary.registerOre("ingredientEgg", boiled_egg);
-		OreDictionary.registerOre("cropVegetable", boiled_potato);
-		OreDictionary.registerOre("cropVegetable", boiled_beans);
-
-		OreDictionary.registerOre("foodFlour", flour);
-		OreDictionary.registerOre("dustFlour", flour);
-		OreDictionary.registerOre("dustSalt", salt);
-		OreDictionary.registerOre("itemCheese", curd);
-		OreDictionary.registerOre("ingredientCheese", curd);
-		OreDictionary.registerOre("itemYeast", yeast);
-		OreDictionary.registerOre("foodDough", dough);
-		OreDictionary.registerOre("foodDoughFlat", pizza_dough);
-		OreDictionary.registerOre("foodDoughBread", bread_dough); //food registry for pan slot
-
-		OreDictionary.registerOre("itemNoodles", dry_strings);
+		Oredict.addToOreDict();
 	}
 
 	private static void register(IForgeRegistry<Item> registry) {
