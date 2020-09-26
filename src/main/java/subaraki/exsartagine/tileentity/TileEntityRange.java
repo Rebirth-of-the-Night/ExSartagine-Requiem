@@ -18,7 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockRangeExtension;
-import subaraki.exsartagine.block.ExSartagineBlock;
+import subaraki.exsartagine.block.ExSartagineBlocks;
 
 public class TileEntityRange extends TileEntity implements ITickable {
 
@@ -192,7 +192,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
 					if(setCooking)
 					{
-						IBlockState lit = ExSartagineBlock.range_extension_lit.getDefaultState().
+						IBlockState lit = ExSartagineBlocks.range_extension_lit.getDefaultState().
 								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
 								withProperty(BlockRangeExtension.ENDBLOCK, state.getValue(BlockRangeExtension.ENDBLOCK));
 
@@ -203,7 +203,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 					}
 					else
 					{
-						IBlockState unlit = ExSartagineBlock.range_extension.getDefaultState().
+						IBlockState unlit = ExSartagineBlocks.range_extension.getDefaultState().
 								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
 								withProperty(BlockRangeExtension.ENDBLOCK, state.getValue(BlockRangeExtension.ENDBLOCK));
 

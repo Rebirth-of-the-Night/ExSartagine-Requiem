@@ -103,12 +103,12 @@ public class BlockRangeExtension extends Block {
 						IBlockState newState = null;
 
 						if(isLit)
-							newState = ExSartagineBlock.range_extension_lit.getDefaultState().
+							newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
 							withProperty(FACING, state.getValue(BlockRangeExtension.FACING)).
 							withProperty(ENDBLOCK, true);
 
 						else
-							newState = ExSartagineBlock.range_extension.getDefaultState().
+							newState = ExSartagineBlocks.range_extension.getDefaultState().
 							withProperty(FACING, state.getValue(BlockRangeExtension.FACING)).
 							withProperty(ENDBLOCK, true);
 

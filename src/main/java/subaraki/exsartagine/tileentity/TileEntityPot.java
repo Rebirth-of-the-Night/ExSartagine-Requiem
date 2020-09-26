@@ -6,7 +6,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockPot;
-import subaraki.exsartagine.block.ExSartagineBlock;
+import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.server.SlotPotInput;
 import subaraki.exsartagine.recipe.PotRecipes;
 
@@ -59,7 +59,7 @@ public class TileEntityPot extends TileEntityCooker {
 
             cookingTime = 0;
             waterLevel--;
-            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlock.pot.getDefaultState(), 3);
+            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.pot.getDefaultState(), 3);
         }
 
         if (isCooking()) {

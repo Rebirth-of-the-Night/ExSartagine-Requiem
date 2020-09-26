@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
-import subaraki.exsartagine.block.ExSartagineBlock;
+import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.server.SlotSmelterInput;
 import subaraki.exsartagine.util.ConfigHandler;
 
@@ -51,7 +51,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 				}
 			}
 			cookingTime = 0;
-			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlock.smelter.getDefaultState(), 3);
+			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
 		}
 
 		if(isCooking)

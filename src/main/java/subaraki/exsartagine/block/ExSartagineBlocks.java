@@ -3,7 +3,7 @@ package subaraki.exsartagine.block;
 import net.minecraft.block.Block;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class ExSartagineBlock {
+public class ExSartagineBlocks {
 
 	public static Block pan;
 	public static Block smelter;

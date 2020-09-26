@@ -15,12 +15,12 @@ public class SmelterRecipes {
 		return INSTANCE;
 	}
 
-	public void addEntry(ItemStack entry){
+	public void addRecipe(ItemStack entry){
 		SmelterRecipe smelterRecipe = new SmelterRecipe(entry);
 		smelterRecipeList.add(smelterRecipe);
 	}
 
-	public void removeEntry(ItemStack entry){
+	public void removeRecipe(ItemStack entry){
 		SmelterRecipe smelterRecipe = new SmelterRecipe(entry);
 		for(SmelterRecipe se : smelterRecipeList)
 		{
@@ -34,9 +34,9 @@ public class SmelterRecipes {
 
 	public ItemStack getResult(ItemStack stack)
 	{
-		SmelterRecipe entry = new SmelterRecipe(stack);
+		SmelterRecipe recipe = new SmelterRecipe(stack);
 
-		if(smelterRecipeList.contains(entry))
+		if(smelterRecipeList.contains(recipe))
 		{
 			if(!FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty())
 				return FurnaceRecipes.instance().getSmeltingResult(stack);

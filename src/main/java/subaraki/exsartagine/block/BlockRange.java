@@ -88,12 +88,12 @@ public class BlockRange extends Block {
 				IBlockState newState = null; //determine wether or not the new furnace needs to be lit
 
 				if(isLit)
-					newState = ExSartagineBlock.range_extension_lit.getDefaultState().
+					newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
 					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
 					withProperty(BlockRangeExtension.ENDBLOCK, true);
 
 				else
-					newState = ExSartagineBlock.range_extension.getDefaultState().
+					newState = ExSartagineBlocks.range_extension.getDefaultState().
 					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
 					withProperty(BlockRangeExtension.ENDBLOCK, true);
 

@@ -3,9 +3,7 @@ package subaraki.exsartagine.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.block.ExSartagineBlock;
+import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.server.SlotPanInput;
 
 public class TileEntityPan extends TileEntityCooker {
@@ -37,7 +35,7 @@ public class TileEntityPan extends TileEntityCooker {
 				}
 			}
 			cookingTime = 0;
-			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlock.pan.getDefaultState(), 3);
+			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.pan.getDefaultState(), 3);
 		}
 
 		if(isCooking)
