@@ -54,15 +54,8 @@ public abstract class BlockHeatable extends Block {
 
     @Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        if (world.getBlockState(pos.down()).getBlock() == Blocks.LIT_FURNACE) {
+        if (Recipes.isHeatSource(world.getBlockState(pos.down()).getBlock())) {
             startHeating(world, state, pos);
-        }
-        if (world.getBlockState(pos.down()).getBlock() instanceof BlockRangeExtension) {
-            if (world.getTileEntity(pos.down()) instanceof TileEntityRangeExtension) {
-                if (((TileEntityRangeExtension) world.getTileEntity(pos.down())).isCooking()) {
-                    startHeating(world, state, pos);
-                }
-            }
         }
     }
 }

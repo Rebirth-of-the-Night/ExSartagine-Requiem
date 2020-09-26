@@ -54,7 +54,7 @@ public class ContainerPot extends Container {
             }
             else if (index != 0)
             {
-                if (!PotRecipes.getInstance().getCookingResult(pot.getInventory()).isEmpty())
+                if (!PotRecipes.getCookingResult(pot.getInventory()).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

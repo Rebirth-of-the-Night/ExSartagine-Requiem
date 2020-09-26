@@ -14,15 +14,15 @@ public class SlotPanInput extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(ItemStack entryStack) {
-        if (!entryStack.isEmpty()) {
+    public boolean isItemValid(ItemStack input) {
+        if (!input.isEmpty()) {
             //Prioritise PanRecipe inputs
-            if (!FryingPanRecipes.getInstance().getCookingResult(getItemHandler()).isEmpty()) {
+            if (!FryingPanRecipes.hasResult(input)) {
                 return true;
             }
             //if no pan input was found, check if the input is food
             else {
-                return entryStack.getItem() instanceof ItemFood;
+                return input.getItem() instanceof ItemFood;
             }
         }
         return false;

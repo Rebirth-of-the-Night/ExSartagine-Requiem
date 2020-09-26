@@ -15,10 +15,7 @@ public class SlotPotInput extends SlotItemHandler {
 	public boolean isItemValid(ItemStack stack) {
 		if(!stack.isEmpty())
 		{
-			if(!PotRecipes.getInstance().getCookingResult(getItemHandler()).isEmpty())
-			{
-				return true;
-			}
+			return PotRecipes.hasResult(stack);
 		}
 		return false;
 	}

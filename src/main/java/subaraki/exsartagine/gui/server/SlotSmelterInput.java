@@ -6,7 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import subaraki.exsartagine.recipe.SmelterRecipes;
+import subaraki.exsartagine.Oredict;
+import subaraki.exsartagine.Utils;
 
 public class SlotSmelterInput extends SlotItemHandler {
 
@@ -19,7 +20,7 @@ public class SlotSmelterInput extends SlotItemHandler {
 	public boolean isItemValid(ItemStack stack) {
 		if(!stack.isEmpty())
 		{
-			boolean hasSmelterEntry = !SmelterRecipes.getInstance().getResult(stack).isEmpty();
+			boolean hasSmelterEntry = Utils.doesStackMatchOre(stack, Oredict.smelter_useable);
 
 			if(hasSmelterEntry)
 			{

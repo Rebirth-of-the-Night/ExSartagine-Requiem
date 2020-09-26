@@ -41,6 +41,7 @@ public class Recipes {
 		addHeatSource(Blocks.LIT_FURNACE);
 		addPlaceable(ExSartagineBlocks.range_extension);
 		addHeatSource(ExSartagineBlocks.range_extension_lit);
+		addHeatSource(Blocks.LAVA);
 
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);
@@ -51,22 +52,17 @@ public class Recipes {
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_meat_raw, new ItemStack(ExSartagineItems.bread_meat), 0.6f);
 		FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_veggie_raw, new ItemStack(ExSartagineItems.bread_veggie), 0.6f);
 
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg,1));
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans,1));
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Items.POTATO), new ItemStack(ExSartagineItems.boiled_potato,1));
+		PotRecipes.addRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg,1));
+		PotRecipes.addRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans,1));
+		PotRecipes.addRecipe(Ingredient.fromItem(Items.POTATO), new ItemStack(ExSartagineItems.boiled_potato,1));
 
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(Item.getItemFromBlock(Blocks.STONE)), new ItemStack(ExSartagineItems.salt,1));
+		PotRecipes.addRecipe(Ingredient.fromItem(Item.getItemFromBlock(Blocks.STONE)), new ItemStack(ExSartagineItems.salt,1));
 		
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.spaghetti_raw), new ItemStack(ExSartagineItems.spaghetti_cooked));
+		PotRecipes.addRecipe(Ingredient.fromItem(ExSartagineItems.spaghetti_raw), new ItemStack(ExSartagineItems.spaghetti_cooked));
 		
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_chicken), new ItemStack(ExSartagineItems.noodles_chicken_cooked));
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_fish), new ItemStack(ExSartagineItems.noodles_fish_cooked));
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_meat), new ItemStack(ExSartagineItems.noodles_meat_cooked));
-		PotRecipes.getInstance().addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_veggie), new ItemStack(ExSartagineItems.noodles_veggie_cooked));
-
-		SmelterRecipes.getInstance().addRecipe(new ItemStack(Blocks.IRON_ORE));
-		SmelterRecipes.getInstance().addRecipe(new ItemStack(Blocks.GOLD_ORE));
-		SmelterRecipes.getInstance().addRecipe(new ItemStack(Items.CLAY_BALL));
-		SmelterRecipes.getInstance().addRecipe(new ItemStack(Blocks.NETHERRACK));
+		PotRecipes.addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_chicken), new ItemStack(ExSartagineItems.noodles_chicken_cooked));
+		PotRecipes.addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_fish), new ItemStack(ExSartagineItems.noodles_fish_cooked));
+		PotRecipes.addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_meat), new ItemStack(ExSartagineItems.noodles_meat_cooked));
+		PotRecipes.addRecipe(Ingredient.fromItem(ExSartagineItems.noodles_veggie), new ItemStack(ExSartagineItems.noodles_veggie_cooked));
 	}
 }

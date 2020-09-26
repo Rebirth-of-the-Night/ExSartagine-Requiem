@@ -5,7 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.recipe.SmelterRecipes;
+import subaraki.exsartagine.Oredict;
+import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class ContainerSmelter extends Container{
@@ -54,7 +55,7 @@ public class ContainerSmelter extends Container{
 			}
 			else if (index != 0)// player inventory
 			{
-				if (!SmelterRecipes.getInstance().getResult(slotStack).isEmpty()) //if the item clicked can be smolten
+				if (Utils.doesStackMatchOre(slotStack, Oredict.smelter_useable)) //if the item clicked can be smolten
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
 					{
