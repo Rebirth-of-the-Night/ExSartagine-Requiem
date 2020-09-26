@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import subaraki.exsartagine.block.ExSartagineBlock;
+import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.recipe.Recipes;
@@ -48,15 +48,12 @@ public class ExSartagine {
         ConfigHandler.instance.loadConfig(event.getSuggestedConfigurationFile());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-
-        new Recipes();
-
     }
 
 
     @SubscribeEvent
     public static void blocks(RegistryEvent.Register<Block> e) {
-        ExSartagineBlock.load(e.getRegistry());
+        ExSartagineBlocks.load(e.getRegistry());
 
         GameRegistry.registerTileEntity(TileEntityPan.class, "tileentityexsartagine");
         GameRegistry.registerTileEntity(TileEntitySmelter.class, "tileentityexsartaginesmelter");
