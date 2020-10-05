@@ -4,7 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.common.SlotPanInput;
+import subaraki.exsartagine.gui.common.SlotCookingInput;
+import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPan extends TileEntityCooker {
 
@@ -50,7 +51,7 @@ public class TileEntityPan extends TileEntityCooker {
 
 	@Override
 	public boolean isValid(ItemStack stack) {
-		return new SlotPanInput(null, 0, 0, 0).isItemValid(stack);
+		return Recipes.hasResult(stack,"pan");
 	}
 	
 	@Override

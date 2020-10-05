@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockPot;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.common.SlotPotInput;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
@@ -85,7 +84,7 @@ public class TileEntityPot extends TileEntityCooker {
 
     @Override
     public boolean isValid(ItemStack stack) {
-        return new SlotPotInput(null, 0, 0, 0).isItemValid(stack);
+        return Recipes.hasResult(stack,"pot");
     }
 
     @Override

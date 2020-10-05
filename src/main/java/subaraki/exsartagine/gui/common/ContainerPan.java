@@ -11,7 +11,7 @@ public class ContainerPan extends Container{
 
 	public ContainerPan(InventoryPlayer playerInventory, TileEntityPan pan) {
 		
-		this.addSlotToContainer(new SlotPanInput(pan.getInventory(), 0, 56, 17));
+		this.addSlotToContainer(new SlotCookingInput(pan.getInventory(), 0, 56, 17,"pan"));
         this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pan.getInventory(), 1, 116, 35));
 
         for (int i = 0; i < 3; ++i)
@@ -52,7 +52,7 @@ public class ContainerPan extends Container{
             else if (index != 0)
             {
             	Slot input = this.inventorySlots.get(0);
-                if (input instanceof SlotPanInput && input.isItemValid(itemstack1))
+                if (input instanceof SlotCookingInput && input.isItemValid(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

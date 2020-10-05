@@ -5,7 +5,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.common.SlotSmelterInput;
+import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.util.ConfigHandler;
 
 public class TileEntitySmelter extends TileEntityCooker {
@@ -81,7 +81,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 	@Override
 	public boolean isValid(ItemStack stack) {
-		return new SlotSmelterInput(null, 0, 0, 0).isItemValid(stack);
+		return Recipes.hasResult(stack,"smelter");
 	}
 	
 	@Override

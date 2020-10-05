@@ -18,7 +18,7 @@ public class ContainerSmelter extends Container{
 	public ContainerSmelter(InventoryPlayer playerInventory, TileEntitySmelter smelter) {
 		this.smelter = smelter;
 
-		this.addSlotToContainer(new SlotSmelterInput(smelter.getInventory(), 0, 56, 17));
+		this.addSlotToContainer(new SlotCookingInput(smelter.getInventory(), 0, 56, 17,"smelter"));
 		this.addSlotToContainer(new SlotPanOutput(playerInventory.player, smelter.getInventory(), 1, 116, 35));
 		this.addSlotToContainer(new SlotPanOutput(playerInventory.player, smelter.getInventory(), 2, 140, 39));
 
@@ -59,7 +59,7 @@ public class ContainerSmelter extends Container{
 			}
 			else if (index != 0)// player inventory
 			{
-				if (Recipes.hasResult(slotStack,this.smelter.getInventory(),"smelter")) //if the item clicked can be smolten
+				if (Recipes.hasResult(slotStack,"smelter")) //if the item clicked can be smolten
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
 					{

@@ -5,19 +5,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import subaraki.exsartagine.recipe.Recipes;
 
-public class SlotPanInput extends SlotItemHandler {
+public class SlotCookingInput extends SlotItemHandler {
 
 
-    public SlotPanInput(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+    protected final String type;
+
+    public SlotCookingInput(IItemHandler itemHandler, int index, int xPosition, int yPosition, String type) {
         super(itemHandler, index, xPosition, yPosition);
+        this.type = type;
     }
 
     @Override
     public boolean isItemValid(ItemStack input) {
-        if (!input.isEmpty()) {
-            //Prioritise PanRecipe inputs
-            return !Recipes.hasResult(input,getItemHandler(),"pan");
-        }
-        return false;
+            return Recipes.hasResult(input,type);
     }
 }

@@ -14,7 +14,7 @@ public class ContainerPot extends Container {
 
 	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
 		this.pot = pot;
-		this.addSlotToContainer(new SlotPotInput(pot.getInventory(), 0, 56, 17));
+		this.addSlotToContainer(new SlotCookingInput(pot.getInventory(), 0, 56, 17,"pot"));
         this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
 
         for (int i = 0; i < 3; ++i)

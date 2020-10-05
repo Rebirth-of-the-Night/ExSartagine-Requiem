@@ -53,8 +53,8 @@ public class Recipes {
 		return ItemStack.EMPTY;
 	}
 
-	public static <I extends IItemHandler> boolean hasResult(ItemStack stack,I handler,String type) {
-		return !getCookingResult(handler,type).isEmpty();
+	public static <I extends IItemHandler> boolean hasResult(ItemStack stack, String type) {
+		return !stack.isEmpty() && getRecipes(type).stream().map(CustomRecipe::getIngredient).anyMatch(ingredient -> ingredient.test(stack));
 	}
 
 	public static void addHeatSource(Block block) {
