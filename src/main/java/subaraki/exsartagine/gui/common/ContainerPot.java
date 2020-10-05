@@ -1,31 +1,28 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
-import subaraki.exsartagine.tileentity.TileEntityRange;
+import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.tileentity.TileEntityPot;
 
-public class ContainerRange extends Container {
+public class ContainerPot extends Container {
 
-	public ContainerRange(InventoryPlayer playerInventory, TileEntityRange range) {
+    private final TileEntityPot pot;
 
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int j = 0; j < 3; ++j)
-			{
-				this.addSlotToContainer(new SlotFurnaceFuel(range.getInventory(), j + i * 3, 25 + j * 18, 14 + i * 18));
-			}
-		}
+	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
+		this.pot = pot;
+		this.addSlotToContainer(new SlotPotInput(pot.getInventory(), 0, 56, 17));
+        this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
 
-		for (int i = 0; i < 3; ++i)
-			for (int j = 0; j < 9; ++j)
-				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 9; ++j)
+                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
-		for (int k = 0; k < 9; ++k)
-			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+        for (int k = 0; k < 9; ++k)
+            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
 	}
 
 	@Override
@@ -39,44 +36,44 @@ public class ContainerRange extends Container {
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < 9)
+            if (index == 1)
             {
-                if (!this.mergeItemStack(itemstack1, 9, 45, true))
+                if (!this.mergeItemStack(itemstack1, 2, 38, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (index >= 9)
+            else if (index != 0)
             {
-                if (TileEntityFurnace.getItemBurnTime(itemstack1) > 0)
+                if (!Recipes.getCookingResult(pot.getInventory(),"pot").isEmpty())
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, 9, false))
+                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 9 && index < 36)
+                else if (index >= 2 && index < 29)
                 {
-                    if (!this.mergeItemStack(itemstack1, 36, 45, false))
+                    if (!this.mergeItemStack(itemstack1, 29, 38, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 36 && index < 45 && !this.mergeItemStack(itemstack1, 9, 36, false))
+                else if (index >= 29 && index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 9, 36, false))
+            else if (!this.mergeItemStack(itemstack1, 2, 38, false))
             {
                 return ItemStack.EMPTY;
             }

@@ -184,19 +184,19 @@ public class BlockSmelter extends BlockHeatable {
 	}
 
 	@Override
-	protected void startHeating(World world, IBlockState state, BlockPos pos) {
+	public void startHeating(World world, IBlockState state, BlockPos pos) {
 		((TileEntitySmelter)world.getTileEntity(pos)).setCooking();
 		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
 	}
 	
 	@Override
-	protected void stopHeating(World world, IBlockState state, BlockPos pos) {
+	public void stopHeating(World world, IBlockState state, BlockPos pos) {
 		((TileEntitySmelter)world.getTileEntity(pos)).stopCooking();
 		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
 	}
 	
 	@Override
-	protected Class<?> getTileEntity() {
+	public Class<?> getTileEntity() {
 		return TileEntitySmelter.class;
 	}
 		

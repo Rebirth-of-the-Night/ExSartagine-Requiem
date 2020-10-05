@@ -1,9 +1,9 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import subaraki.exsartagine.recipe.PotRecipes;
+import subaraki.exsartagine.recipe.Recipes;
 
 public class SlotPotInput extends SlotItemHandler {
 
@@ -15,7 +15,7 @@ public class SlotPotInput extends SlotItemHandler {
 	public boolean isItemValid(ItemStack stack) {
 		if(!stack.isEmpty())
 		{
-			return PotRecipes.hasResult(stack);
+			return Recipes.hasResult(stack,getItemHandler(),"pot");
 		}
 		return false;
 	}

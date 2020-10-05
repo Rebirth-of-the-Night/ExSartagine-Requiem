@@ -1,10 +1,9 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import subaraki.exsartagine.recipe.FryingPanRecipes;
+import subaraki.exsartagine.recipe.Recipes;
 
 public class SlotPanInput extends SlotItemHandler {
 
@@ -17,13 +16,7 @@ public class SlotPanInput extends SlotItemHandler {
     public boolean isItemValid(ItemStack input) {
         if (!input.isEmpty()) {
             //Prioritise PanRecipe inputs
-            if (!FryingPanRecipes.hasResult(input)) {
-                return true;
-            }
-            //if no pan input was found, check if the input is food
-            else {
-                return input.getItem() instanceof ItemFood;
-            }
+            return !Recipes.hasResult(input,getItemHandler(),"pan");
         }
         return false;
     }

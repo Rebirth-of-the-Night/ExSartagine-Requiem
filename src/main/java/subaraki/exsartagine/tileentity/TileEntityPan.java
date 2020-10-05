@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.server.SlotPanInput;
+import subaraki.exsartagine.gui.common.SlotPanInput;
 
 public class TileEntityPan extends TileEntityCooker {
 

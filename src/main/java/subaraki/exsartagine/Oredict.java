@@ -8,7 +8,6 @@ import subaraki.exsartagine.item.ExSartagineItems;
 
 public class Oredict {
 
-    public static final String smelter_useable = "smelterUsable";
 
     public static void addToOreDict() {
         OreDictionary.registerOre("egg", ExSartagineItems.boiled_egg);
@@ -27,10 +26,5 @@ public class Oredict {
         OreDictionary.registerOre("foodDoughBread", ExSartagineItems.bread_dough); //food registry for pan slot
 
         OreDictionary.registerOre("itemNoodles", ExSartagineItems.dry_strings);
-
-        OreDictionary.registerOre(smelter_useable, new ItemStack(Blocks.IRON_ORE));
-        OreDictionary.registerOre(smelter_useable, new ItemStack(Blocks.GOLD_ORE));
-        OreDictionary.registerOre(smelter_useable, new ItemStack(Items.CLAY_BALL));
-        OreDictionary.registerOre(smelter_useable, new ItemStack(Blocks.NETHERRACK));
     }
 }

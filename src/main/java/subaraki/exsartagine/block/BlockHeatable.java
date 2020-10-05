@@ -3,25 +3,17 @@ package subaraki.exsartagine.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
 
-public abstract class BlockHeatable extends Block {
+public abstract class BlockHeatable extends Block implements Heatable {
 
     public BlockHeatable(Material materialIn) {
         super(materialIn);
     }
-
-    protected abstract void startHeating(World world, IBlockState state, BlockPos pos);
-
-    protected abstract void stopHeating(World world, IBlockState state, BlockPos pos);
-
-    protected abstract Class<?> getTileEntity();
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {

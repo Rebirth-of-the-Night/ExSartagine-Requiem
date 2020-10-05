@@ -5,7 +5,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.server.SlotSmelterInput;
+import subaraki.exsartagine.gui.common.SlotSmelterInput;
 import subaraki.exsartagine.util.ConfigHandler;
 
 public class TileEntitySmelter extends TileEntityCooker {

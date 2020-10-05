@@ -1,21 +1,18 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.recipe.PotRecipes;
-import subaraki.exsartagine.tileentity.TileEntityPot;
+import subaraki.exsartagine.tileentity.TileEntityPan;
 
-public class ContainerPot extends Container {
+public class ContainerPan extends Container{
 
-    private final TileEntityPot pot;
-
-	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
-		this.pot = pot;
-		this.addSlotToContainer(new SlotPotInput(pot.getInventory(), 0, 56, 17));
-        this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
+	public ContainerPan(InventoryPlayer playerInventory, TileEntityPan pan) {
+		
+		this.addSlotToContainer(new SlotPanInput(pan.getInventory(), 0, 56, 17));
+        this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pan.getInventory(), 1, 116, 35));
 
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 9; ++j)
@@ -54,7 +51,8 @@ public class ContainerPot extends Container {
             }
             else if (index != 0)
             {
-                if (!PotRecipes.getCookingResult(pot.getInventory()).isEmpty())
+            	Slot input = this.inventorySlots.get(0);
+                if (input instanceof SlotPanInput && input.isItemValid(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

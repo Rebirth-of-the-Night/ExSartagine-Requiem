@@ -6,7 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import subaraki.exsartagine.gui.server.ContainerRange;
+import subaraki.exsartagine.gui.common.ContainerRange;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 
 public class GuiRange extends GuiContainer {

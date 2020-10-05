@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -7,12 +7,16 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
+import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class ContainerSmelter extends Container{
 
 
+	private final TileEntitySmelter smelter;
+
 	public ContainerSmelter(InventoryPlayer playerInventory, TileEntitySmelter smelter) {
+		this.smelter = smelter;
 
 		this.addSlotToContainer(new SlotSmelterInput(smelter.getInventory(), 0, 56, 17));
 		this.addSlotToContainer(new SlotPanOutput(playerInventory.player, smelter.getInventory(), 1, 116, 35));
@@ -37,7 +41,7 @@ public class ContainerSmelter extends Container{
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
 	{
 		ItemStack bufferStack = ItemStack.EMPTY; //no idea... should have made documentation when i was coding this. TODO
-		Slot slot = (Slot)this.inventorySlots.get(index);
+		Slot slot = this.inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -55,7 +59,7 @@ public class ContainerSmelter extends Container{
 			}
 			else if (index != 0)// player inventory
 			{
-				if (Utils.doesStackMatchOre(slotStack, Oredict.smelter_useable)) //if the item clicked can be smolten
+				if (Recipes.hasResult(slotStack,this.smelter.getInventory(),"smelter")) //if the item clicked can be smolten
 				{
 					if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
 					{

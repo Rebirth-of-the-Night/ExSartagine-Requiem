@@ -189,7 +189,7 @@ public class BlockPot extends BlockHeatable {
 	}
 
 	@Override
-	protected void startHeating(World world, IBlockState state, BlockPos pos) {
+	public void startHeating(World world, IBlockState state, BlockPos pos) {
 		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
 		{
 			((TileEntityPot)world.getTileEntity(pos)).setCooking();
@@ -198,7 +198,7 @@ public class BlockPot extends BlockHeatable {
 	}
 
 	@Override
-	protected void stopHeating(World world, IBlockState state, BlockPos pos) {
+	public void stopHeating(World world, IBlockState state, BlockPos pos) {
 		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
 		{
 			((TileEntityPot)world.getTileEntity(pos)).stopCooking();
@@ -207,7 +207,7 @@ public class BlockPot extends BlockHeatable {
 	}
 
 	@Override
-	protected Class getTileEntity() {
+	public Class<?> getTileEntity() {
 		return TileEntityPot.class;
 	}
 }

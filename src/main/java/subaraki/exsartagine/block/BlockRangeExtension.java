@@ -72,7 +72,7 @@ public class BlockRangeExtension extends Block {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
-		EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+		EnumFacing enumfacing = state.getValue(FACING);
 		BlockPos nextTo = pos.offset(enumfacing.rotateYCCW());
 
 		//the previous extension is broken : break this
@@ -201,19 +201,19 @@ public class BlockRangeExtension extends Block {
 			TileEntityRangeExtension tere = ((TileEntityRangeExtension)worldIn.getTileEntity(pos));
 			if(tere.isCooking()){
 
-				EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+				EnumFacing enumfacing = stateIn.getValue(FACING);
 				switch (enumfacing) {
 				case NORTH:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2-0.6, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2-0.6, 0.0D, 0.0D, 0.0D);
 					break;
 				case WEST:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.6, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.6, d1, d2, 0.0D, 0.0D, 0.0D);
 					break;
 				case SOUTH:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2+0.6, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2+0.6, 0.0D, 0.0D, 0.0D);
 					break;
 				case EAST:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.6, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.6, d1, d2, 0.0D, 0.0D, 0.0D);
 					break;
 				default:
 					break;
@@ -253,7 +253,7 @@ public class BlockRangeExtension extends Block {
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
-		i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i = i | state.getValue(FACING).getHorizontalIndex();
 		i = i | ((state.getValue(ENDBLOCK) ? 1 : 0) << 2); //push to third bit
 		return i;
 	}

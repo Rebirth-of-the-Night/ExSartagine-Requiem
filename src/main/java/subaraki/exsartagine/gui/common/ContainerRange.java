@@ -1,28 +1,31 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.oredict.OreDictionary;
-import subaraki.exsartagine.tileentity.TileEntityPan;
+import net.minecraft.tileentity.TileEntityFurnace;
+import subaraki.exsartagine.tileentity.TileEntityRange;
 
-public class ContainerPan extends Container{
+public class ContainerRange extends Container {
 
-	public ContainerPan(InventoryPlayer playerInventory, TileEntityPan pan) {
-		
-		this.addSlotToContainer(new SlotPanInput(pan.getInventory(), 0, 56, 17));
-        this.addSlotToContainer(new SlotPanOutput(playerInventory.player, pan.getInventory(), 1, 116, 35));
+	public ContainerRange(InventoryPlayer playerInventory, TileEntityRange range) {
 
-        for (int i = 0; i < 3; ++i)
-            for (int j = 0; j < 9; ++j)
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				this.addSlotToContainer(new SlotFurnaceFuel(range.getInventory(), j + i * 3, 25 + j * 18, 14 + i * 18));
+			}
+		}
 
-        for (int k = 0; k < 9; ++k)
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+		for (int i = 0; i < 3; ++i)
+			for (int j = 0; j < 9; ++j)
+				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+
+		for (int k = 0; k < 9; ++k)
+			this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
 	}
 
 	@Override
@@ -36,45 +39,44 @@ public class ContainerPan extends Container{
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == 1)
+            if (index < 9)
             {
-                if (!this.mergeItemStack(itemstack1, 2, 38, true))
+                if (!this.mergeItemStack(itemstack1, 9, 45, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (index != 0)
+            else if (index >= 9)
             {
-            	Slot input = this.inventorySlots.get(0);
-                if (input instanceof SlotPanInput && input.isItemValid(itemstack1))
+                if (TileEntityFurnace.getItemBurnTime(itemstack1) > 0)
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                    if (!this.mergeItemStack(itemstack1, 0, 9, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 2 && index < 29)
+                else if (index >= 9 && index < 36)
                 {
-                    if (!this.mergeItemStack(itemstack1, 29, 38, false))
+                    if (!this.mergeItemStack(itemstack1, 36, 45, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 29 && index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
+                else if (index >= 36 && index < 45 && !this.mergeItemStack(itemstack1, 9, 36, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 2, 38, false))
+            else if (!this.mergeItemStack(itemstack1, 9, 36, false))
             {
                 return ItemStack.EMPTY;
             }

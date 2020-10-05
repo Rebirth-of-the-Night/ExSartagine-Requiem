@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.server;
+package subaraki.exsartagine.gui.common;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

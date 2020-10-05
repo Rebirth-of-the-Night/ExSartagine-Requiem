@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockPot;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.server.SlotPotInput;
-import subaraki.exsartagine.recipe.PotRecipes;
+import subaraki.exsartagine.gui.common.SlotPotInput;
+import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
 
@@ -38,7 +38,7 @@ public class TileEntityPot extends TileEntityCooker {
                 if (getEntry().getCount() > 0) {
                     if (getEntry().getCount() > 0 && (getResult().isEmpty() || getResult().getCount() < getResult().getMaxStackSize())) {
                         if (getResult().isEmpty()) {
-                            ItemStack stack = PotRecipes.getCookingResult(getInventory()).copy();
+                            ItemStack stack = Recipes.getCookingResult(getInventory(),"pot").copy();
 
                             if (getEntry().getItem() instanceof ItemBlock && getEntry().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
                                 stack = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : stack;
@@ -65,7 +65,7 @@ public class TileEntityPot extends TileEntityCooker {
         if (isCooking()) {
             if (!getEntry().isEmpty() &&
                     getEntry().getCount() > 0 &&
-                    getWaterLevel() > 0 && (getResult().getItem().equals(PotRecipes.getCookingResult(getInventory()).getItem())
+                    getWaterLevel() > 0 && (getResult().getItem().equals(Recipes.getCookingResult(getInventory(),"pot").getItem())
                     || getResult().isEmpty())) //or recipe fits
             {
                 cookingTime++;
