@@ -31,13 +31,13 @@ public class TileEntityPot extends TileEntityCooker {
     @Override
     public void update() {
 
-        if (cookingTime == 125 && waterLevel > 0) {
+        if (progress == 125 && waterLevel > 0) {
             if (!world.isRemote) {
 
                 if (getEntry().getCount() > 0) {
                     if (getEntry().getCount() > 0 && (getResult().isEmpty() || getResult().getCount() < getResult().getMaxStackSize())) {
                         if (getResult().isEmpty()) {
-                            ItemStack stack = Recipes.getCookingResult(getInventory(),"pot").copy();
+                            ItemStack stack = Recipes.getCookingResult(getInventory(),"pot");
 
                             if (getEntry().getItem() instanceof ItemBlock && getEntry().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
                                 stack = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : stack;
@@ -56,7 +56,7 @@ public class TileEntityPot extends TileEntityCooker {
                 }
             }
 
-            cookingTime = 0;
+            progress = 0;
             waterLevel--;
             world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.pot.getDefaultState(), 3);
         }
@@ -67,9 +67,9 @@ public class TileEntityPot extends TileEntityCooker {
                     getWaterLevel() > 0 && (getResult().getItem().equals(Recipes.getCookingResult(getInventory(),"pot").getItem())
                     || getResult().isEmpty())) //or recipe fits
             {
-                cookingTime++;
-            } else if (cookingTime > 0)
-                cookingTime--;
+                progress++;
+            } else if (progress > 0)
+                progress--;
         }
 
         if (!world.isRemote) {
@@ -92,6 +92,11 @@ public class TileEntityPot extends TileEntityCooker {
         super.writeToNBT(compound);
         compound.setInteger("water", waterLevel);
         return compound;
+    }
+
+    @Override
+    public int getCookTime() {
+        return 125;
     }
 
     @Override

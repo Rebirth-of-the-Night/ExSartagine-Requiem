@@ -4,6 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 
+import java.util.Collections;
+import java.util.List;
+
 public class SmelterRecipe implements CustomRecipe<IItemHandler> {
 
     private final Ingredient ingredient;
@@ -17,7 +20,7 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
-    public boolean match(IItemHandler handler) {
+    public boolean itemMatch(IItemHandler handler) {
         return ingredient.test(handler.getStackInSlot(INPUT));
     }
 
@@ -27,8 +30,8 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
-    public Ingredient getIngredient() {
-        return ingredient;
+    public List<Ingredient> getIngredients() {
+        return Collections.singletonList(ingredient);
     }
 
     @Override

@@ -1,33 +1,19 @@
 package subaraki.exsartagine.tileentity.render;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.MathHelper;
 import subaraki.exsartagine.tileentity.TileEntityCooker;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class TileEntityRenderFood extends TileEntitySpecialRenderer {
 
-	private final RenderItem itemRenderer;
-	private final Random random = new Random();
-
 	private EntityItem ei;
 
 	public TileEntityRenderFood() {
-		itemRenderer = Minecraft.getMinecraft().getRenderItem();
 	}
 
 	@Override
@@ -43,7 +29,7 @@ public class TileEntityRenderFood extends TileEntitySpecialRenderer {
 		}
 
 		TileEntityCooker te = null;
-		if (tileentity == null || tileentity instanceof TileEntitySmelter)
+		if (tileentity instanceof TileEntitySmelter)
 			return;
 
 		if (tileentity instanceof TileEntityCooker)

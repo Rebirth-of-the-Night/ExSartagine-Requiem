@@ -37,7 +37,7 @@ public class BlockPot extends BlockHeatable {
 	public static final PropertyBool FULL = PropertyBool.create("full");
 
 	public BlockPot() {
-		super(Material.ROCK);
+		super(Material.ROCK, Reference.POT);
 
 		setLightLevel(0.0f);
 		setHardness(8f);
@@ -52,50 +52,6 @@ public class BlockPot extends BlockHeatable {
 
 	}
 
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-		if(!(worldIn.getTileEntity(pos) instanceof TileEntityPot) || hand == EnumHand.OFF_HAND)
-			return false;
-
-		ItemStack stack = playerIn.getHeldItem(hand);
-
-		if(!stack.isEmpty() && stack.getItem().equals(Items.WATER_BUCKET))
-		{
-			((TileEntityPot)worldIn.getTileEntity(pos)).replenishWater();
-			worldIn.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-			if(!playerIn.capabilities.isCreativeMode)
-				playerIn.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-
-			onBlockAdded(worldIn, pos, state); //assure activation of any heating source
-
-			return true;
-		}
-
-		playerIn.openGui(ExSartagine.instance, 2, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
-		return true;
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-
-		if (tileentity instanceof TileEntityPot)
-		{
-			TileEntityPot te = (TileEntityPot)tileentity;
-			if(te.getInventory() instanceof ItemStackHandler)
-			{
-				ItemStackHandler inventory = (ItemStackHandler) te.getInventory();
-				Utils.scatter(worldIn, pos, inventory);
-			}		
-		}
-
-		super.breakBlock(worldIn, pos, state);
-	}
-
 	/////////////////rendering//////////////
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -103,10 +59,6 @@ public class BlockPot extends BlockHeatable {
 	}
 
 	///////////////TE Stuff//////////////////////
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
@@ -143,8 +95,8 @@ public class BlockPot extends BlockHeatable {
 				for(int i = 0 ; i < 10 ; i++)
 					worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, -0.02D, 0.0D, new int[1]);
 
-				worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, 0.5D, 0.0D, new int[0]);
-				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D, new int[0]);
+				worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, 0.5D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
@@ -160,7 +112,7 @@ public class BlockPot extends BlockHeatable {
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
-		i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i = i | state.getValue(FACING).getHorizontalIndex();
 		i = i | ((state.getValue(FULL) ? 1 : 0) << 2);
 		return i;
 	}
@@ -192,8 +144,7 @@ public class BlockPot extends BlockHeatable {
 	public void startHeating(World world, IBlockState state, BlockPos pos) {
 		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
 		{
-			((TileEntityPot)world.getTileEntity(pos)).setCooking();
-			world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
+			super.startHeating(world, state, pos);
 		}
 	}
 
@@ -201,8 +152,7 @@ public class BlockPot extends BlockHeatable {
 	public void stopHeating(World world, IBlockState state, BlockPos pos) {
 		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
 		{
-			((TileEntityPot)world.getTileEntity(pos)).stopCooking();
-			world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
+			super.stopHeating(world, state, pos);
 		}
 	}
 

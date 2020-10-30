@@ -49,7 +49,7 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		
-		if(facing.equals(facing.DOWN))
+		if(EnumFacing.DOWN.equals(facing))
 		{
 			if(getHostCooker() instanceof TileEntityCooker)
 			{
@@ -62,7 +62,7 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(facing.equals(facing.DOWN))
+		if(EnumFacing.DOWN.equals(facing))
 		{
 			if(getHostCooker() instanceof TileEntityCooker)
 			{

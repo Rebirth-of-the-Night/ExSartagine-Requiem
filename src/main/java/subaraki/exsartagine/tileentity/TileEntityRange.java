@@ -22,7 +22,7 @@ import subaraki.exsartagine.block.ExSartagineBlocks;
 
 public class TileEntityRange extends TileEntity implements ITickable {
 
-	private ItemStackHandler inventory = new ItemStackHandler(9);
+	private final ItemStackHandler inventory = new ItemStackHandler(9);
 
 	private List<BlockPos> connected = new ArrayList<BlockPos>();
 
@@ -125,7 +125,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 			connections.setLong(Integer.toString(slot), pos.toLong());
 			slot++;
 		}
-		compound.setTag("connections", (NBTTagCompound)connections);
+		compound.setTag("connections", connections);
 
 		return compound;
 	}
@@ -149,7 +149,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
 	public boolean canConnect(){
 		//if the last one is filled, the rest is too.
-		return connected.isEmpty() ? true : connected.size() < 4 ? true : false;
+		return connected.isEmpty() || connected.size() < 4;
 	}
 
 	public void connect(TileEntityRangeExtension tere){
@@ -210,13 +210,10 @@ public class TileEntityRange extends TileEntity implements ITickable {
 						world.setBlockState(posTere, unlit);
 						world.notifyBlockUpdate(posTere, state, unlit, 3);
 					}
-					if(tere != null)
-					{
-						//revalidate te tileentity. furnace does the same after changing block state
-						tere.validate();
-						//make sure a copy gets back to the position
-						world.setTileEntity(posTere, tere);
-					}
+					//revalidate te tileentity. furnace does the same after changing block state
+					tere.validate();
+					//make sure a copy gets back to the position
+					world.setTileEntity(posTere, tere);
 				}
 			}
 			

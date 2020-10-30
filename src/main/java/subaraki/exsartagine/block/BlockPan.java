@@ -32,7 +32,7 @@ public class BlockPan extends BlockHeatable {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockPan() {
-		super(Material.IRON);
+		super(Material.IRON, Reference.PAN);
 
 		setLightLevel(0.0f);
 		setSoundType(SoundType.METAL);
@@ -44,29 +44,6 @@ public class BlockPan extends BlockHeatable {
 		this.setLightOpacity(0);
 	}
 
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-		if(!(worldIn.getTileEntity(pos) instanceof TileEntityPan) || hand == EnumHand.OFF_HAND)
-			return false;
-
-		playerIn.openGui(ExSartagine.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-
-		if (tileentity instanceof TileEntityPan)
-		{
-			
-		}
-		super.breakBlock(worldIn, pos, state);
-	}
-
 	/////////////////rendering//////////////
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -74,10 +51,6 @@ public class BlockPan extends BlockHeatable {
 	}
 
 	///////////////TE Stuff//////////////////////
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
@@ -111,8 +84,8 @@ public class BlockPan extends BlockHeatable {
 		{
 			if(((TileEntityPan)worldIn.getTileEntity(pos)).isCooking())
 			{
-				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D, new int[0]);
-				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D, new int[0]);
+				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
@@ -128,7 +101,7 @@ public class BlockPan extends BlockHeatable {
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -154,18 +127,6 @@ public class BlockPan extends BlockHeatable {
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public void startHeating(World world, IBlockState state, BlockPos pos) {
-		((TileEntityPan)world.getTileEntity(pos)).setCooking();
-		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-	}
-
-	@Override
-	public void stopHeating(World world, IBlockState state, BlockPos pos) {
-		((TileEntityPan)world.getTileEntity(pos)).stopCooking();
-		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
 	}
 
 	@Override

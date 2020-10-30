@@ -25,7 +25,7 @@ public class FryingPanRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         IStackHelper stackHelper = jeiHelpers.getStackHelper();
-        List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(Lists.newArrayList(recipe.getIngredient()));
+        List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(Lists.newArrayList(recipe.getIngredients()));
         ingredients.setInputLists(VanillaTypes.ITEM, inputLists);
         ingredients.setOutput(VanillaTypes.ITEM, recipe.getDisplay());
     }

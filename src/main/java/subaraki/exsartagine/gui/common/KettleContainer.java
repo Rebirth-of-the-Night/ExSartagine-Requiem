@@ -5,17 +5,25 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.tileentity.TileEntityPot;
+import net.minecraftforge.items.SlotItemHandler;
+import subaraki.exsartagine.tileentity.KettleBlockEntity;
 
-public class ContainerPot extends Container {
+public class KettleContainer extends Container {
 
-    private final TileEntityPot pot;
+	public KettleContainer(InventoryPlayer playerInventory, KettleBlockEntity pot) {
 
-	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
-		this.pot = pot;
-		this.addSlotToContainer(new SlotInput(pot.getInventory(), 0, 56, 17,"pot"));
-        this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
+      this.addSlotToContainer(new SlotItemHandler(pot.handler, 0, 15, 35));
+      for (int x = 0; x < 3; x++) {
+          for (int y = 0; y < 3; y++) {
+              this.addSlotToContainer(new SlotItemHandler(pot.handler, x + 3 * y + 1, 33 + 18 * x, 17 + 18 * y));
+          }
+      }
+
+      for (int x = 0; x < 3; x++) {
+          for (int y = 0; y < 3; y++) {
+              this.addSlotToContainer(new SlotOutput(playerInventory.player,pot.handler, x + 3 * y + 10, 116 + 18 * x, 18 + 18 * y));
+          }
+      }
 
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 9; ++j)
@@ -54,21 +62,7 @@ public class ContainerPot extends Container {
             }
             else if (index != 0)
             {
-                if (!Recipes.getCookingResults(pot.getInventory(),"pot").isEmpty())
-                {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index >= 2 && index < 29)
-                {
-                    if (!this.mergeItemStack(itemstack1, 29, 38, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index >= 29 && index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
+                if (!this.mergeItemStack(itemstack1, 0, 1, false))
                 {
                     return ItemStack.EMPTY;
                 }

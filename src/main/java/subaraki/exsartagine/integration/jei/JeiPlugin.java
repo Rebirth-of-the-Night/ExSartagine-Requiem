@@ -22,6 +22,7 @@ public class JeiPlugin implements IModPlugin {
         IGuiHelper helper = reg.getJeiHelpers().getGuiHelper();
         categories.add(new SmelterSmeltingRecipeCategory(new ItemStack(ExSartagineBlocks.smelter),helper));
         categories.add(new PotRecipeCategory(new ItemStack(ExSartagineBlocks.pot),helper));
+        categories.add(new KettleRecipeCategory(new ItemStack(ExSartagineBlocks.kettle),helper));
         categories.add(new FryingPanRecipeCategory(new ItemStack(ExSartagineBlocks.pan),helper));
 
         for (AbstractCookingRecipeCategory<?> category : categories) {

@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
-import subaraki.exsartagine.gui.common.SlotCookingInput;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPan extends TileEntityCooker {
@@ -16,7 +15,7 @@ public class TileEntityPan extends TileEntityCooker {
 	@Override
 	public void update() {
 
-		if(cookingTime == 125)
+		if(progress == 125)
 		{
 			if(!world.isRemote)
 			{
@@ -35,7 +34,7 @@ public class TileEntityPan extends TileEntityCooker {
 					getEntry().shrink(1);
 				}
 			}
-			cookingTime = 0;
+			progress = 0;
 			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.pan.getDefaultState(), 3);
 		}
 
@@ -43,10 +42,15 @@ public class TileEntityPan extends TileEntityCooker {
 		{
 			if(getEntry().getCount() > 0 && 
 					(getResult().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getResult().isEmpty()))
-				cookingTime++;
-			else if (cookingTime > 0)
-				cookingTime --;
+				progress++;
+			else if (progress > 0)
+				progress--;
 		}
+	}
+
+	@Override
+	public int getCookTime() {
+		return 125;
 	}
 
 	@Override

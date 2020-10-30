@@ -20,7 +20,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 	@Override
 	public void update() {
 
-		if(cookingTime == 199)
+		if(progress == 199)
 		{
 			if(!world.isRemote)
 			{
@@ -50,7 +50,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 					}
 				}
 			}
-			cookingTime = 0;
+			progress = 0;
 			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
 		}
 
@@ -58,9 +58,9 @@ public class TileEntitySmelter extends TileEntityCooker {
 		{
 			if(getEntry().getCount() > 0 && 
 					(getResult().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getResult().isEmpty()))
-				cookingTime++;
-			else if (cookingTime > 0)
-				cookingTime --;
+				progress++;
+			else if (progress > 0)
+				progress--;
 		}
 		
 		if(!world.isRemote)
@@ -73,6 +73,11 @@ public class TileEntitySmelter extends TileEntityCooker {
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, false), 3);
 	
 		}
+	}
+
+	@Override
+	public int getCookTime() {
+		return 199;
 	}
 
 	private ItemStack getBonus(){

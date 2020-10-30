@@ -10,6 +10,9 @@ pot.gui=Cooking Pot
 range.gui=Cooking Range
 tile.exsartagine.range.name=Cooking Range
 
+kettle.gui=Kettle
+tile.exsartagine.kettle.name=Kettle
+
 item.exsartagine.egg.boiled.name=Boiled Egg
 item.exsartagine.beans.boiled.name=Cooked Beans
 item.exsartagine.potato.boiled.name=Cooked Potato

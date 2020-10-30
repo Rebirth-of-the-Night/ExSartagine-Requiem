@@ -1,6 +1,5 @@
 package subaraki.exsartagine.tileentity;
 
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,15 +13,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-public class TileEntityCooker extends TileEntity implements ITickable {
+public abstract class TileEntityCooker extends TileEntity implements ITickable,Cooker {
 
 	protected boolean isCooking = false;
-	protected int cookingTime = 0;
+	protected int progress = 0;
 
 	protected static final int RESULT = 1;
 	protected static final int ENTRY = 0;
@@ -39,7 +35,7 @@ public class TileEntityCooker extends TileEntity implements ITickable {
 	}
 	
 	/**i nit inventory with more slots, where 0 is input, and x>0 is output*/
-	protected void initInventory(int slots){
+	protected void initInventory(int slots) {
 		inventory = new ISHCooker(slots, this);
 		
 		input = new RangedWrapper(inventory, 0, 1);
@@ -76,18 +72,13 @@ public class TileEntityCooker extends TileEntity implements ITickable {
 		return stack.copy(); 
 	}
 
-	public boolean isValid(ItemStack stack){
-		return false;
-	}
+	abstract public boolean isValid(ItemStack stack);
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 
-			if(facing == facing.UP)
-				return false;
-
-			return true;
+			return facing != EnumFacing.UP;
 		}
 		return super.hasCapability(capability, facing);
 	}
@@ -108,31 +99,34 @@ public class TileEntityCooker extends TileEntity implements ITickable {
 		return super.getCapability(capability, facing);
 	}
 
-	public IItemHandler getInventory(){
-		return getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null) ;
+	public IItemHandler getInventory() {
+		return getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 	}
-	
+
+	@Override
 	public void setCooking(){
 		isCooking = true;
 	}
 
+	@Override
 	public void stopCooking(){
 		isCooking = false;
-		cookingTime = 0;
+		progress = 0;
 	}
 
 	public boolean isCooking(){
 		return isCooking;
 	}
 
-	public int getCookingProgress(){
-		return cookingTime;
+	@Override
+	public int getProgress(){
+		return progress;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setInteger("cooktime", cookingTime);
+		compound.setInteger("cooktime", progress);
 		compound.setBoolean("cooking", isCooking);
 		compound.setTag("inv", inventory.serializeNBT());
 		return compound;
@@ -143,7 +137,7 @@ public class TileEntityCooker extends TileEntity implements ITickable {
 		super.readFromNBT(compound);
 		if(compound.hasKey("cooktime") && compound.hasKey("cooking")){
 			this.isCooking = compound.getBoolean("cooking");
-			this.cookingTime = compound.getInteger("cooktime");
+			this.progress = compound.getInteger("cooktime");
 		}
 		if(compound.hasKey("inv"))
 			inventory.deserializeNBT(compound.getCompoundTag("inv"));
@@ -181,9 +175,5 @@ public class TileEntityCooker extends TileEntity implements ITickable {
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
 	{
 		return oldState.getBlock() != newSate.getBlock();
-	}
-
-	@Override
-	public void update() {
 	}
 }

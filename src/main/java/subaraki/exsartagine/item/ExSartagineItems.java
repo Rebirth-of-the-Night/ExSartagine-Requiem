@@ -21,6 +21,7 @@ public class ExSartagineItems {
 	public static Item smelter;
 	public static Item pot;
 	public static Item range;
+	public static Item kettle;
 
 	public static ItemFood boiled_egg;
 	public static ItemFood boiled_beans;
@@ -90,6 +91,7 @@ public class ExSartagineItems {
 		smelter = new ItemBlock(ExSartagineBlocks.smelter).setRegistryName(ExSartagineBlocks.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
+		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
 		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");
@@ -158,6 +160,7 @@ public class ExSartagineItems {
 		registry.register(smelter);
 		registry.register(pot);
 		registry.register(range);
+		registry.register(kettle);
 
 		registry.register(boiled_egg);
 		registry.register(boiled_beans);
@@ -212,6 +215,7 @@ public class ExSartagineItems {
 		registerRender(smelter, "smelter", MODID);
 		registerRender(pot, "pot", MODID);
 		registerRender(range, "range", MODID);
+		registerRender(kettle,"kettle",MODID);
 
 		registerRender(boiled_egg, "egg", MODID);
 		registerRender(boiled_beans, "beans", MODID);

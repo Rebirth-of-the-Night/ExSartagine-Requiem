@@ -1,23 +1,10 @@
 {
     "variants": {
-        "normal": {
-             "model": "exsartagine:kettle" 
-         },
-        "facing=east": {
-            "model": "exsartagine:kettle",
-            "y": 90
+        "heated=false": {
+            "model": "exsartagine:kettle"
         },
-        "facing=west": {
-            "model": "exsartagine:kettle",
-            "y": 270
-        },
-        "facing=south": {
-            "model": "exsartagine:kettle",
-            "y": 180
-        },
-        "facing=north": {
-            "model": "exsartagine:kettle",
-            "y": 0
+        "heated=true": {
+            "model": "exsartagine:kettle"
         }
     }
 }

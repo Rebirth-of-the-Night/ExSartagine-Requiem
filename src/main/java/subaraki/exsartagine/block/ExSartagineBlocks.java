@@ -1,7 +1,9 @@
 package subaraki.exsartagine.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraftforge.registries.IForgeRegistry;
+import subaraki.exsartagine.util.Reference;
 
 public class ExSartagineBlocks {
 
@@ -11,6 +13,7 @@ public class ExSartagineBlocks {
 	public static Block range;
 	public static Block range_extension;
 	public static Block range_extension_lit;
+	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
 		pan = new BlockPan();
@@ -19,6 +22,7 @@ public class ExSartagineBlocks {
 		range = new BlockRange();
 		range_extension = new BlockRangeExtension("range_extended");
 		range_extension_lit = new BlockRangeExtension("range_extended_lit");
+		kettle = new KettleBlock(Material.IRON).setRegistryName("kettle").setTranslationKey(Reference.MODID +".kettle").setHardness(5);
 		register(registry);
 	}
 	
@@ -29,6 +33,6 @@ public class ExSartagineBlocks {
 		registry.register(range);
 		registry.register(range_extension);
 		registry.register(range_extension_lit);
-
+		registry.register(kettle);
 	}
 }

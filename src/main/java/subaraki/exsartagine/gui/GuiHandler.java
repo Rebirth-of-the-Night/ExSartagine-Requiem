@@ -5,18 +5,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import subaraki.exsartagine.gui.client.GuiPan;
-import subaraki.exsartagine.gui.client.GuiPot;
-import subaraki.exsartagine.gui.client.GuiRange;
-import subaraki.exsartagine.gui.client.GuiSmelter;
-import subaraki.exsartagine.gui.common.ContainerPan;
-import subaraki.exsartagine.gui.common.ContainerPot;
-import subaraki.exsartagine.gui.common.ContainerRange;
-import subaraki.exsartagine.gui.common.ContainerSmelter;
-import subaraki.exsartagine.tileentity.TileEntityPan;
-import subaraki.exsartagine.tileentity.TileEntityPot;
-import subaraki.exsartagine.tileentity.TileEntityRange;
-import subaraki.exsartagine.tileentity.TileEntitySmelter;
+import subaraki.exsartagine.gui.client.*;
+import subaraki.exsartagine.gui.common.*;
+import subaraki.exsartagine.tileentity.*;
+import subaraki.exsartagine.util.Reference;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -26,14 +18,16 @@ public class GuiHandler implements IGuiHandler {
 		BlockPos pos = new BlockPos(x, y, z);
 		TileEntity te = world.getTileEntity(pos);
 
-		if(te instanceof TileEntityPan && ID == 0)
+		if(te instanceof TileEntityPan && ID == Reference.PAN)
 			return new ContainerPan(player.inventory, (TileEntityPan)te);
-		if(te instanceof TileEntitySmelter && ID == 1)
+		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new ContainerSmelter(player.inventory, (TileEntitySmelter)te);
-		if(te instanceof TileEntityPot && ID == 2)
+		if(te instanceof TileEntityPot && ID == Reference.POT)
 			return new ContainerPot(player.inventory, (TileEntityPot)te);
-		if(te instanceof TileEntityRange && ID == 3)
+		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new ContainerRange(player.inventory, (TileEntityRange)te);
+		if(te instanceof KettleBlockEntity && ID == Reference.KETTLE)
+			return new KettleContainer(player.inventory, (KettleBlockEntity)te);
 		
 		return null;
 	}
@@ -44,15 +38,16 @@ public class GuiHandler implements IGuiHandler {
 		BlockPos pos = new BlockPos(x, y, z);
 		TileEntity te = world.getTileEntity(pos);
 
-		if(te instanceof TileEntityPan && ID == 0)
+		if(te instanceof TileEntityPan && ID == Reference.PAN)
 			return new GuiPan(player, (TileEntityPan)te);
-		if(te instanceof TileEntitySmelter && ID == 1)
+		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new GuiSmelter(player, (TileEntitySmelter)te);
-		if(te instanceof TileEntityPot && ID == 2)
+		if(te instanceof TileEntityPot && ID == Reference.POT)
 			return new GuiPot(player, (TileEntityPot)te);
-		if(te instanceof TileEntityRange && ID == 3)
+		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new GuiRange(player, (TileEntityRange)te);
-		
+		if(te instanceof KettleBlockEntity && ID == Reference.KETTLE)
+			return new KettleScreen(player, (KettleBlockEntity) te);
 		return null;
 	}
 }

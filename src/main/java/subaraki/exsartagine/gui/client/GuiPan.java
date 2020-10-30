@@ -56,7 +56,7 @@ public class GuiPan extends GuiContainer {
 		else
 			this.drawTexturedModalRect(i+56, j+53, 176, 12, 16, 16); //furnace out
 
-		float progress = pan.getCookingProgress() / 5.6f; //progress max = 125. 125 / 22 = 5.6. 5.6*125 = 22; 22 is texture max
+		float progress = pan.getProgress() / 5.6f; //progress max = 125. 125 / 22 = 5.6. 5.6*125 = 22; 22 is texture max
 		this.drawTexturedModalRect(i+80, j+34, 176, 44, (int)progress, 15); //Arrow
 	}
 	

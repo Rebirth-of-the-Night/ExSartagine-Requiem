@@ -2,10 +2,13 @@ package subaraki.exsartagine;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
@@ -54,4 +57,21 @@ public class Utils {
             return Arrays.stream(var3).anyMatch(id -> id == needle);
         }
     }
+
+    /**
+     * Default implementation of IRecipe.getRemainingItems {getRemainingItems} because
+     * this is just copy pasted over a lot of recipes.
+     *
+     * @param inv Crafting inventory
+     * @return Crafting inventory contents after the recipe.
+     */
+    public static NonNullList<ItemStack> defaultRecipeGetRemainingItems(IItemHandler inv) {
+        NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSlots(), ItemStack.EMPTY);
+        for (int i = 0; i < ret.size(); i++)
+        {
+            ret.set(i, ForgeHooks.getContainerItem(inv.getStackInSlot(i)));
+        }
+        return ret;
+    }
+
 }

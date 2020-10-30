@@ -7,17 +7,17 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.recipe.PotRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import subaraki.exsartagine.recipe.KettleRecipe;
 
 import java.util.List;
 
-public class PotRecipeWrapper implements IRecipeWrapper {
+public class KettleRecipeWrapper implements IRecipeWrapper {
 
-
-    private final PotRecipe recipe;
+    private final KettleRecipe recipe;
     private final IJeiHelpers jeiHelpers;
 
-    public PotRecipeWrapper(PotRecipe recipe, IJeiHelpers jeiHelpers) {
+    public KettleRecipeWrapper(KettleRecipe recipe, IJeiHelpers jeiHelpers) {
         this.recipe = recipe;
         this.jeiHelpers = jeiHelpers;
     }
@@ -25,8 +25,11 @@ public class PotRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         IStackHelper stackHelper = jeiHelpers.getStackHelper();
-        List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(Lists.newArrayList(recipe.getIngredients()));
+        List<Ingredient> ingredientList = Lists.newArrayList(recipe.getCatalyst());
+        ingredientList.addAll(recipe.getIngredients());
+        List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(ingredientList);
         ingredients.setInputLists(VanillaTypes.ITEM, inputLists);
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getDisplay());
+        ingredients.setOutputs(VanillaTypes.ITEM, recipe.getResults(null));
+        ingredients.setInput(VanillaTypes.FLUID,recipe.getFluid());
     }
 }

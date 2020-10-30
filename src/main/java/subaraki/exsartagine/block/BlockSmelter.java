@@ -37,8 +37,7 @@ public class BlockSmelter extends BlockHeatable {
 	public static final PropertyBool FULL = PropertyBool.create("full");
 
 	public BlockSmelter() {
-		super(Material.ROCK);
-
+		super(Material.ROCK, Reference.SMELTER);
 		setLightLevel(0.0f);
 		setHardness(8f);
 		setSoundType(SoundType.STONE);
@@ -52,36 +51,6 @@ public class BlockSmelter extends BlockHeatable {
 
 	}
 
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-		if(!(worldIn.getTileEntity(pos) instanceof TileEntitySmelter) || hand == EnumHand.OFF_HAND)
-			return false;
-
-		playerIn.openGui(ExSartagine.instance, 1, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
-		return true;
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-
-		if (tileentity instanceof TileEntitySmelter)
-		{
-			TileEntitySmelter te = (TileEntitySmelter)tileentity;
-			if(te.getInventory() instanceof ItemStackHandler)
-			{
-				ItemStackHandler inventory = (ItemStackHandler) te.getInventory();
-				Utils.scatter(worldIn, pos, inventory);
-			}
-		}
-
-		super.breakBlock(worldIn, pos, state);
-	}
-
 	/////////////////rendering//////////////
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -90,16 +59,12 @@ public class BlockSmelter extends BlockHeatable {
 
 	//see trough ! 
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
 
 	///////////////TE Stuff//////////////////////
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
@@ -163,7 +128,7 @@ public class BlockSmelter extends BlockHeatable {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta & 3); //untill third bit ? so facing only
+		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta & 3); //until third bit ? so facing only
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{
@@ -183,18 +148,6 @@ public class BlockSmelter extends BlockHeatable {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
-	@Override
-	public void startHeating(World world, IBlockState state, BlockPos pos) {
-		((TileEntitySmelter)world.getTileEntity(pos)).setCooking();
-		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-	}
-	
-	@Override
-	public void stopHeating(World world, IBlockState state, BlockPos pos) {
-		((TileEntitySmelter)world.getTileEntity(pos)).stopCooking();
-		world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-	}
-	
 	@Override
 	public Class<?> getTileEntity() {
 		return TileEntitySmelter.class;

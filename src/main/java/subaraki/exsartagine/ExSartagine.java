@@ -2,6 +2,7 @@ package subaraki.exsartagine;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -20,6 +21,7 @@ import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.TileEntityRenderFood;
 import subaraki.exsartagine.util.ConfigHandler;
+import subaraki.exsartagine.util.Reference;
 
 import java.util.Arrays;
 
@@ -60,6 +62,7 @@ public class ExSartagine {
         GameRegistry.registerTileEntity(TileEntityPot.class, "tileentityexsartaginepot");
         GameRegistry.registerTileEntity(TileEntityRange.class, "tileentityexsartaginerange");
         GameRegistry.registerTileEntity(TileEntityRangeExtension.class, "tileentityexsartaginerangeextension");
+        GameRegistry.registerTileEntity(KettleBlockEntity.class,new ResourceLocation(MODID,"kettle"));
     }
 
     @SubscribeEvent
@@ -70,9 +73,7 @@ public class ExSartagine {
     @SubscribeEvent
     public static void models(ModelRegistryEvent e) {
         ExSartagineItems.registerRenders();
-
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPan.class, new TileEntityRenderFood());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySmelter.class, new TileEntityRenderFood());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new TileEntityRenderFood());
     }
 
