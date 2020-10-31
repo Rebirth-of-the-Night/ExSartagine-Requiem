@@ -33,8 +33,15 @@ public class Recipes {
     private static final List<Block> heatSources = new ArrayList<>();
 
     private static final List<Block> placeable = new ArrayList<>();
-
     protected static final Map<String, List<CustomRecipe<?>>> recipes = new HashMap<>();
+
+    static {
+        addType("pan");
+        addType("pot");
+        addType("smelter");
+        addType("kettle");
+    }
+
 
     public static void addType(String type) {
         recipes.put(type, new ArrayList<>());
@@ -128,11 +135,6 @@ public class Recipes {
         addPlaceable(ExSartagineBlocks.range_extension);
         addHeatSource(ExSartagineBlocks.range_extension_lit);
         addHeatSource(Blocks.LAVA);
-
-        addType("pan");
-        addType("pot");
-        addType("smelter");
-        addType("kettle");
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);

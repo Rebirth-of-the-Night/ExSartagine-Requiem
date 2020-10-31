@@ -9,9 +9,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -44,6 +47,18 @@ public class KettleBlock extends BlockHeatable {
 
     @Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+    }
+
+    public static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, .875, 1);
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 
     @Override
@@ -104,6 +119,11 @@ public class KettleBlock extends BlockHeatable {
     @Override
     public void stopHeating(World world, IBlockState state, BlockPos pos) {
         world.setBlockState(pos, state.withProperty(HEATED,false));
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return super.getRenderLayer();
     }
 
     @Override

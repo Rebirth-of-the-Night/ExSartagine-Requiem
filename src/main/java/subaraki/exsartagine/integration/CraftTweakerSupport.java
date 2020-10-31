@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ZenRegister
-@ZenClass("mods." + Reference.MODID)
+@ZenClass("mods." + Reference.MODID+".ExSartagine")
 public class CraftTweakerSupport {
 
     @ZenMethod
