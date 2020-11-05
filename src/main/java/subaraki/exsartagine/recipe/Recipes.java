@@ -169,11 +169,15 @@ public class Recipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
 
+        //testRecipes();
+    }
+
+    private static void testRecipes() {
         List<Ingredient> inputs = Lists.newArrayList(Ingredient.fromItems(Items.GOLD_INGOT));
-        Ingredient catalyst = Ingredient.EMPTY;
+        Ingredient catalyst = Ingredient.fromItem(Items.SUGAR);
 
         List<ItemStack> output = NonNullList.withSize(9, new ItemStack(Items.GOLD_NUGGET));
-       // addKettleRecipe(inputs, catalyst, new FluidStack(FluidRegistry.WATER,1000), output, 100);
+        addKettleRecipe(inputs, catalyst, new FluidStack(FluidRegistry.WATER,1000), output, 100);
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, String type) {

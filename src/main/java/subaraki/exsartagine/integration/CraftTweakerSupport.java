@@ -38,6 +38,11 @@ public class CraftTweakerSupport {
     }
 
     @ZenMethod
+    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluid, IItemStack[] outputs) {
+        addKettleRecipe(inputs, catalyst, fluid, outputs,200);
+    }
+
+    @ZenMethod
     public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluid, IItemStack[] outputs, int time) {
         List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
         Ingredient iCatalyst = CraftTweakerMC.getIngredient(catalyst);

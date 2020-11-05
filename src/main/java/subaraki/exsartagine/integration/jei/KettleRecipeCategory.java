@@ -59,7 +59,7 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
         int xPos = 29;
         int yPos = 0;
 
-        guiItemStacks.init(0, true, 6, yPos + 18);
+        guiItemStacks.init(0, true, 11, yPos + 18);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3 ; x++) {
                 guiItemStacks.init(1 + x + 3 * y, true, xPos + 18 * x, yPos + 18 * y);

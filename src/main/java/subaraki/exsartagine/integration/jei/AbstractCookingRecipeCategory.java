@@ -22,7 +22,7 @@ public abstract class AbstractCookingRecipeCategory<T extends IRecipeWrapper> im
     public static final ResourceLocation BACKGROUNDS = new ResourceLocation(Reference.MODID, BACKGROUND);
 
     public AbstractCookingRecipeCategory(ItemStack catalyst, IGuiHelper helper) {
-        this.uid = catalyst.getItem().getRegistryName().getPath();
+        this.uid = Reference.MODID+"."+catalyst.getItem().getRegistryName().getPath();
         this.catalyst = catalyst;
         this.guiHelper = helper;
         setupGui();

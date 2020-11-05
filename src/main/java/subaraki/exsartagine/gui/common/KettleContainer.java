@@ -21,7 +21,7 @@ public class KettleContainer extends Container {
 
       for (int x = 0; x < 3; x++) {
           for (int y = 0; y < 3; y++) {
-              this.addSlotToContainer(new SlotOutput(playerInventory.player,pot.handler, x + 3 * y + 10, 116 + 18 * x, 18 + 18 * y));
+              this.addSlotToContainer(new SlotOutput(playerInventory.player,pot.handler, x + 3 * y + 10, 116 + 18 * x, 17 + 18 * y));
           }
       }
 
