@@ -145,11 +145,12 @@ public class Recipes {
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_meat_raw, new ItemStack(ExSartagineItems.bread_meat), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_veggie_raw, new ItemStack(ExSartagineItems.bread_veggie), 0.6f);
 
-        List<CustomRecipe<?>> recipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
+        List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
                 .map(entry -> new FryingPanRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
                 .collect(Collectors.toList());
-        Recipes.recipes.put("pan", recipes);
+
+        defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
 
         addPotRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg, 1));
         addPotRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans, 1));

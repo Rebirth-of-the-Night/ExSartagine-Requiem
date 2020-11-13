@@ -65,7 +65,7 @@ public class BlockRange extends Block {
 		if(!(worldIn.getTileEntity(pos) instanceof TileEntityRange) || hand == EnumHand.OFF_HAND)
 			return false;
 
-		playerIn.openGui(ExSartagine.instance, 3, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		playerIn.openGui(ExSartagine.instance, Reference.RANGE, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
