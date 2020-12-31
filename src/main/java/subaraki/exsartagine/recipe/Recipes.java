@@ -132,9 +132,9 @@ public class Recipes {
                                                && r.getResults(new ItemStackHandler()).size() == outputs.size()
                                                && r.getIngredients().containsAll(inputs)
                                                && r.getIngredients().size() == inputs.size()
-                                               && (r.getCatalyst().equals(catalyst) || catalyst == null)
-                                               && ((r.getFluid() == null && fluid == null) || (r.getFluid() != null && r.getFluid().containsFluid(fluid)))
-                                               && (cookTime == -1 || r.getCookTime() == cookTime));
+                                               && (((KettleRecipe)r).getCatalyst().equals(catalyst) || catalyst == null)
+                                               && ((((KettleRecipe)r).getFluid() == null && fluid == null) || (((KettleRecipe)r).getFluid() != null && ((KettleRecipe)r).getFluid().containsFluid(fluid)))
+                                               && (cookTime == -1 || ((KettleRecipe)r).getCookTime() == cookTime));
     }
     
 
