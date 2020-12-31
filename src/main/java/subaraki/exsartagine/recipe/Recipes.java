@@ -23,6 +23,7 @@ import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,76 @@ public class Recipes {
     public static boolean hasResult(ItemStack stack, String type) {
         return hasResult(new ItemStackHandler(NonNullList.from(ItemStack.EMPTY, stack)), type);
     }
-
+    
+    public static boolean removePotRecipe(ItemStack output) {
+        return getRecipes("pot").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removePotRecipe(ItemStack input, ItemStack output) {
+        return getRecipes("pot").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removePotRecipe(Ingredient input, ItemStack output) {
+        boolean changed = false;
+        for (ItemStack i : input.getMatchingStacks()) {
+            if (removePotRecipe(i, output)) 
+                changed = true;
+        }
+        return changed;
+    }
+    
+    public static boolean removePanRecipe(ItemStack output) {
+        return getRecipes("pan").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removePanRecipe(ItemStack input, ItemStack output) {
+        return getRecipes("pan").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removePanRecipe(Ingredient input, ItemStack output) {
+        boolean changed = false;
+        for (ItemStack i : input.getMatchingStacks()) {
+            if (removePanRecipe(i, output)) 
+                changed = true;
+        }
+        return changed;
+    }
+    
+    public static boolean removeSmelterRecipe(ItemStack output) {
+        return getRecipes("smelter").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removeSmelterRecipe(ItemStack input, ItemStack output) {
+        return getRecipes("smelter").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removeSmelterRecipe(Ingredient input, ItemStack output) {
+        boolean changed = false;
+        for (ItemStack i : input.getMatchingStacks()) {
+            if (removeSmelterRecipe(i, output)) 
+                changed = true;
+        }
+        return changed;
+    }
+    
+    public static boolean removeKettleRecipe(ItemStack output) {
+        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).contains(output));
+    }
+    
+    public static boolean removeKettleRecipe(List<ItemStack> outputs) {
+        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs));
+    }
+    
+    public static boolean removeKettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack fluid, List<ItemStack> outputs, int cookTime) {
+        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs)
+                                               && r.getResults(new ItemStackHandler()).size() == outputs.size()
+                                               && r.getIngredients().containsAll(inputs)
+                                               && r.getIngredients().size() == inputs.size()
+                                               && (r.getCatalyst().equals(catalyst) || catalyst == null)
+                                               && ((r.getFluid() == null && fluid == null) || (r.getFluid() != null && r.getFluid().containsFluid(fluid)))
+                                               && (cookTime == -1 || r.getCookTime() == cookTime));
+    }
+    
 
     public static <I extends IItemHandler> ItemStack getCookingResult(I handler, String type) {
         for (CustomRecipe<IItemHandler> recipe : getRecipes(type)) {
