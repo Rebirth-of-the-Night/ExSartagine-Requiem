@@ -186,6 +186,14 @@ public class Recipes {
     public static void addPlaceable(Block block) {
         placeable.add(block);
     }
+    
+    public static boolean removeHeatSource(Block block) {
+        return heatSources.removeIf(b -> Block.isEqualTo(b, block));
+    }
+    
+    public static boolean removePlaceable(Block block) {
+        return placeable.removeIf(b -> Block.isEqualTo(b, block));
+    }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> List<R> getRecipes(String type) {
         return (List<R>) Recipes.recipes.get(type);
