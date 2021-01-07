@@ -28,6 +28,8 @@ import java.util.List;
 
 public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
+    private static final int OUTPUT_START = 10;
+
     public KettleRecipe cached;
     public int progress;
     public boolean running;
@@ -79,7 +81,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
         for (ItemStack stack : results) {
             ItemStack remainder = stack.copy();
-            for (int i = 10; i < 19; i++) {
+            for (int i = OUTPUT_START; i < 19; i++) {
                 remainder = handler.insertItem(i, remainder, true);
                 if (remainder.isEmpty()) break;
             }
@@ -107,7 +109,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         NonNullList<ItemStack> nonnulllist = cached.getRemainingItems(this.handler);
         List<ItemStack> results = cached.getResults(handler);
 
-        for (int i = 0; i < nonnulllist.size(); ++i) {
+        for (int i = 0; i < OUTPUT_START; ++i) {
             ItemStack itemstack = this.handler.getStackInSlot(i);
             ItemStack remainderItem = nonnulllist.get(i);
 
@@ -128,8 +130,8 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
         for (ItemStack stack : results) {
             ItemStack remainder = stack.copy();
-            for (int i = 10; i < 19; i++) {
-                remainder = handler.insertItem(i,remainder,false);
+            for (int i = OUTPUT_START; i < 19; i++) {
+                remainder = handler.insertItem(i, remainder, false);
                 if (remainder.isEmpty()) {
                     break;
                 }

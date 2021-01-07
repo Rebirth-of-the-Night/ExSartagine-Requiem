@@ -248,7 +248,7 @@ public class Recipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
 
-        //testRecipes();
+        testRecipes();
     }
 
     private static void testRecipes() {
