@@ -76,8 +76,9 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         if (recipe == null)
             return false;
 
-        List<ItemStack> results = recipe.getResults(handler);
+        if (!recipe.fluidMatch(fluidTank)) return false;
 
+        List<ItemStack> results = recipe.getResults(handler);
         for (ItemStack stack : results) {
             ItemStack remainder = stack.copy();
             for (int i = OUTPUT_START; i < 19; i++) {
