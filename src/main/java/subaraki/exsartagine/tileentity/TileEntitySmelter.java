@@ -24,8 +24,8 @@ public class TileEntitySmelter extends TileEntityCooker {
 		{
 			if(!world.isRemote)
 			{
-				if(getEntry().getCount() > 0 && 
-						(getResult().isEmpty() || getResult().getCount() < getResult().getMaxStackSize()))
+				if(getInput().getCount() > 0 &&
+						(getOutput().isEmpty() || getOutput().getCount() < getOutput().getMaxStackSize()))
 				{
 					if(world.rand.nextInt(100)+1 <= bonusChance){ //+1, so 0% is no chance [1-100]
 						if(getBonus().isEmpty())
@@ -37,16 +37,16 @@ public class TileEntitySmelter extends TileEntityCooker {
 							getBonus().grow(1);
 					}
 
-					if(getResult().isEmpty())
+					if(getOutput().isEmpty())
 					{
 						ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).copy();
 						setResult(itemstack);
-						getEntry().shrink(1);
+						getInput().shrink(1);
 					}
 					else
 					{
-						getResult().grow(1);
-						getEntry().shrink(1);
+						getOutput().grow(1);
+						getInput().shrink(1);
 					}
 				}
 			}
@@ -56,8 +56,8 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 		if(isCooking)
 		{
-			if(getEntry().getCount() > 0 && 
-					(getResult().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getResult().isEmpty()))
+			if(getInput().getCount() > 0 &&
+					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))
 				progress++;
 			else if (progress > 0)
 				progress--;
@@ -66,10 +66,10 @@ public class TileEntitySmelter extends TileEntityCooker {
 		if(!world.isRemote)
 		{
 			//set lava block rendering
-			if(!world.getBlockState(pos).getValue(BlockSmelter.FULL) && (!getResult().isEmpty() || !getBonus().isEmpty()))
+			if(!world.getBlockState(pos).getValue(BlockSmelter.FULL) && (!getOutput().isEmpty() || !getBonus().isEmpty()))
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, true), 3);
 			//set lava block gone
-			if(world.getBlockState(pos).getValue(BlockSmelter.FULL) && (getResult().isEmpty() && getBonus().isEmpty()))
+			if(world.getBlockState(pos).getValue(BlockSmelter.FULL) && (getOutput().isEmpty() && getBonus().isEmpty()))
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, false), 3);
 	
 		}
@@ -80,8 +80,8 @@ public class TileEntitySmelter extends TileEntityCooker {
 		return 199;
 	}
 
-	private ItemStack getBonus(){
-		return getResult(BONUSSLOT);
+	private ItemStack getBonus() {
+		return getOutput(BONUSSLOT);
 	}
 
 	@Override

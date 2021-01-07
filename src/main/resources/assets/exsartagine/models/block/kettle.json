@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
+		"particle": "blocks/cauldron_inner",
 		"1": "blocks/cauldron_inner",
 		"2": "blocks/cauldron_side"
 	},

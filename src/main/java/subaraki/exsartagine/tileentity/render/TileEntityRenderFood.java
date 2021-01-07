@@ -40,8 +40,8 @@ public class TileEntityRenderFood extends TileEntitySpecialRenderer {
 		if(te == null)
 			return;
 
-		ItemStack entryToRender = te.getEntry().copy();
-		ItemStack resultToRender  = te.getResult().copy();
+		ItemStack entryToRender = te.getInput().copy();
+		ItemStack resultToRender  = te.getOutput().copy();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) x, (float) y, (float) z ); //translate to correct location

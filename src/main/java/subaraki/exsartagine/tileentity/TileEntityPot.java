@@ -6,7 +6,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockPot;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.recipe.KettleRecipe;
+import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
@@ -14,7 +15,9 @@ public class TileEntityPot extends TileEntityCooker {
     /**
      * max 192 , value of 3 stacks. one bucket = 192
      */
+    private final int cookTime = 125;
     private int waterLevel = 0;
+    public PotRecipe cached;
 
     public TileEntityPot() {
         initInventory();
@@ -31,48 +34,30 @@ public class TileEntityPot extends TileEntityCooker {
     @Override
     public void update() {
 
-        if (progress == 125 && waterLevel > 0) {
-            if (!world.isRemote) {
+        if (!world.isRemote) {
+            if (canRun()) {
+                PotRecipe recipe = getOrCreateRecipe();
+                if (recipe != null) {
+                    if (cookTime == progress) {
+                        process();
+                    } else {
+                        if (isCooking) {
 
-                if (getEntry().getCount() > 0) {
-                    if (getEntry().getCount() > 0 && (getResult().isEmpty() || getResult().getCount() < getResult().getMaxStackSize())) {
-                        if (getResult().isEmpty()) {
-                            ItemStack stack = Recipes.getCookingResult(getInventory(),"pot");
-
-                            if (getEntry().getItem() instanceof ItemBlock && getEntry().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                                stack = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : stack;
-                            }
-
-                            setResult(stack.copy());
                         } else {
-                            if (getEntry().getItem() instanceof ItemBlock && getEntry().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                                getResult().grow(world.rand.nextInt(5) == 0 ? 1 : 0);
-                            } else
-                                getResult().grow(1);
-
+                            start();
                         }
-                        getEntry().shrink(1);
+                        progress++;
+                        if (world.rand.nextInt(10) == 0)
+                        waterLevel--;
+                        markDirty();
                     }
                 }
+            } else {
+                decreaseProgress();
+                isCooking = false;
+                markDirty();
             }
 
-            progress = 0;
-            waterLevel--;
-            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.pot.getDefaultState(), 3);
-        }
-
-        if (isCooking()) {
-            if (!getEntry().isEmpty() &&
-                    getEntry().getCount() > 0 &&
-                    getWaterLevel() > 0 && (getResult().getItem().equals(Recipes.getCookingResult(getInventory(),"pot").getItem())
-                    || getResult().isEmpty())) //or recipe fits
-            {
-                progress++;
-            } else if (progress > 0)
-                progress--;
-        }
-
-        if (!world.isRemote) {
             //set water block rendering
             if (!world.getBlockState(pos).getValue(BlockPot.FULL) && waterLevel > 0)
                 world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockPot.FULL, true), 3);
@@ -82,9 +67,73 @@ public class TileEntityPot extends TileEntityCooker {
         }
     }
 
+    public void start() {
+        isCooking = true;
+    }
+
+    public void decreaseProgress() {
+        if (progress > 0) {
+            progress--;
+        }
+    }
+
+    public boolean canRun() {
+        if (waterLevel <= 0) {
+            return false;
+        }
+        ItemStack input = getInput();
+        ItemStack output = getOutput();
+        if (!input.isEmpty()) {
+            PotRecipe potRecipe = getOrCreateRecipe();
+            if (potRecipe == null) {
+                return false;
+            }
+
+            if (output.isEmpty()) {
+                return true;
+            }
+
+            ItemStack result = potRecipe.getResult(getInventory());
+            return getInventory().insertItem(RESULT, result, true).isEmpty();
+        } else {
+            return false;
+        }
+    }
+
+    public PotRecipe getOrCreateRecipe() {
+        if (cached != null && cached.itemMatch(getInventory())) {
+            return cached;
+        }
+        return cached = (PotRecipe) Recipes.findRecipe(getInventory(), "pot");
+    }
+
+    public void process() {
+        progress = 0;
+        if (getInput().getCount() > 0) {
+            if (getOutput().isEmpty() || getOutput().getCount() < getOutput().getMaxStackSize()) {
+                if (getOutput().isEmpty()) {
+                    ItemStack stack = Recipes.getCookingResult(getInventory(), "pot");
+
+                    if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
+                        stack = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : stack;
+                    }
+
+                    setResult(stack.copy());
+                } else {
+                    if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
+                        getOutput().grow(world.rand.nextInt(5) == 0 ? 1 : 0);
+                    } else
+                        getOutput().grow(1);
+
+                }
+                getInput().shrink(1);
+            }
+        }
+    }
+
     @Override
     public boolean isValid(ItemStack stack) {
-        return Recipes.hasResult(stack,"pot");
+        return Recipes.hasResult(stack, "pot");
     }
 
     @Override

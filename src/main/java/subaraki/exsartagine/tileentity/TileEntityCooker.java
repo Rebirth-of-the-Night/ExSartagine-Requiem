@@ -21,7 +21,7 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 	protected int progress = 0;
 
 	protected static final int RESULT = 1;
-	protected static final int ENTRY = 0;
+	protected static final int INPUT = 0;
 
 	private ISHCooker inventory;
 	private RangedWrapper input;
@@ -44,7 +44,7 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 	}
 
 	public void setEntry(ItemStack stack){
-		getInventory().insertItem(ENTRY, stack, false);
+		getInventory().insertItem(INPUT, stack, false);
 	}
 
 	public void setResult(ItemStack stack){
@@ -55,20 +55,20 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 		getInventory().insertItem(slot, stack, false);
 	}
 	
-	public ItemStack getEntry(){
-		return getInventory().getStackInSlot(ENTRY);
+	public ItemStack getInput(){
+		return getInventory().getStackInSlot(INPUT);
 	}
 
-	public ItemStack getResult() {
-		return this.getResult(RESULT);
+	public ItemStack getOutput() {
+		return this.getOutput(RESULT);
 	}
 
-	public ItemStack getResult(int slot){
+	public ItemStack getOutput(int slot){
 		return getInventory().getStackInSlot(slot);
 	}
 	
 	public ItemStack getEntryStackOne(){
-		ItemStack stack = getInventory().getStackInSlot(ENTRY);
+		ItemStack stack = getInventory().getStackInSlot(INPUT);
 		return stack.copy(); 
 	}
 
@@ -170,6 +170,12 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 		super.handleUpdateTag(tag);
 	}
 	////////////////////////////////////////////////////////////////////
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
+	}
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
