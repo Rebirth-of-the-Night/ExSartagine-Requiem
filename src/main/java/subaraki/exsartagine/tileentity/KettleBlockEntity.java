@@ -247,14 +247,6 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return oldState.getBlock() == newSate.getBlock();
+        return oldState.getBlock() != newSate.getBlock();
     }
-
-    //calls readFromNbt by default. no need to add anything in here
-    @Override
-    public void handleUpdateTag(NBTTagCompound tag) {
-        super.handleUpdateTag(tag);
-    }
-    ////////////////////////////////////////////////////////////////////
-
 }
