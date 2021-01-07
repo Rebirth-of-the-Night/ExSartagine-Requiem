@@ -37,31 +37,30 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
     public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9);
 
-    public final FluidTank fluidTank = new KettleFSH(this,10000);
+    public final FluidTank fluidTank = new KettleFSH(this, 10000);
 
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (isHeated()) {
-                if (canStart()) {
-                    KettleRecipe recipe = getOrCreateRecipe();
-                    if (recipe != null) {
-                        if (cookTime == progress) {
-                            process();
-                        } else {
-                            if (running) {
+            if (isHeated() && canStart()) {
+                KettleRecipe recipe = getOrCreateRecipe();
+                if (recipe != null) {
+                    if (cookTime == progress) {
+                        process();
+                    } else {
+                        if (running) {
 
-                            } else {
-                                start();
-                            }
-                            progress++;
-                            markDirty();
+                        } else {
+                            start();
                         }
+                        progress++;
+                        markDirty();
                     }
                 }
             } else {
                 decreaseProgress();
                 running = false;
+                markDirty();
             }
         }
     }
@@ -139,7 +138,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         }
 
         if (cached.getFluid() != null) {
-            fluidTank.drainInternal(cached.getFluid().amount,true);
+            fluidTank.drainInternal(cached.getFluid().amount, true);
         }
     }
 
@@ -181,7 +180,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
     public int addFluids(FluidStack fluid) {
         if (fluid != null) {
-            return fluidTank.fill(fluid,true);
+            return fluidTank.fill(fluid, true);
         }
         return 0;
     }
@@ -222,7 +221,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
     @Override
     public void markDirty() {
         super.markDirty();
-        world.notifyBlockUpdate(pos,blockType.getDefaultState(),blockType.getDefaultState(),3);
+        world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
     }
 
     /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
