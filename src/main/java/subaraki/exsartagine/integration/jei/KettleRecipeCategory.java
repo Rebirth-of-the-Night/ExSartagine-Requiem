@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRecipeWrapper> {
 
-    // Textures
-
     protected static final int inputSlot = 0;
     protected static final int outputSlot = 2;
 
