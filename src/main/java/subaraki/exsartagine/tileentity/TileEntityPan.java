@@ -15,23 +15,22 @@ public class TileEntityPan extends TileEntityCooker {
 	@Override
 	public void update() {
 
-		if(progress == 125)
-		{
-			if(!world.isRemote)
-			{
-				if(getInput().getCount() > 0 && (getOutput().isEmpty() || getOutput().getCount() < getOutput().getMaxStackSize()))
+		if(progress == 125) {
+			if(!world.isRemote) {
+				ItemStack input = getInput();
+				ItemStack output = getOutput();
+				if(!input.isEmpty() && (output.isEmpty() || output.getCount() < output.getMaxStackSize()))
 				{
-					if(getOutput().isEmpty())
+					if(output.isEmpty())
 					{
-						ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(getInput()).copy();
-						
+						ItemStack itemstack = Recipes.getCookingResult(getInventory(),"pan").copy();
 						setResult(itemstack.copy());
 					}
 					else
 					{
-						getOutput().grow(1);
+						output.grow(1);
 					}
-					getInput().shrink(1);
+					input.shrink(1);
 				}
 			}
 			progress = 0;
@@ -40,8 +39,8 @@ public class TileEntityPan extends TileEntityCooker {
 
 		if(isCooking)
 		{
-			if(getInput().getCount() > 0 &&
-					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))
+			if(!getInput().isEmpty() &&
+					(getOutput().getItem().equals(Recipes.getCookingResult(getInventory(),"pan").getItem()) || getOutput().isEmpty()))
 				progress++;
 			else if (progress > 0)
 				progress--;

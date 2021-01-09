@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+import subaraki.exsartagine.recipe.IIngredientWrapper;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.util.Reference;
 
@@ -71,7 +72,7 @@ public class CraftTweakerSupport {
     @ZenMethod
     public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluid, IItemStack[] outputs, @Optional("200") int time) {
         List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
-        Ingredient iCatalyst = CraftTweakerMC.getIngredient(catalyst);
+        Ingredient iCatalyst = new IIngredientWrapper(catalyst);
         FluidStack iFluid = CraftTweakerMC.getLiquidStack(fluid);
         List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
         Recipes.addKettleRecipe(iinputs, iCatalyst, iFluid, iOutputs, time);

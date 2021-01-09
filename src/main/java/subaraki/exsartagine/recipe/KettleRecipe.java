@@ -1,6 +1,9 @@
 package subaraki.exsartagine.recipe;
 
-import com.google.common.collect.Lists;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -42,7 +45,7 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(IItemHandler handler) {
-        return kettleRecipeGetRemainingItems(handler);
+        return kettleRecipeGetRemainingItems(this,handler);
     }
 
     /**
@@ -52,10 +55,23 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
      * @param inv Crafting inventory
      * @return Crafting inventory contents after the recipe.
      */
-    public static NonNullList<ItemStack> kettleRecipeGetRemainingItems(IItemHandler inv) {
+    public static NonNullList<ItemStack> kettleRecipeGetRemainingItems(KettleRecipe recipe,IItemHandler inv) {
         NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSlots(), ItemStack.EMPTY);
-        for (int i = 0; i < 10; i++)
-        {
+
+        IIngredient iIngredient = ((IIngredientWrapper)recipe.catalyst).getiIngredient();
+
+        if (iIngredient.hasNewTransformers()) {
+
+            try {
+                IItemStack remainingItem = iIngredient.applyNewTransform(CraftTweakerMC.getIItemStack(inv.getStackInSlot(0)));
+                ret.set(0, CraftTweakerMC.getItemStack(remainingItem));
+
+            } catch (Throwable e) {
+                CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + iIngredient.toCommandString(), e);
+            }
+        }
+
+        for (int i = 1; i < 10; i++) {
             ret.set(i, ForgeHooks.getContainerItem(inv.getStackInSlot(i)));
         }
         return ret;

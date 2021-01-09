@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.item.ExSartagineItems;
@@ -52,6 +53,16 @@ public class ExSartagine {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
     }
 
+    @Mod.EventBusSubscriber(Side.CLIENT)
+    public static class Client {
+        @SubscribeEvent
+        public static void models(ModelRegistryEvent e) {
+            ExSartagineItems.registerRenders();
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPan.class, new TileEntityRenderFood());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new TileEntityRenderFood());
+        }
+    }
+
 
     @SubscribeEvent
     public static void blocks(RegistryEvent.Register<Block> e) {
@@ -68,13 +79,6 @@ public class ExSartagine {
     @SubscribeEvent
     public static void items(RegistryEvent.Register<Item> e) {
         ExSartagineItems.load(e.getRegistry());
-    }
-
-    @SubscribeEvent
-    public static void models(ModelRegistryEvent e) {
-        ExSartagineItems.registerRenders();
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPan.class, new TileEntityRenderFood());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new TileEntityRenderFood());
     }
 
     @EventHandler
