@@ -223,13 +223,6 @@ public class Recipes {
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_meat_raw, new ItemStack(ExSartagineItems.bread_meat), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_veggie_raw, new ItemStack(ExSartagineItems.bread_veggie), 0.6f);
 
-        List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
-                .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
-                .map(entry -> new FryingPanRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
-                .collect(Collectors.toList());
-
-        defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
-
         addPotRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg, 1));
         addPotRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans, 1));
         addPotRecipe(Ingredient.fromItem(Items.POTATO), new ItemStack(ExSartagineItems.boiled_potato, 1));
@@ -248,7 +241,16 @@ public class Recipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
 
-        testRecipes();
+        //testRecipes();
+    }
+
+    public static void postInit() {
+        List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
+                .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
+                .map(entry -> new FryingPanRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
+                .collect(Collectors.toList());
+
+        defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
     }
 
     private static void testRecipes() {
