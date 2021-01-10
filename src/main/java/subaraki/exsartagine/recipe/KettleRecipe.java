@@ -60,7 +60,7 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
 
         IIngredient iIngredient = ((IIngredientWrapper)recipe.catalyst).getiIngredient();
 
-        if (iIngredient.hasNewTransformers()) {
+        if (iIngredient != null && iIngredient.hasNewTransformers()) {
 
             try {
                 IItemStack remainingItem = iIngredient.applyNewTransform(CraftTweakerMC.getIItemStack(inv.getStackInSlot(0)));
