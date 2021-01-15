@@ -38,7 +38,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
     public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9);
 
-    public final FluidTank fluidTank = new KettleFSH(this, 10000);
+    public final FluidTank fluidTank = new KettleFSH(this, 1000);
 
     @Override
     public void update() {
