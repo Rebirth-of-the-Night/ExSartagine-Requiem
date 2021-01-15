@@ -19,9 +19,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.item.ExSartagineItems;
@@ -59,6 +64,28 @@ public class BlockPot extends BlockHeatable {
 	}
 
 	///////////////TE Stuff//////////////////////
+
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack stack = playerIn.getHeldItem(hand);
+		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null)) {
+			IFluidHandlerItem iFluidHandlerItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null);
+			FluidStack drained = iFluidHandlerItem.drain(new FluidStack(FluidRegistry.WATER,1000),false);
+			if (drained != null && drained.amount >= 0) {
+				TileEntityPot pot = ((TileEntityPot) worldIn.getTileEntity(pos));
+				FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, pot.fluidTank, new InvWrapper(playerIn.inventory), drained.amount, playerIn, true);
+				if (fluidActionResult.isSuccess()) {
+					playerIn.setHeldItem(hand,fluidActionResult.getResult());
+					((TileEntityPot) worldIn.getTileEntity(pos)).replenishWater();
+					worldIn.notifyBlockUpdate(pos, state, getDefaultState(), 3);
+					onBlockAdded(worldIn, pos, state); //assure activation of any heating source
+					return true;
+				}
+			}
+		}
+		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
@@ -150,8 +177,7 @@ public class BlockPot extends BlockHeatable {
 
 	@Override
 	public void stopHeating(World world, IBlockState state, BlockPos pos) {
-		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
-		{
+		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0) {
 			super.stopHeating(world, state, pos);
 		}
 	}

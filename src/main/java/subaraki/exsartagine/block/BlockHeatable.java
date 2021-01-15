@@ -31,15 +31,6 @@ public abstract class BlockHeatable extends Block implements Heatable {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
-        if(this instanceof BlockPot && !stack.isEmpty() && stack.getItem().equals(Items.WATER_BUCKET)) {
-            ((TileEntityPot)worldIn.getTileEntity(pos)).replenishWater();
-            worldIn.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-            if(!playerIn.capabilities.isCreativeMode)
-                playerIn.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-            onBlockAdded(worldIn, pos, state); //assure activation of any heating source
-            return true;
-        }
         playerIn.openGui(ExSartagine.instance, guiID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }

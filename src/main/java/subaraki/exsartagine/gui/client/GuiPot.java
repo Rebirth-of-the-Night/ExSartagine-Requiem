@@ -59,8 +59,8 @@ public class GuiPot extends GuiContainer {
 		float progress = pot.getProgress() / 3.55f; //progress max = 125. 125 / 33 = 3.75 3.75*125 = 33; 33 is texture max
 		this.drawTexturedModalRect(i+76, j+34, 176, 44, (int)progress, 18); //Arrow
 
-		float waterProgress = (float)pot.getWaterLevel() / 3.5f;
-		this.drawTexturedModalRect(i+14, j+15+(54 - (int)waterProgress), 176, 62 + (54 - (int)waterProgress), 5, 54);
+		int waterProgress = (int)(pot.getWaterLevel() / (1000/54f));
+		this.drawTexturedModalRect(i+14, j+15+(54 - waterProgress), 176, 62 + (54 - waterProgress), 5, 54);
 	}
 	
 	@Override

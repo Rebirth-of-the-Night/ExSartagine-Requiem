@@ -5,30 +5,32 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.block.BlockPot;
-import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
 
-    /**
-     * max 192 , value of 3 stacks. one bucket = 192
-     */
+
+    private static final int CAPACITY = 200;
     private final int cookTime = 125;
-    private int waterLevel = 0;
     public PotRecipe cached;
+
+    public FluidTank fluidTank = new FluidTank( 1000);
 
     public TileEntityPot() {
         initInventory();
     }
 
     public int getWaterLevel() {
-        return waterLevel;
+        return fluidTank.getFluidAmount();
     }
 
     public void replenishWater() {
-        this.waterLevel = 192;
+        this.fluidTank.fill(new FluidStack(FluidRegistry.WATER,1000),false);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class TileEntityPot extends TileEntityCooker {
                         }
                         progress++;
                         if (world.rand.nextInt(10) == 0)
-                        waterLevel--;
+                        fluidTank.drain(5,true);
                         markDirty();
                     }
                 }
@@ -59,10 +61,10 @@ public class TileEntityPot extends TileEntityCooker {
             }
 
             //set water block rendering
-            if (!world.getBlockState(pos).getValue(BlockPot.FULL) && waterLevel > 0)
+            if (!world.getBlockState(pos).getValue(BlockPot.FULL) && getWaterLevel() > 0)
                 world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockPot.FULL, true), 3);
             //set water block gone
-            if (world.getBlockState(pos).getValue(BlockPot.FULL) && waterLevel == 0)
+            if (world.getBlockState(pos).getValue(BlockPot.FULL) && getWaterLevel() == 0)
                 world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockPot.FULL, false), 3);
         }
     }
@@ -78,7 +80,7 @@ public class TileEntityPot extends TileEntityCooker {
     }
 
     public boolean canRun() {
-        if (waterLevel <= 0) {
+        if (getWaterLevel() <= 0) {
             return false;
         }
         ItemStack input = getInput();
@@ -139,7 +141,7 @@ public class TileEntityPot extends TileEntityCooker {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger("water", waterLevel);
+        fluidTank.writeToNBT(compound);
         return compound;
     }
 
@@ -151,6 +153,6 @@ public class TileEntityPot extends TileEntityCooker {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        this.waterLevel = compound.getInteger("water");
+        fluidTank.readFromNBT(compound);
     }
 }
