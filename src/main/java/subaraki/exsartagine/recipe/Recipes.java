@@ -4,16 +4,13 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -22,8 +19,8 @@ import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.item.ExSartagineItems;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +57,9 @@ public class Recipes {
         getRecipes("smelter").add(new SmelterRecipe(ingredient, itemStack));
     }
 
-    public static void addKettleRecipe(List<Ingredient> ingredients, Ingredient catalyst, FluidStack fluid, List<ItemStack> results, int cookTime) {
-        getRecipes("kettle").add(new KettleRecipe(ingredients, catalyst, fluid, results, cookTime));
+    public static void addKettleRecipe(List<Ingredient> ingredients, Ingredient catalyst, @Nullable FluidStack inputFluid,
+                                       @Nullable FluidStack outputFluid, List<ItemStack> results, int cookTime) {
+        getRecipes("kettle").add(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime));
     }
 
     public static boolean hasResult(ItemStack stack, String type) {
@@ -133,7 +131,7 @@ public class Recipes {
                                                && r.getIngredients().containsAll(inputs)
                                                && r.getIngredients().size() == inputs.size()
                                                && (((KettleRecipe)r).getCatalyst().equals(catalyst) || catalyst == null)
-                                               && ((((KettleRecipe)r).getFluid() == null && fluid == null) || (((KettleRecipe)r).getFluid() != null && ((KettleRecipe)r).getFluid().containsFluid(fluid)))
+                                               && ((((KettleRecipe)r).getInputFluid() == null && fluid == null) || (((KettleRecipe)r).getInputFluid() != null && ((KettleRecipe)r).getInputFluid().containsFluid(fluid)))
                                                && (cookTime == -1 || ((KettleRecipe)r).getCookTime() == cookTime));
     }
     
@@ -258,7 +256,7 @@ public class Recipes {
         Ingredient catalyst = Ingredient.fromItem(Items.SUGAR);
 
         List<ItemStack> output = NonNullList.withSize(9, new ItemStack(Items.GOLD_NUGGET));
-        addKettleRecipe(inputs, catalyst, new FluidStack(FluidRegistry.WATER,1000), output, 100);
+        addKettleRecipe(inputs, catalyst, new FluidStack(FluidRegistry.WATER,1000),null, output, 100);
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, String type) {

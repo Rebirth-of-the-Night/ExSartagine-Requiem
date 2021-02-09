@@ -70,12 +70,19 @@ public class CraftTweakerSupport {
     }
 
     @ZenMethod
-    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluid, IItemStack[] outputs, @Optional("200") int time) {
+    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluidInput,IItemStack[] outputs, @Optional("200") int time) {
+        addKettleRecipe(inputs, catalyst, fluidInput, null, outputs, time);
+    }
+
+    @ZenMethod
+    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluidInput,
+                                       ILiquidStack fluidOutput,IItemStack[] outputs, @Optional("200") int time) {
         List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
         Ingredient iCatalyst = new IIngredientWrapper(catalyst);
-        FluidStack iFluid = CraftTweakerMC.getLiquidStack(fluid);
+        FluidStack iFluidInput = CraftTweakerMC.getLiquidStack(fluidInput);
+        FluidStack iFluidOutput = CraftTweakerMC.getLiquidStack(fluidOutput);
         List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
-        Recipes.addKettleRecipe(iinputs, iCatalyst, iFluid, iOutputs, time);
+        Recipes.addKettleRecipe(iinputs, iCatalyst, iFluidInput,iFluidOutput, iOutputs, time);
     }
     
     @ZenMethod

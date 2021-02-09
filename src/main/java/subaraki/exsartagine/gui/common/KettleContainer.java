@@ -10,27 +10,42 @@ import subaraki.exsartagine.tileentity.KettleBlockEntity;
 
 public class KettleContainer extends Container {
 
+    private final KettleBlockEntity pot;
+
     public KettleContainer(InventoryPlayer playerInventory, KettleBlockEntity pot) {
+        this.pot = pot;
 
-        this.addSlotToContainer(new SlotItemHandler(pot.handler, 0, 15, 35));
+        int x1 = 22;
+        int y1 = 15;
+
+        this.addSlotToContainer(new SlotItemHandler(pot.handler, 0, x1, 18 + y1));
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                this.addSlotToContainer(new SlotItemHandler(pot.handler, x + 3 * y + 1, 33 + 18 * x, 17 + 18 * y));
+                this.addSlotToContainer(new SlotItemHandler(pot.handler, x + 3 * y + 1, x1 + 18 + 18 * x, y1 + 18 * y));
             }
         }
 
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.handler, x + 3 * y + 10, 116 + 18 * x, 17 + 18 * y));
+                this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.handler, x + 3 * y + 10, 116 + 18 * x, y1 + 18 * y));
             }
         }
+
+        this.addSlotToContainer(new SlotItemHandler(pot.handler, 19, 167, 74));
+
+        int x2 = 16;
+        int y2 = 100;
 
         for (int i = 0; i < 3; ++i)
             for (int j = 0; j < 9; ++j)
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9,  x2 + j * 18, y2 + i * 18));
 
         for (int k = 0; k < 9; ++k)
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+            this.addSlotToContainer(new Slot(playerInventory, k, x2 + k * 18, y2 + 58));
+    }
+
+    public void swapTanks() {
+        pot.swapTanks();
     }
 
     @Override

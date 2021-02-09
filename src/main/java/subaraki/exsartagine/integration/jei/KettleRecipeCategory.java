@@ -29,7 +29,7 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
 
     @Override
     public void setupGui() {
-        background = guiHelper.createDrawable(BACKGROUNDS, 0, 169, 166, 54);
+        background = guiHelper.createDrawable(BACKGROUNDS, 0, 169, 177, 54);
         staticFlame = guiHelper.drawableBuilder(BACKGROUNDS, 120, 0, 22, 15).build();
         cookProgress = guiHelper.createAnimatedDrawable(staticFlame, 100, IDrawableAnimated.StartDirection.LEFT, false);
     }
@@ -52,7 +52,8 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
 
         IGuiFluidStackGroup guiFluidStackGroup = recipeLayout.getFluidStacks();
 
-        guiFluidStackGroup.init(0,true,1,1,7,52,10000,true,null);
+        guiFluidStackGroup.init(0,true,1,1,7,52,1000,true,null);
+
 
         int xPos = 29;
         int yPos = 0;
@@ -63,6 +64,9 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
                 guiItemStacks.init(1 + x + 3 * y, true, xPos + 18 * x, yPos + 18 * y);
             }
         }
+
+        guiFluidStackGroup.init(1,false,169,1,7,52,1000,true,null);
+
 
         xPos += 83;
 

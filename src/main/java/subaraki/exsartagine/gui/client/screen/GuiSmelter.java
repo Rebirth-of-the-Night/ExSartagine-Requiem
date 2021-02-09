@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.client;
+package subaraki.exsartagine.gui.client.screen;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

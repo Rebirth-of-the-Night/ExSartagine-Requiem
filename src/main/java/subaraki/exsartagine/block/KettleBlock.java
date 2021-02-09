@@ -68,7 +68,7 @@ public class KettleBlock extends BlockHeatable {
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             if (!worldIn.isRemote) {
                 KettleBlockEntity kettle = (KettleBlockEntity) worldIn.getTileEntity(pos);
-                IFluidHandler iFluidHandler = kettle.fluidTank;
+                IFluidHandler iFluidHandler = kettle.fluidInputTank;
                 if (FluidUtil.interactWithFluidHandler(playerIn,hand,iFluidHandler)) {
                     return true;
                 }

@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import subaraki.exsartagine.gui.client.*;
+import subaraki.exsartagine.gui.client.screen.*;
 import subaraki.exsartagine.gui.common.*;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.util.Reference;

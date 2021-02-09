@@ -15,6 +15,9 @@ public class KettleISH extends ItemStackHandler {
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
+        if (slot == 19) {
+            blockEntity.tryOutputFluid();
+        }
         blockEntity.markDirty();
     }
 }

@@ -19,14 +19,16 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
 
     private final List<Ingredient> inputs;
     private final Ingredient catalyst;
-    private final FluidStack fluid;
+    private final FluidStack inputFluid;
+    private final FluidStack outputFluid;
     private final List<ItemStack> outputs;
     private final int time;
 
-    public KettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack fluid, List<ItemStack> outputs,int time) {
+    public KettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack inputFluid,FluidStack outputFluid, List<ItemStack> outputs,int time) {
         this.inputs = inputs;
         this.catalyst = catalyst;
-        this.fluid = fluid;
+        this.inputFluid = inputFluid;
+        this.outputFluid = outputFluid;
         this.outputs = outputs;
         this.time = time;
     }
@@ -36,11 +38,11 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
     }
 
     public boolean fluidMatch(IFluidHandler handler) {
-        if (fluid == null) {
+        if (inputFluid == null) {
             return true;
         }
         FluidStack fluidStack = handler.getTankProperties()[0].getContents();
-        return fluidStack != null && fluidStack.containsFluid(fluid);
+        return fluidStack != null && fluidStack.containsFluid(inputFluid);
     }
 
     @Override
@@ -81,8 +83,8 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
         return time;
     }
 
-    public FluidStack getFluid() {
-        return fluid;
+    public FluidStack getInputFluid() {
+        return inputFluid;
     }
 
     @Override
@@ -127,5 +129,9 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
     @Override
     public List<Ingredient> getIngredients() {
         return inputs;
+    }
+
+    public FluidStack getOutputFluid() {
+        return outputFluid;
     }
 }

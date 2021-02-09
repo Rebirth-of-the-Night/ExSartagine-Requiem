@@ -1,5 +1,6 @@
 package subaraki.exsartagine.tileentity;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +13,13 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.KettleBlock;
@@ -25,6 +30,7 @@ import subaraki.exsartagine.recipe.Recipes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
@@ -36,9 +42,13 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
     public boolean running;
     public int cookTime = -1;
 
-    public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9);
+    public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9 + 1);
 
-    public final FluidTank fluidTank = new KettleFSH(this, 1000);
+    public final FluidTank fluidInputTank = new KettleFSH(this, 1000);
+
+    public final FluidTank fluidOutputTank = new KettleFSH(this, 1000);
+
+    public final IFluidHandler iFluidHandlerWrapper = new IFluidHandlerWrapper();
 
     @Override
     public void update() {
@@ -60,8 +70,6 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
                 }
             } else {
                 decreaseProgress();
-                running = false;
-                markDirty();
             }
         }
     }
@@ -69,7 +77,9 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
     public void decreaseProgress() {
         if (progress > 0) {
             progress--;
+            markDirty();
         }
+        running = false;
     }
 
     public boolean canStart() {
@@ -77,7 +87,8 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         if (recipe == null)
             return false;
 
-        if (!recipe.fluidMatch(fluidTank)) return false;
+        if (!checkFluids(recipe)) return false;
+
 
         List<ItemStack> results = recipe.getResults(handler);
         for (ItemStack stack : results) {
@@ -93,6 +104,52 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         return true;
     }
 
+    public void swapTanks() {
+        FluidStack oldInput = fluidInputTank.getFluid();
+        FluidStack oldOutput = fluidOutputTank.getFluid();
+
+        if (oldInput != null || oldOutput != null) {
+            FluidStack oldInputCopy = null;
+            FluidStack oldOutputCopy = null;
+            if (oldInput != null) {
+                oldInputCopy = oldInput.copy();
+            }
+            if (oldOutput != null) {
+                oldOutputCopy = oldOutput.copy();
+            }
+
+            fluidInputTank.setFluid(oldOutputCopy);
+            fluidOutputTank.setFluid(oldInputCopy);
+            markDirty();
+        }
+    }
+
+    public void tryOutputFluid() {
+        ItemStack stack = handler.getStackInSlot(19);
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null))  {
+            FluidActionResult fluidActionResult = FluidUtil.tryFillContainer(stack,fluidOutputTank,fluidOutputTank.getFluidAmount(),null,true);
+            if (fluidActionResult.isSuccess()) {
+                handler.setStackInSlot(19,fluidActionResult.getResult());
+            }
+        }
+    }
+
+    public boolean checkFluids(KettleRecipe recipe) {
+        if (!recipe.fluidMatch(fluidInputTank)) {
+            return false;
+        }
+        FluidStack outputStack = recipe.getOutputFluid();
+        if (outputStack == null) {
+            return true;
+        }
+
+        int filled = fluidOutputTank.fill(outputStack, false);
+        if (filled < outputStack.amount) {
+            return false;
+        }
+        return true;
+    }
+
     public void start() {
         running = true;
         cookTime = cached.getCookTime();
@@ -102,7 +159,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         if (cached != null && cached.itemMatch(handler)) {
             return cached;
         }
-        return cached = Recipes.findKettleRecipe(handler, fluidTank);
+        return cached = Recipes.findKettleRecipe(handler, fluidInputTank);
     }
 
     public void process() {
@@ -138,11 +195,18 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
                 }
             }
         }
+        processFluids();
+    }
 
-        if (cached.getFluid() != null) {
-            fluidTank.drainInternal(cached.getFluid().amount, true);
+    public void processFluids() {
+        if (cached.getInputFluid() != null) {
+            fluidInputTank.drainInternal(cached.getInputFluid().amount, true);
+        }
+        if (cached.getOutputFluid() != null) {
+            fluidOutputTank.fillInternal(cached.getOutputFluid(), true);
         }
     }
+
 
     public boolean isHeated() {
         return world.getBlockState(pos).getValue(KettleBlock.HEATED);
@@ -161,7 +225,40 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T)fluidTank : null;
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) iFluidHandlerWrapper : null;
+    }
+
+    public class IFluidHandlerWrapper implements IFluidHandler {
+
+        IFluidTankProperties[] iFluidTankProperties;
+
+        @Override
+        public IFluidTankProperties[] getTankProperties() {
+            if (iFluidTankProperties == null) {
+                List<IFluidTankProperties> tanks = Lists.newArrayList();
+                Collections.addAll(tanks, fluidInputTank.getTankProperties());
+                Collections.addAll(tanks, fluidOutputTank.getTankProperties());
+                return tanks.toArray(new IFluidTankProperties[0]);
+            }
+            return iFluidTankProperties;
+        }
+
+        @Override
+        public int fill(FluidStack resource, boolean doFill) {
+            return fluidInputTank.fill(resource, doFill);
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(FluidStack resource, boolean doDrain) {
+            return fluidOutputTank.drain(resource, doDrain);
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(int maxDrain, boolean doDrain) {
+            return fluidOutputTank.drain(maxDrain, doDrain);
+        }
     }
 
     @Override
@@ -182,7 +279,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
     public int addFluids(FluidStack fluid) {
         if (fluid != null) {
-            return fluidTank.fill(fluid, true);
+            return fluidInputTank.fill(fluid, true);
         }
         return 0;
     }
@@ -205,7 +302,14 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         compound.setBoolean("running", running);
         compound.setInteger("progress", progress);
         compound.setTag("inv", handler.serializeNBT());
-        fluidTank.writeToNBT(compound);
+        NBTTagCompound fluidInputCompound = new NBTTagCompound();
+        NBTTagCompound fluidOutputCompound = new NBTTagCompound();
+        fluidInputTank.writeToNBT(fluidInputCompound);
+        fluidOutputTank.writeToNBT(fluidOutputCompound);
+
+        compound.setTag("fluidInputTank", fluidInputCompound);
+        compound.setTag("fluidOutputTank", fluidOutputCompound);
+
         return compound;
     }
 
@@ -217,7 +321,12 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         this.progress = compound.getInteger("progress");
         if (compound.hasKey("inv"))
             handler.deserializeNBT(compound.getCompoundTag("inv"));
-        fluidTank.readFromNBT(compound);
+
+        NBTTagCompound fluidInputCompound = compound.getCompoundTag("fluidInputTank");
+        NBTTagCompound fluidOutputCompound = compound.getCompoundTag("fluidOutputTank");
+
+        fluidInputTank.readFromNBT(fluidInputCompound);
+        fluidOutputTank.readFromNBT(fluidOutputCompound);
     }
 
     @Override

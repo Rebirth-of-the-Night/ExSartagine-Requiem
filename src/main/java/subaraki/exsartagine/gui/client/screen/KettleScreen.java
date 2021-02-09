@@ -1,6 +1,7 @@
-package subaraki.exsartagine.gui.client;
+package subaraki.exsartagine.gui.client.screen;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,18 +10,22 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import subaraki.exsartagine.gui.client.TankSwapButton;
 import subaraki.exsartagine.gui.common.KettleContainer;
+import subaraki.exsartagine.network.PacketHandler;
+import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.KettleBlockEntity;
 import subaraki.exsartagine.util.Reference;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +41,24 @@ public class KettleScreen extends GuiContainer {
 
         playerInventory = player.inventory;
         this.pot = pot;
+        xSize += 16;
+        ySize += 16;
+    }
+
+    private static final int BUTTON_ID = 837890435;
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        addButton(new TankSwapButton(BUTTON_ID,guiLeft + 93,guiTop+ 72,20,20,""));
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        if (button.id == BUTTON_ID) {
+            PacketHandler.INSTANCE.sendToServer(new SwapTanksPacket());
+        }
     }
 
     @Override
@@ -57,20 +80,18 @@ public class KettleScreen extends GuiContainer {
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
         float progress = 25 * (float) pot.getProgress() / pot.getCookTime();
-        this.drawTexturedModalRect(i + 90, j + 34, 0, 166, (int) progress, 15); //Arrow
+        this.drawTexturedModalRect(i + 91, j + 33, 0, 184, (int) progress, 15); //Arrow
 
         //Draw fluid
-        FluidStack fluid = pot.fluidTank.getFluid();
-        if (fluid != null && fluid.amount > 0) {
-            renderFluid(mc, i + 4, j + 17, fluid);
-        }
+            renderFluid(mc, i + 9, j + 15, pot.fluidInputTank);
+            renderFluid(mc, i + 176, j + 15, pot.fluidOutputTank);
     }
 
-    public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {
         GlStateManager.enableBlend();
         GlStateManager.enableAlpha();
 
-        drawFluid(minecraft, xPosition, yPosition, fluidStack);
+        drawFluid(minecraft, xPosition, yPosition, fluidTank);
 
         GlStateManager.color(1, 1, 1, 1);
 
@@ -82,7 +103,8 @@ public class KettleScreen extends GuiContainer {
     private static final int TEX_HEIGHT = 16;
     private static final int MIN_FLUID_HEIGHT = 1; // ensure tiny amounts of fluid are still visible
 
-    private void drawFluid(Minecraft minecraft, final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    private void drawFluid(Minecraft minecraft, final int xPosition, final int yPosition, FluidTank fluidTank) {
+        FluidStack fluidStack = fluidTank.getFluid();
         if (fluidStack == null) {
             return;
         }
@@ -95,7 +117,7 @@ public class KettleScreen extends GuiContainer {
 
         int fluidColor = fluid.getColor(fluidStack);
 
-        int scaledAmount = (fluidStack.amount * 52) / 10000;
+        int scaledAmount = (fluidStack.amount * 52) / fluidTank.getCapacity();
         if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
             scaledAmount = MIN_FLUID_HEIGHT;
         }
@@ -172,17 +194,17 @@ public class KettleScreen extends GuiContainer {
         tessellator.draw();
     }
 
-    public List<String> getFluidTooltip(FluidStack fluidStack) {
+    public List<String> getFluidTooltip(FluidTank fluidTank) {
         List<String> tooltip = new ArrayList<>();
-        Fluid fluidType = fluidStack.getFluid();
-        if (fluidType == null) {
+        FluidStack fluidStack = fluidTank.getFluid();
+        if (fluidStack == null) {
             return tooltip;
         }
 
-        String fluidName = fluidType.getLocalizedName(fluidStack);
+        String fluidName = fluidStack.getLocalizedName();
         tooltip.add(fluidName);
 
-        String amount = I18n.format("jei.tooltip.liquid.amount.with.capacity", fluidStack.amount, 10000);
+        String amount = I18n.format("jei.tooltip.liquid.amount.with.capacity", fluidStack.amount, fluidTank.getCapacity());
         tooltip.add(TextFormatting.GRAY + amount);
         return tooltip;
     }
@@ -196,8 +218,11 @@ public class KettleScreen extends GuiContainer {
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         super.renderHoveredToolTip(x, y);
-        if (isPointInRegion(3, 16, 7, 52, x, y) && pot.fluidTank.getFluid() != null) {
-            this.drawHoveringText(getFluidTooltip(pot.fluidTank.getFluid()), x, y, fontRenderer);
+        if (isPointInRegion(8, 14, 7, 52, x, y) && pot.fluidInputTank.getFluid() != null) {
+            this.drawHoveringText(getFluidTooltip(pot.fluidInputTank), x, y, fontRenderer);
+        }
+        if (isPointInRegion(176, 14, 7, 52, x, y) && pot.fluidOutputTank.getFluid() != null) {
+            this.drawHoveringText(getFluidTooltip(pot.fluidOutputTank), x, y, fontRenderer);
         }
     }
 }

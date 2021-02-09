@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.client;
+package subaraki.exsartagine.gui.client.screen;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -6,27 +6,27 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import subaraki.exsartagine.gui.common.ContainerPan;
-import subaraki.exsartagine.tileentity.TileEntityPan;
+import subaraki.exsartagine.gui.common.ContainerPot;
+import subaraki.exsartagine.tileentity.TileEntityPot;
 
-public class GuiPan extends GuiContainer {
+public class GuiPot extends GuiContainer {
 
-	private static final ResourceLocation GUI_PAN = new ResourceLocation("exsartagine","textures/gui/pan.png");
+	private static final ResourceLocation GUI_POT = new ResourceLocation("exsartagine","textures/gui/pot.png");
 
 	private final InventoryPlayer playerInventory;
-	private final TileEntityPan pan;
+	private final TileEntityPot pot;
 
-	public GuiPan(EntityPlayer player, TileEntityPan pan) {
-		super(new ContainerPan(player.inventory, pan));
+	public GuiPot(EntityPlayer player, TileEntityPot pot) {
+		super(new ContainerPot(player.inventory, pot));
 
 		playerInventory = player.inventory;
-		this.pan = pan;
+		this.pot = pot;
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = I18n.format("pan.gui");
+		String s = I18n.format("pot.gui");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 	}
@@ -36,19 +36,19 @@ public class GuiPan extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		drawDefaultBackground();
-		this.mc.getTextureManager().bindTexture(GUI_PAN);
+		this.mc.getTextureManager().bindTexture(GUI_POT);
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
 		fade +=0.05f;
-		if(pan.isCooking())
+		if(pot.isCooking())
 		{
 			this.drawTexturedModalRect(i+56, j+53, 176, 28, 16, 16); //furnace lit
 
 			GlStateManager.enableBlend();
 			GlStateManager.color(1f, 1f, 1f, (float)(Math.cos(Math.sin(fade))));
-			this.drawTexturedModalRect(i+57, j+38, 176, 0, 14, 12); //fire
+			this.drawTexturedModalRect(i+57, j+37, 176, 0, 14, 12); //fire
 			GlStateManager.color(1, 1, 1, 1);
 			GlStateManager.disableBlend();
 
@@ -56,8 +56,11 @@ public class GuiPan extends GuiContainer {
 		else
 			this.drawTexturedModalRect(i+56, j+53, 176, 12, 16, 16); //furnace out
 
-		float progress = pan.getProgress() / 5.6f; //progress max = 125. 125 / 22 = 5.6. 5.6*125 = 22; 22 is texture max
-		this.drawTexturedModalRect(i+80, j+34, 176, 44, (int)progress, 15); //Arrow
+		float progress = pot.getProgress() / 3.55f; //progress max = 125. 125 / 33 = 3.75 3.75*125 = 33; 33 is texture max
+		this.drawTexturedModalRect(i+76, j+34, 176, 44, (int)progress, 18); //Arrow
+
+		int waterProgress = (int)(pot.getWaterLevel() / (1000/54f));
+		this.drawTexturedModalRect(i+14, j+15+(54 - waterProgress), 176, 62 + (54 - waterProgress), 5, 54);
 	}
 	
 	@Override

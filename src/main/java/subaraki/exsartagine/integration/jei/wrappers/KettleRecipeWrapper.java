@@ -30,6 +30,8 @@ public class KettleRecipeWrapper implements IRecipeWrapper {
         List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(ingredientList);
         ingredients.setInputLists(VanillaTypes.ITEM, inputLists);
         ingredients.setOutputs(VanillaTypes.ITEM, recipe.getResults(null));
-        ingredients.setInput(VanillaTypes.FLUID,recipe.getFluid());
+
+        ingredients.setInput(VanillaTypes.FLUID,recipe.getInputFluid());
+        ingredients.setOutput(VanillaTypes.FLUID,recipe.getOutputFluid());
     }
 }

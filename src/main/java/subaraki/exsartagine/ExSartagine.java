@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.TileEntityRenderFood;
@@ -85,6 +86,7 @@ public class ExSartagine {
     @EventHandler
     public void init(FMLInitializationEvent e) {
         Recipes.init();
+        PacketHandler.registerMessages(MODID);
     }
 
     @EventHandler
