@@ -1,6 +1,6 @@
 package subaraki.exsartagine.recipe;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Comparators;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,7 +11,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -20,10 +19,7 @@ import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Recipes {
@@ -249,14 +245,9 @@ public class Recipes {
                 .collect(Collectors.toList());
 
         defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
-    }
 
-    private static void testRecipes() {
-        List<Ingredient> inputs = Lists.newArrayList(Ingredient.fromItems(Items.GOLD_INGOT));
-        Ingredient catalyst = Ingredient.fromItem(Items.SUGAR);
-
-        List<ItemStack> output = NonNullList.withSize(9, new ItemStack(Items.GOLD_NUGGET));
-        addKettleRecipe(inputs, catalyst, new FluidStack(FluidRegistry.WATER,1000),null, output, 100);
+        List kettleRecipes = recipes.get("kettle");
+        Collections.sort(kettleRecipes);
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, String type) {
@@ -269,7 +260,7 @@ public class Recipes {
             }
         }
 
-        NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
 
         for (int i = 0; i < nonnulllist.size(); ++i) {
             nonnulllist.set(i, craftMatrix.getStackInSlot(i));

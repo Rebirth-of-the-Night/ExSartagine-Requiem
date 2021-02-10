@@ -134,4 +134,29 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
     public FluidStack getOutputFluid() {
         return outputFluid;
     }
+
+    //needed to force recipes using fluid to come first
+    @Override
+    public int compareTo(CustomRecipe<IItemHandler> o) {
+        if (!(o instanceof KettleRecipe)) {
+            return 0;
+        }
+        boolean thisFluidRequirement = getInputFluid() != null;
+        boolean otherFluidRequirement = ((KettleRecipe)o).getInputFluid() != null;
+
+        if (thisFluidRequirement && otherFluidRequirement) {
+            return 0;
+        }
+
+        //this recipe goes first
+        if (thisFluidRequirement) {
+            return -1;
+        }
+
+        //other recipe goes first
+        if (otherFluidRequirement) {
+            return 1;
+        }
+        return 0;
+    }
 }

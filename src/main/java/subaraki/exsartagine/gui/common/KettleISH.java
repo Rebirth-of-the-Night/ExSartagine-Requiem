@@ -5,6 +5,8 @@ import subaraki.exsartagine.tileentity.KettleBlockEntity;
 
 public class KettleISH extends ItemStackHandler {
 
+    public static final int CONTAINER_SLOT = 19;
+
     protected final KettleBlockEntity blockEntity;
 
     public KettleISH(KettleBlockEntity blockEntity, int slots) {
@@ -15,9 +17,14 @@ public class KettleISH extends ItemStackHandler {
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
-        if (slot == 19) {
+        if (slot == CONTAINER_SLOT) {
             blockEntity.tryOutputFluid();
         }
         blockEntity.markDirty();
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return slot == CONTAINER_SLOT ? 1 : super.getSlotLimit(slot);
     }
 }

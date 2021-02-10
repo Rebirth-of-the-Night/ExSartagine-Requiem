@@ -24,7 +24,7 @@ public class IIngredientWrapper extends Ingredient {
     @Override
     public boolean apply(ItemStack itemStack) {
         if (this.iIngredient == null) {
-            return itemStack == null || itemStack.isEmpty();
+            return itemStack.isEmpty();
         }
 
         if (itemStack.isEmpty()) {

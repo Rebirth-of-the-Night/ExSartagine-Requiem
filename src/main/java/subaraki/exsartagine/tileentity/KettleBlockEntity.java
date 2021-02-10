@@ -93,7 +93,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
         List<ItemStack> results = recipe.getResults(handler);
         for (ItemStack stack : results) {
             ItemStack remainder = stack.copy();
-            for (int i = OUTPUT_START; i < 19; i++) {
+            for (int i = OUTPUT_START; i < KettleISH.CONTAINER_SLOT; i++) {
                 remainder = handler.insertItem(i, remainder, true);
                 if (remainder.isEmpty()) break;
             }
@@ -125,11 +125,11 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
     }
 
     public void tryOutputFluid() {
-        ItemStack stack = handler.getStackInSlot(19);
+        ItemStack stack = handler.getStackInSlot(KettleISH.CONTAINER_SLOT);
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null))  {
             FluidActionResult fluidActionResult = FluidUtil.tryFillContainer(stack,fluidOutputTank,fluidOutputTank.getFluidAmount(),null,true);
             if (fluidActionResult.isSuccess()) {
-                handler.setStackInSlot(19,fluidActionResult.getResult());
+                handler.setStackInSlot(KettleISH.CONTAINER_SLOT,fluidActionResult.getResult());
             }
         }
     }
@@ -188,7 +188,7 @@ public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
 
         for (ItemStack stack : results) {
             ItemStack remainder = stack.copy();
-            for (int i = OUTPUT_START; i < 19; i++) {
+            for (int i = OUTPUT_START; i < KettleISH.CONTAINER_SLOT; i++) {
                 remainder = handler.insertItem(i, remainder, false);
                 if (remainder.isEmpty()) {
                     break;

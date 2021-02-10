@@ -9,7 +9,7 @@ import subaraki.exsartagine.Utils;
 
 import java.util.List;
 
-public interface CustomRecipe<T extends IItemHandler> {
+public interface CustomRecipe<T extends IItemHandler> extends Comparable<CustomRecipe<T>> {
 
     ItemStack getDisplay();
 
@@ -27,5 +27,10 @@ public interface CustomRecipe<T extends IItemHandler> {
 
     default NonNullList<ItemStack> getRemainingItems(T handler) {
         return Utils.defaultRecipeGetRemainingItems(handler);
+    }
+
+    @Override
+    default int compareTo(CustomRecipe<T> o) {
+        return 0;
     }
 }

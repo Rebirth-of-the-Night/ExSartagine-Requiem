@@ -2,6 +2,7 @@ package subaraki.exsartagine.gui.client.screen;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,14 +18,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import subaraki.exsartagine.gui.client.TankSwapButton;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.gui.common.KettleContainer;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.KettleBlockEntity;
 import subaraki.exsartagine.util.Reference;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +46,12 @@ public class KettleScreen extends GuiContainer {
     }
 
     private static final int BUTTON_ID = 837890435;
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation(Reference.MODID,"textures/gui/switch.png");
 
     @Override
     public void initGui() {
         super.initGui();
-        addButton(new TankSwapButton(BUTTON_ID,guiLeft + 93,guiTop+ 72,20,20,""));
+        addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 93,guiTop+ 72,20,20,0,0,0,BUTTON_TEXTURE));
     }
 
     @Override
