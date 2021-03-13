@@ -115,17 +115,9 @@ public class TileEntityPot extends TileEntityCooker {
             if (getOutput().getCount() < getOutput().getMaxStackSize()) {
                 ItemStack result = Recipes.getCookingResult(getInventory(), "pot");
                 if (getOutput().isEmpty()) {
-
-                    if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                        result = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : result;
-                    }
-
                     setResult(result.copy());
                 } else {
-                    if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                        getOutput().grow(world.rand.nextInt(5) == 0 ? result.getCount() : 0);
-                    } else
-                        getOutput().grow(result.getCount());
+                    getOutput().grow(result.getCount());
                 }
                 getInput().shrink(1);
             }
