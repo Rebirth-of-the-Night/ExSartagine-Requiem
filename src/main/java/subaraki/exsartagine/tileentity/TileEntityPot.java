@@ -112,21 +112,20 @@ public class TileEntityPot extends TileEntityCooker {
     public void process() {
         progress = 0;
         if (getInput().getCount() > 0) {
-            if (getOutput().isEmpty() || getOutput().getCount() < getOutput().getMaxStackSize()) {
+            if (getOutput().getCount() < getOutput().getMaxStackSize()) {
+                ItemStack result = Recipes.getCookingResult(getInventory(), "pot");
                 if (getOutput().isEmpty()) {
-                    ItemStack stack = Recipes.getCookingResult(getInventory(), "pot");
 
                     if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                        stack = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : stack;
+                        result = world.rand.nextInt(5) == 0 ? ItemStack.EMPTY : result;
                     }
 
-                    setResult(stack.copy());
+                    setResult(result.copy());
                 } else {
                     if (getInput().getItem() instanceof ItemBlock && getInput().getItem() == Item.getItemFromBlock(Blocks.STONE)) {
-                        getOutput().grow(world.rand.nextInt(5) == 0 ? 1 : 0);
+                        getOutput().grow(world.rand.nextInt(5) == 0 ? result.getCount() : 0);
                     } else
-                        getOutput().grow(1);
-
+                        getOutput().grow(result.getCount());
                 }
                 getInput().shrink(1);
             }
