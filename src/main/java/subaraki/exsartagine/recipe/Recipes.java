@@ -188,6 +188,7 @@ public class Recipes {
         return placeable.removeIf(b -> b == state);
     }
 
+    @SuppressWarnings("unchecked")
     public static <I extends IItemHandler, R extends CustomRecipe<I>> List<R> getRecipes(String type) {
         return (List<R>) Recipes.recipes.get(type);
     }
@@ -237,6 +238,7 @@ public class Recipes {
         //testRecipes();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void postInit() {
         List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
@@ -245,7 +247,7 @@ public class Recipes {
 
         defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
 
-        List<CustomRecipe<?>> kettleRecipes = recipes.get("kettle");
+        List kettleRecipes = recipes.get("kettle");
         Collections.sort(kettleRecipes);
     }
 
