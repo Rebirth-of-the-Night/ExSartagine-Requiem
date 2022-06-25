@@ -8,12 +8,17 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 
 import static subaraki.exsartagine.util.Reference.MODID;
+
+import java.util.List;
 
 public class ExSartagineItems {
 
@@ -101,7 +106,9 @@ public class ExSartagineItems {
 		salt = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".salt").setRegistryName("salt");
 		yeast = new Item().setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".yeast").setRegistryName("yeast");
 		curd = new Item(){
-			public void addInformation(net.minecraft.item.ItemStack stack, net.minecraft.entity.player.EntityPlayer playerIn, java.util.List<String> tooltip, boolean advanced) {
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, World world, List<String> tooltip, 
+					net.minecraft.client.util.ITooltipFlag flag) {
 				String text = ChatFormatting.ITALIC + "Simple Cheese";
 
 				if(!tooltip.contains(text))

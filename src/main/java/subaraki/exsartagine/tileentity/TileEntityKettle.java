@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class KettleBlockEntity extends TileEntity implements ITickable, Cooker {
+public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
 
     private static final int OUTPUT_START = 10;
 

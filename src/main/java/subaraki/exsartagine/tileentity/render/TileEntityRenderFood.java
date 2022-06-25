@@ -5,11 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import subaraki.exsartagine.tileentity.TileEntityCooker;
-import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
-public class TileEntityRenderFood extends TileEntitySpecialRenderer {
+public class TileEntityRenderFood extends TileEntitySpecialRenderer<TileEntityCooker> {
 
 	private EntityItem ei;
 
@@ -17,7 +15,7 @@ public class TileEntityRenderFood extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void render(TileEntity tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(TileEntityCooker tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		super.render(tileentity, x, y, z, partialTicks, destroyStage, alpha);
 
 		if(ei == null)
@@ -28,20 +26,11 @@ public class TileEntityRenderFood extends TileEntitySpecialRenderer {
 			ei.hoverStart = 0f;
 		}
 
-		TileEntityCooker te = null;
-		if (tileentity instanceof TileEntitySmelter)
+		if(tileentity == null)
 			return;
 
-		if (tileentity instanceof TileEntityCooker)
-		{
-			te = (TileEntityCooker)tileentity;
-		}
-
-		if(te == null)
-			return;
-
-		ItemStack entryToRender = te.getInput().copy();
-		ItemStack resultToRender  = te.getOutput().copy();
+		ItemStack entryToRender = tileentity.getInput().copy();
+		ItemStack resultToRender  = tileentity.getOutput().copy();
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) x, (float) y, (float) z ); //translate to correct location

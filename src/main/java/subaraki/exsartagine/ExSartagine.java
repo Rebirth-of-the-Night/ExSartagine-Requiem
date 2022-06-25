@@ -24,7 +24,6 @@ import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.TileEntityRenderFood;
 import subaraki.exsartagine.util.ConfigHandler;
-import subaraki.exsartagine.util.Reference;
 
 import java.util.Arrays;
 
@@ -70,12 +69,12 @@ public class ExSartagine {
     public static void blocks(RegistryEvent.Register<Block> e) {
         ExSartagineBlocks.load(e.getRegistry());
 
-        GameRegistry.registerTileEntity(TileEntityPan.class, "tileentityexsartagine");
-        GameRegistry.registerTileEntity(TileEntitySmelter.class, "tileentityexsartaginesmelter");
-        GameRegistry.registerTileEntity(TileEntityPot.class, "tileentityexsartaginepot");
-        GameRegistry.registerTileEntity(TileEntityRange.class, "tileentityexsartaginerange");
-        GameRegistry.registerTileEntity(TileEntityRangeExtension.class, "tileentityexsartaginerangeextension");
-        GameRegistry.registerTileEntity(KettleBlockEntity.class,new ResourceLocation(MODID,"kettle"));
+        GameRegistry.registerTileEntity(TileEntityPan.class, new ResourceLocation(MODID, "pan"));
+        GameRegistry.registerTileEntity(TileEntitySmelter.class, new ResourceLocation(MODID, "smelter"));
+        GameRegistry.registerTileEntity(TileEntityPot.class, new ResourceLocation(MODID, "pot"));
+        GameRegistry.registerTileEntity(TileEntityRange.class, new ResourceLocation(MODID, "range"));
+        GameRegistry.registerTileEntity(TileEntityRangeExtension.class, new ResourceLocation(MODID, "range_extension"));
+        GameRegistry.registerTileEntity(TileEntityKettle.class, new ResourceLocation(MODID, "kettle"));
     }
 
     @SubscribeEvent

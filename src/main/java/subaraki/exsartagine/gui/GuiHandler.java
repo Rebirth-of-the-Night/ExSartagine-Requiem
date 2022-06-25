@@ -26,8 +26,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerPot(player.inventory, (TileEntityPot)te);
 		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new ContainerRange(player.inventory, (TileEntityRange)te);
-		if(te instanceof KettleBlockEntity && ID == Reference.KETTLE)
-			return new KettleContainer(player.inventory, (KettleBlockEntity)te);
+		if(te instanceof TileEntityKettle && ID == Reference.KETTLE)
+			return new KettleContainer(player.inventory, (TileEntityKettle)te);
 		
 		return null;
 	}
@@ -46,8 +46,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiPot(player, (TileEntityPot)te);
 		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new GuiRange(player, (TileEntityRange)te);
-		if(te instanceof KettleBlockEntity && ID == Reference.KETTLE)
-			return new KettleScreen(player, (KettleBlockEntity) te);
+		if(te instanceof TileEntityKettle && ID == Reference.KETTLE)
+			return new KettleScreen(player, (TileEntityKettle) te);
 		return null;
 	}
 }

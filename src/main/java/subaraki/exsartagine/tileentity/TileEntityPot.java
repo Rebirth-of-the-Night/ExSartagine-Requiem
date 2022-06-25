@@ -1,8 +1,5 @@
 package subaraki.exsartagine.tileentity;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -14,12 +11,10 @@ import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
 
-
-    private static final int CAPACITY = 200;
     private final int cookTime = 125;
     public PotRecipe cached;
 
-    public FluidTank fluidTank = new FluidTank( 1000);
+    public FluidTank fluidTank = new FluidTank(1000);
 
     public TileEntityPot() {
         initInventory();

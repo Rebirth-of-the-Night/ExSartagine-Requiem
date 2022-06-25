@@ -18,11 +18,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.gui.common.KettleContainer;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
-import subaraki.exsartagine.tileentity.KettleBlockEntity;
+import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.util.Reference;
 
 import java.io.IOException;
@@ -34,9 +33,9 @@ public class KettleScreen extends GuiContainer {
     private static final ResourceLocation GUI_POT = new ResourceLocation(Reference.MODID, "textures/gui/kettle.png");
 
     private final InventoryPlayer playerInventory;
-    private final KettleBlockEntity pot;
+    private final TileEntityKettle pot;
 
-    public KettleScreen(EntityPlayer player, KettleBlockEntity pot) {
+    public KettleScreen(EntityPlayer player, TileEntityKettle pot) {
         super(new KettleContainer(player.inventory, pot));
 
         playerInventory = player.inventory;
@@ -68,9 +67,6 @@ public class KettleScreen extends GuiContainer {
         this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
         this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
-
-
-    private final float fade = 0.2f;
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
