@@ -29,10 +29,11 @@ public class BlockKettle extends BlockHeatable {
 
     public BlockKettle(Material materialIn) {
         super(materialIn, Reference.KETTLE);
-        setDefaultState(getDefaultState().withProperty(HEATED,false));
+        setDefaultState(getDefaultState().withProperty(HEATED,false).withProperty(HANGING,false));
     }
 
     public static final PropertyBool HEATED = PropertyBool.create("heated");
+    public static final PropertyBool HANGING = PropertyBool.create("hanging");
 
     @Override
     public Class<?> getTileEntity() {
@@ -86,10 +87,12 @@ public class BlockKettle extends BlockHeatable {
                 if (!Recipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
-                } else if (Recipes.isHeatSource(down)) {
-                    startHeating(world, state, pos);
                 } else {
-                    stopHeating(world, state, pos);
+                    if (Recipes.isHeatSource(down)) {
+                        startHeating(world, state, pos);
+                    } else {
+                        stopHeating(world, state, pos);
+                    }
                 }
             }
         }
