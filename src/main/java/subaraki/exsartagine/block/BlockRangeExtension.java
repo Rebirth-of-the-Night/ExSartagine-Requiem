@@ -90,9 +90,10 @@ public class BlockRangeExtension extends Block {
 			//placed (should exclude being broken from the left and having a furnace right, because the code for popping the block is above)
 			if(world.getBlockState(nextTo).getBlock() == Blocks.FURNACE )
 			{
-				if(currentRange.getParentRange() != null && world.getTileEntity(currentRange.getParentRange()) instanceof TileEntityRange)
+				BlockPos parentRangePos = currentRange.getParentRange();
+				if(parentRangePos != null && world.getTileEntity(parentRangePos) instanceof TileEntityRange)
 				{
-					TileEntityRange parentRange = (TileEntityRange)world.getTileEntity(currentRange.getParentRange());
+					TileEntityRange parentRange = (TileEntityRange)world.getTileEntity(parentRangePos);
 					if(parentRange.canConnect())
 					{
 						world.setBlockToAir(nextTo);
@@ -143,9 +144,12 @@ public class BlockRangeExtension extends Block {
 		TileEntity tere = worldIn.getTileEntity(pos);
 		if(tere instanceof TileEntityRangeExtension)
 		{
-			TileEntity range = worldIn.getTileEntity(((TileEntityRangeExtension)tere).getParentRange());
-			if(range instanceof TileEntityRange)
-				((TileEntityRange)range).disconnect(pos);
+			BlockPos parentRange = ((TileEntityRangeExtension)tere).getParentRange();
+			if (parentRange != null) {
+				TileEntity range = worldIn.getTileEntity(parentRange);
+				if(range instanceof TileEntityRange)
+					((TileEntityRange)range).disconnect(pos);
+			}
 		}
 
 		super.breakBlock(worldIn, pos, state);
