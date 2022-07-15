@@ -13,7 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class TileEntityRangeExtension extends TileEntity implements ITickable {
 
-	private boolean isCooking;
+	private boolean isCooking = false;
 	private BlockPos parentRange;
 
 	@Override
@@ -76,7 +76,8 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setBoolean("cooking", isCooking);
-		compound.setLong("parent", parentRange.toLong());
+		if (parentRange != null)
+			compound.setLong("parent", parentRange.toLong());
 		return compound;
 	}
 
@@ -84,7 +85,8 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		isCooking = compound.getBoolean("cooking");
-		parentRange = BlockPos.fromLong(compound.getLong("parent"));
+		if (compound.hasKey("parent"))
+			parentRange = BlockPos.fromLong(compound.getLong("parent"));
 	}
 
 	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
