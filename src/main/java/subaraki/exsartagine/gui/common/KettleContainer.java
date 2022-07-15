@@ -6,13 +6,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import subaraki.exsartagine.tileentity.KettleBlockEntity;
+import subaraki.exsartagine.tileentity.TileEntityKettle;
 
 public class KettleContainer extends Container {
 
-    private final KettleBlockEntity pot;
+    private final TileEntityKettle pot;
 
-    public KettleContainer(InventoryPlayer playerInventory, KettleBlockEntity pot) {
+    public KettleContainer(InventoryPlayer playerInventory, TileEntityKettle pot) {
         this.pot = pot;
 
         int x1 = 22;

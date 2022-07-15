@@ -12,7 +12,7 @@ import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class ContainerSmelter extends Container {
 
-
+    @SuppressWarnings("unused")
     private final TileEntitySmelter smelter;
 
     public ContainerSmelter(InventoryPlayer playerInventory, TileEntitySmelter smelter) {

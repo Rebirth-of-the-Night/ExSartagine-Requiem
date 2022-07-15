@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.tileentity.KettleBlockEntity;
+import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.util.Reference;
 
 import javax.annotation.Nullable;
@@ -36,13 +36,13 @@ public class KettleBlock extends BlockHeatable {
 
     @Override
     public Class<?> getTileEntity() {
-        return KettleBlockEntity.class;
+        return TileEntityKettle.class;
     }
 
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        return new KettleBlockEntity();
+        return new TileEntityKettle();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class KettleBlock extends BlockHeatable {
 
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             if (!worldIn.isRemote) {
-                KettleBlockEntity kettle = (KettleBlockEntity) worldIn.getTileEntity(pos);
+                TileEntityKettle kettle = (TileEntityKettle) worldIn.getTileEntity(pos);
                 IFluidHandler iFluidHandler = kettle.fluidInputTank;
                 if (FluidUtil.interactWithFluidHandler(playerIn,hand,iFluidHandler)) {
                     return true;
@@ -80,9 +80,9 @@ public class KettleBlock extends BlockHeatable {
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (world.getTileEntity(pos) instanceof KettleBlockEntity) {
+        if (world.getTileEntity(pos) instanceof TileEntityKettle) {
             if (fromPos.up().equals(pos)) { //if the block is beneath us
-                Block down = world.getBlockState(fromPos).getBlock();
+                IBlockState down = world.getBlockState(fromPos);
                 if (!Recipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
@@ -97,8 +97,7 @@ public class KettleBlock extends BlockHeatable {
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        Block below = world.getBlockState(pos.down()).getBlock();
-        return getDefaultState().withProperty(HEATED,Recipes.isHeatSource(below));
+        return getDefaultState().withProperty(HEATED,Recipes.isHeatSource(world.getBlockState(pos.down())));
     }
 
     @Override

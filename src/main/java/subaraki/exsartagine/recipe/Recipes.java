@@ -1,7 +1,6 @@
 package subaraki.exsartagine.recipe;
 
-import com.google.common.collect.Comparators;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -24,9 +23,9 @@ import java.util.stream.Collectors;
 
 public class Recipes {
 
-    private static final List<Block> heatSources = new ArrayList<>();
+    private static final Set<IBlockState> heatSources = new HashSet<>();
 
-    private static final List<Block> placeable = new ArrayList<>();
+    private static final Set<IBlockState> placeable = new HashSet<>();
     protected static final Map<String, List<CustomRecipe<?>>> recipes = new HashMap<>();
 
     static {
@@ -172,41 +171,42 @@ public class Recipes {
         return getRecipes(type).stream().anyMatch(customRecipe -> customRecipe.itemMatch(handler));
     }
 
-    public static void addHeatSource(Block block) {
-        heatSources.add(block);
-        addPlaceable(block);
+    public static void addHeatSource(IBlockState state) {
+        heatSources.add(state);
+        addPlaceable(state);
     }
 
-    public static void addPlaceable(Block block) {
-        placeable.add(block);
-    }
-    
-    public static boolean removeHeatSource(Block block) {
-        return heatSources.removeIf(b -> Block.isEqualTo(b, block));
-    }
-    
-    public static boolean removePlaceable(Block block) {
-        return placeable.removeIf(b -> Block.isEqualTo(b, block));
+    public static void addPlaceable(IBlockState state) {
+        placeable.add(state);
     }
 
+    public static boolean removeHeatSource(IBlockState state) {
+        return heatSources.removeIf(b -> b == state);
+    }
+
+    public static boolean removePlaceable(IBlockState state) {
+        return placeable.removeIf(b -> b == state);
+    }
+
+    @SuppressWarnings("unchecked")
     public static <I extends IItemHandler, R extends CustomRecipe<I>> List<R> getRecipes(String type) {
         return (List<R>) Recipes.recipes.get(type);
     }
 
-    public static boolean isHeatSource(Block block) {
-        return heatSources.contains(block);
+    public static boolean isHeatSource(IBlockState state) {
+        return heatSources.contains(state);
     }
 
-    public static boolean isPlaceable(Block block) {
-        return placeable.contains(block);
+    public static boolean isPlaceable(IBlockState state) {
+        return placeable.contains(state);
     }
 
     public static void init() {
-        addPlaceable(Blocks.FURNACE);
-        addHeatSource(Blocks.LIT_FURNACE);
-        addPlaceable(ExSartagineBlocks.range_extension);
-        addHeatSource(ExSartagineBlocks.range_extension_lit);
-        addHeatSource(Blocks.LAVA);
+        addPlaceable(Blocks.FURNACE.getDefaultState());
+        addHeatSource(Blocks.LIT_FURNACE.getDefaultState());
+        addPlaceable(ExSartagineBlocks.range_extension.getDefaultState());
+        addHeatSource(ExSartagineBlocks.range_extension_lit.getDefaultState());
+        addHeatSource(Blocks.LAVA.getDefaultState());
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);
@@ -238,6 +238,7 @@ public class Recipes {
         //testRecipes();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void postInit() {
         List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)

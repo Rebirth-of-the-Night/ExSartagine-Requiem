@@ -1,15 +1,15 @@
 package subaraki.exsartagine.gui.common;
 
 import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.tileentity.KettleBlockEntity;
+import subaraki.exsartagine.tileentity.TileEntityKettle;
 
 public class KettleISH extends ItemStackHandler {
 
     public static final int CONTAINER_SLOT = 19;
 
-    protected final KettleBlockEntity blockEntity;
+    protected final TileEntityKettle blockEntity;
 
-    public KettleISH(KettleBlockEntity blockEntity, int slots) {
+    public KettleISH(TileEntityKettle blockEntity, int slots) {
         super(slots);
         this.blockEntity = blockEntity;
     }

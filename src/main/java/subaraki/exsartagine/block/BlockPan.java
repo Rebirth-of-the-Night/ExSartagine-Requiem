@@ -1,5 +1,7 @@
 package subaraki.exsartagine.block;
 
+import java.util.Random;
+
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -7,11 +9,9 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -19,12 +19,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityPan;
 import subaraki.exsartagine.util.Reference;
-
-import java.util.Random;
 
 public class BlockPan extends BlockHeatable {
 
@@ -77,8 +74,6 @@ public class BlockPan extends BlockHeatable {
 		double d0 = (double)pos.getX() + 0.5D;
 		double d1 = (double)pos.getY() + 0.15D;
 		double d2 = (double)pos.getZ() + 0.5D;
-		double d3 = 0.22D;
-		double d4 = 0.27D;
 
 		if(worldIn.getTileEntity(pos) instanceof TileEntityPan)
 		{

@@ -4,8 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -17,8 +15,6 @@ import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.Cooker;
-import subaraki.exsartagine.tileentity.TileEntityCooker;
-import subaraki.exsartagine.tileentity.TileEntityPot;
 
 public abstract class BlockHeatable extends Block implements Heatable {
 
@@ -37,8 +33,7 @@ public abstract class BlockHeatable extends Block implements Heatable {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        Block blockDown = world.getBlockState(pos.down()).getBlock();
-        return Recipes.isPlaceable(blockDown);
+        return Recipes.isPlaceable(world.getBlockState(pos.down()));
     }
 
     @Override
@@ -71,7 +66,7 @@ public abstract class BlockHeatable extends Block implements Heatable {
 
         if (world.getTileEntity(pos).getClass().equals(this.getTileEntity())) {
             if (fromPos.up().equals(pos)) { //if the block is beneath us
-                Block down = world.getBlockState(fromPos).getBlock();
+                IBlockState down = world.getBlockState(fromPos);
                 if (!Recipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
@@ -86,7 +81,7 @@ public abstract class BlockHeatable extends Block implements Heatable {
 
     @Override
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        if (Recipes.isHeatSource(world.getBlockState(pos.down()).getBlock())) {
+        if (Recipes.isHeatSource(world.getBlockState(pos.down()))) {
             startHeating(world, state, pos);
         }
     }

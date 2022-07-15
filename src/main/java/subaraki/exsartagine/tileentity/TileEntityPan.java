@@ -1,7 +1,6 @@
 package subaraki.exsartagine.tileentity;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.recipe.Recipes;
