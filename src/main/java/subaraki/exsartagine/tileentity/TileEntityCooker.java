@@ -13,9 +13,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
-public abstract class TileEntityCooker extends TileEntity implements ITickable,Cooker {
+public abstract class TileEntityCooker extends TileEntity implements ITickable, Cooker {
 
 	protected boolean isCooking = false;
 	protected int progress = 0;
@@ -29,14 +30,14 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 
 	/**inits inventory with 2 slots. input and output*/
 	protected void initInventory(){
-		inventory = new ISHCooker(2, this);
+		inventory = new ISHCooker(2);
 		input = new RangedWrapper(inventory, 0, 1);
 		output = new RangedWrapper(inventory, 1, 2);
 	}
 	
-	/**i nit inventory with more slots, where 0 is input, and x>0 is output*/
+	/**init inventory with more slots, where 0 is input, and x>0 is output*/
 	protected void initInventory(int slots) {
-		inventory = new ISHCooker(slots, this);
+		inventory = new ISHCooker(slots);
 		
 		input = new RangedWrapper(inventory, 0, 1);
 		output = new RangedWrapper(inventory, 1, slots);
@@ -91,9 +92,9 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 				return (T) inventory;
 			
 			if(EnumFacing.DOWN == facing) //to prevent npe. facing can be null
-				return (T)output;
+				return (T) output;
 			else
-				return (T)input;
+				return (T) input;
 
 		}
 		return super.getCapability(capability, facing);
@@ -181,5 +182,30 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable,C
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
 	{
 		return oldState.getBlock() != newSate.getBlock();
+	}
+
+	public class ISHCooker extends ItemStackHandler {
+
+		public ISHCooker(int slots) {
+			super(slots);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			if (slot == 0 && TileEntityCooker.this.isValid(stack) || slot > 0)
+				return super.insertItem(slot, stack, simulate);
+			else
+				return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return super.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		protected void onContentsChanged(int slot) {
+			TileEntityCooker.this.markDirty();
+		}
 	}
 }
