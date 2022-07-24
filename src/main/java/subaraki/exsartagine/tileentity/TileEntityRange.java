@@ -100,14 +100,13 @@ public class TileEntityRange extends TileEntity implements ITickable {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return (T) inventory;
 		}
 		return super.getCapability(capability, facing);
 	}
-
-	
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {

@@ -224,6 +224,7 @@ public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
 
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) iFluidHandlerWrapper : null;
     }
