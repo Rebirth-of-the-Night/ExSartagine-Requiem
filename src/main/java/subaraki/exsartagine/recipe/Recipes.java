@@ -176,16 +176,33 @@ public class Recipes {
         addPlaceable(state);
     }
 
+    public static void addHeatSources(Collection<IBlockState> states) {
+        heatSources.addAll(states);
+        addPlaceables(states);
+    }
+
     public static void addPlaceable(IBlockState state) {
         placeable.add(state);
+    }
+
+    public static void addPlaceables(Collection<IBlockState> states) {
+        placeable.addAll(states);
     }
 
     public static boolean removeHeatSource(IBlockState state) {
         return heatSources.removeIf(b -> b == state);
     }
 
+    public static boolean removeHeatSources(Collection<IBlockState> states) {
+        return heatSources.removeAll(states);
+    }
+
     public static boolean removePlaceable(IBlockState state) {
         return placeable.removeIf(b -> b == state);
+    }
+
+    public static boolean removePlaceables(Collection<IBlockState> states) {
+        return placeable.removeAll(states);
     }
 
     @SuppressWarnings("unchecked")

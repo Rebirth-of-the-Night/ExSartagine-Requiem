@@ -3,6 +3,7 @@ package subaraki.exsartagine.integration;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
+import crafttweaker.api.block.IBlock;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
@@ -19,10 +20,13 @@ import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.util.Reference;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Sets;
 
 @ZenRegister
 @ZenClass("mods." + Reference.MODID + ".ExSartagine")
@@ -400,6 +404,11 @@ public class CraftTweakerSupport {
     public static void addHeatSource(IBlockState source) {
         CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), true, true));
     }
+
+    @ZenMethod
+    public static void addHeatSource(IBlock source) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, true));
+    }
     
     @ZenMethod
     public static void removeHeatSource(IBlockState source) {
@@ -407,8 +416,18 @@ public class CraftTweakerSupport {
     }
 
     @ZenMethod
+    public static void removeHeatSource(IBlock source) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, false));
+    }
+
+    @ZenMethod
     public static void addPlaceable(IBlockState source) {
         CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, true));
+    }
+
+    @ZenMethod
+    public static void addPlaceable(IBlock source) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, true));
     }
     
     @ZenMethod
@@ -416,13 +435,22 @@ public class CraftTweakerSupport {
         CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, false));
     }
 
+    @ZenMethod
+    public static void removePlaceable(IBlock source) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, false));
+    }
+
     private static class BlockStateAction implements IAction {
-        private net.minecraft.block.state.IBlockState state;
+        private Collection<net.minecraft.block.state.IBlockState> states;
         private boolean isHeatSource;
         private boolean add;
 
         public BlockStateAction(net.minecraft.block.state.IBlockState state, boolean isHeatSource, boolean add) {
-            this.state = state;
+            this(Sets.newHashSet(state), isHeatSource, add);
+        }
+
+        public BlockStateAction(Collection<net.minecraft.block.state.IBlockState> states, boolean isHeatSource, boolean add) {
+            this.states = states;
             this.isHeatSource = isHeatSource;
             this.add = add;
         }
@@ -431,27 +459,29 @@ public class CraftTweakerSupport {
         public String describe() {
             return (this.add ? "Adding " : "Removing ") +
                    (this.isHeatSource ? "heat source " : "placeable ") +
-                   "with block state " + this.state;
+                   "with block states " + this.states.stream()
+                            .map(net.minecraft.block.state.IBlockState::toString)
+                            .collect(Collectors.joining(","));
         }
 
         @Override
         public void apply() {
             if (this.add) {
                 if (this.isHeatSource)
-                    Recipes.addHeatSource(state);
+                    Recipes.addHeatSources(states);
                 else
-                    Recipes.addPlaceable(state);
+                    Recipes.addPlaceables(states);
             } else {
                 boolean done;
                 if (this.isHeatSource)
-                    done = Recipes.removeHeatSource(state);
+                    done = Recipes.removeHeatSources(states);
                 else
-                    done = Recipes.removePlaceable(state);
+                    done = Recipes.removePlaceables(states);
                 
                 if (!done)
                     CraftTweakerAPI.logWarning("No " + 
                             (this.isHeatSource ? "heat sources " : "placeables ") +
-                            "were removed for block state " + this.state);
+                            "were removed for block state " + this.states);
             }
         }
     }
