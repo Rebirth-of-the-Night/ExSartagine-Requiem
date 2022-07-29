@@ -22,7 +22,7 @@ public class ExSartagineBlocks {
 		range = new BlockRange();
 		range_extension = new BlockRangeExtension("range_extended");
 		range_extension_lit = new BlockRangeExtension("range_extended_lit");
-		kettle = new KettleBlock(Material.IRON).setRegistryName("kettle").setTranslationKey(Reference.MODID +".kettle").setHardness(5);
+		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(Reference.MODID +".kettle").setHardness(5);
 		register(registry);
 	}
 	

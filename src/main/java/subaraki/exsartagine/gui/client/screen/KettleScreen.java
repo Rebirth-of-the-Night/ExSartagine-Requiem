@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import subaraki.exsartagine.gui.common.KettleContainer;
+import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
@@ -36,7 +36,7 @@ public class KettleScreen extends GuiContainer {
     private final TileEntityKettle pot;
 
     public KettleScreen(EntityPlayer player, TileEntityKettle pot) {
-        super(new KettleContainer(player.inventory, pot));
+        super(new ContainerKettle(player.inventory, pot));
 
         playerInventory = player.inventory;
         this.pot = pot;

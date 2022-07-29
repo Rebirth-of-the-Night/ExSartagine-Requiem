@@ -27,7 +27,7 @@ public class GuiHandler implements IGuiHandler {
 		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new ContainerRange(player.inventory, (TileEntityRange)te);
 		if(te instanceof TileEntityKettle && ID == Reference.KETTLE)
-			return new KettleContainer(player.inventory, (TileEntityKettle)te);
+			return new ContainerKettle(player.inventory, (TileEntityKettle)te);
 		
 		return null;
 	}

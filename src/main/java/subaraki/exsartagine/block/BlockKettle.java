@@ -25,9 +25,9 @@ import subaraki.exsartagine.util.Reference;
 
 import javax.annotation.Nullable;
 
-public class KettleBlock extends BlockHeatable {
+public class BlockKettle extends BlockHeatable {
 
-    public KettleBlock(Material materialIn) {
+    public BlockKettle(Material materialIn) {
         super(materialIn, Reference.KETTLE);
         setDefaultState(getDefaultState().withProperty(HEATED,false));
     }

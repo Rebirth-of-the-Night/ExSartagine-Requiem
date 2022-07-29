@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import subaraki.exsartagine.gui.common.KettleContainer;
+import subaraki.exsartagine.gui.common.ContainerKettle;
 
 // not threadsafe!
 public class SwapTanksPacket implements IMessage {
@@ -37,8 +37,8 @@ public class SwapTanksPacket implements IMessage {
     private void handle(SwapTanksPacket message, MessageContext ctx) {
       // This code is run on the server side. So you can do server-side calculations here
       Container container = ctx.getServerHandler().player.openContainer;
-      if (container instanceof KettleContainer) {
-        ((KettleContainer) container).swapTanks();
+      if (container instanceof ContainerKettle) {
+        ((ContainerKettle) container).swapTanks();
       }
     }
   }

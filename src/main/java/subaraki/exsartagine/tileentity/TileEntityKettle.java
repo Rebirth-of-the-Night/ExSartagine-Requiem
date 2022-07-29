@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.block.KettleBlock;
+import subaraki.exsartagine.block.BlockKettle;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
 import subaraki.exsartagine.recipe.KettleRecipe;
@@ -209,11 +209,11 @@ public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
 
 
     public boolean isHeated() {
-        return world.getBlockState(pos).getValue(KettleBlock.HEATED);
+        return world.getBlockState(pos).getValue(BlockKettle.HEATED);
     }
 
     public void setHeated(boolean heated) {
-        world.setBlockState(pos, blockType.getDefaultState().withProperty(KettleBlock.HEATED, heated));
+        world.setBlockState(pos, blockType.getDefaultState().withProperty(BlockKettle.HEATED, heated));
     }
 
 
