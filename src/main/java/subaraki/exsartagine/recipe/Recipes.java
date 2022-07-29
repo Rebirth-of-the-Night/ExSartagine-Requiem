@@ -1,5 +1,6 @@
 package subaraki.exsartagine.recipe;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -176,6 +177,10 @@ public class Recipes {
         addPlaceable(state);
     }
 
+    public static void addHeatSource(Block block) {
+        addHeatSources(block.getBlockState().getValidStates());
+    }
+
     public static void addHeatSources(Collection<IBlockState> states) {
         heatSources.addAll(states);
         addPlaceables(states);
@@ -183,6 +188,10 @@ public class Recipes {
 
     public static void addPlaceable(IBlockState state) {
         placeable.add(state);
+    }
+
+    public static void addPlaceable(Block block) {
+        addPlaceables(block.getBlockState().getValidStates());
     }
 
     public static void addPlaceables(Collection<IBlockState> states) {
@@ -193,12 +202,20 @@ public class Recipes {
         return heatSources.removeIf(b -> b == state);
     }
 
+    public static void removeHeatSource(Block block) {
+        removeHeatSources(block.getBlockState().getValidStates());
+    }
+
     public static boolean removeHeatSources(Collection<IBlockState> states) {
         return heatSources.removeAll(states);
     }
 
     public static boolean removePlaceable(IBlockState state) {
         return placeable.removeIf(b -> b == state);
+    }
+
+    public static void removePlaceable(Block block) {
+        removePlaceables(block.getBlockState().getValidStates());
     }
 
     public static boolean removePlaceables(Collection<IBlockState> states) {
@@ -219,11 +236,11 @@ public class Recipes {
     }
 
     public static void init() {
-        addPlaceable(Blocks.FURNACE.getDefaultState());
-        addHeatSource(Blocks.LIT_FURNACE.getDefaultState());
-        addPlaceable(ExSartagineBlocks.range_extension.getDefaultState());
-        addHeatSource(ExSartagineBlocks.range_extension_lit.getDefaultState());
-        addHeatSource(Blocks.LAVA.getDefaultState());
+        addPlaceable(Blocks.FURNACE);
+        addHeatSource(Blocks.LIT_FURNACE);
+        addPlaceable(ExSartagineBlocks.range_extension);
+        addHeatSource(ExSartagineBlocks.range_extension_lit);
+        addHeatSource(Blocks.LAVA);
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);

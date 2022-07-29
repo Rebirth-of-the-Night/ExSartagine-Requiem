@@ -176,7 +176,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 	public void setRangeConnectionsCooking(boolean setCooking){
 		if(!connected.isEmpty())
 		{
-			//backup of connections. it seems to get whiped when updating the annex furnaces
+			//backup of connections. it seems to get wiped when updating the annex furnaces
 			List<BlockPos> backup = connected;
 			
 			for(BlockPos posTere : connected)
@@ -195,8 +195,8 @@ public class TileEntityRange extends TileEntity implements ITickable {
 								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
 								withProperty(BlockRangeExtension.ENDBLOCK, state.getValue(BlockRangeExtension.ENDBLOCK));
 
-						//connexions get whiped here for some reason :
-						//TODO fix this
+						// connections get wiped here for some reason :
+						// TODO fix this
 						world.setBlockState(posTere, lit);
 						world.notifyBlockUpdate(posTere, state, lit, 3);
 					}
@@ -250,8 +250,8 @@ public class TileEntityRange extends TileEntity implements ITickable {
 	////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 	{
-		return oldState.getBlock() != newSate.getBlock();
+		return oldState.getBlock() != newState.getBlock();
 	}
 }
