@@ -163,9 +163,9 @@ public class CraftTweakerSupport {
         public void apply() {
             boolean done;
             if (this.input == null)
-                done = Recipes.removePanRecipe(output);
+                done = Recipes.removeWokRecipe(output);
             else
-                done = Recipes.removePanRecipe(input, output);
+                done = Recipes.removeWokRecipe(input, output);
 
             if (!done) {
                 if (this.input == null)

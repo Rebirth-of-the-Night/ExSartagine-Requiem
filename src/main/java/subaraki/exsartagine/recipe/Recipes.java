@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 import javax.annotation.Nullable;
@@ -29,11 +30,11 @@ public class Recipes {
     private static final Set<IBlockState> placeable = new HashSet<>();
     protected static final Map<String, List<CustomRecipe<?>>> recipes = new HashMap<>();
 
+
     static {
-        addType("pan");
-        addType("pot");
-        addType("smelter");
-        addType("kettle");
+        for (String s : RecipeTypes.TYPES) {
+            addType(s);
+        }
     }
 
 
@@ -42,20 +43,20 @@ public class Recipes {
     }
 
     public static void addPotRecipe(Ingredient input, ItemStack result) {
-        getRecipes("pot").add(new PotRecipe(input, result));
+        getRecipes(RecipeTypes.POT).add(new PotRecipe(input, result));
     }
 
     public static void addPanRecipe(Ingredient ingredient, ItemStack itemStack) {
-        getRecipes("pan").add(new FryingPanRecipe(ingredient, itemStack));
+        getRecipes(RecipeTypes.WOK).add(new FryingPanRecipe(ingredient, itemStack));
     }
 
     public static void addSmelterRecipe(Ingredient ingredient, ItemStack itemStack) {
-        getRecipes("smelter").add(new SmelterRecipe(ingredient, itemStack));
+        getRecipes(RecipeTypes.SMELTER).add(new SmelterRecipe(ingredient, itemStack));
     }
 
     public static void addKettleRecipe(List<Ingredient> ingredients, Ingredient catalyst, @Nullable FluidStack inputFluid,
                                        @Nullable FluidStack outputFluid, List<ItemStack> results, int cookTime) {
-        getRecipes("kettle").add(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime));
+        getKettleRecipes().add(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime));
     }
 
     public static boolean hasResult(ItemStack stack, String type) {
@@ -63,11 +64,11 @@ public class Recipes {
     }
     
     public static boolean removePotRecipe(ItemStack output) {
-        return getRecipes("pot").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+        return getRecipes(RecipeTypes.POT).removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
     
     public static boolean removePotRecipe(ItemStack input, ItemStack output) {
-        return getRecipes("pot").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+        return getRecipes(RecipeTypes.POT).removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
     
     public static boolean removePotRecipe(Ingredient input, ItemStack output) {
@@ -78,30 +79,34 @@ public class Recipes {
         }
         return changed;
     }
-    
-    public static boolean removePanRecipe(ItemStack output) {
-        return getRecipes("pan").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+
+    public static List<FryingPanRecipe> getWokRecipes() {
+        return getRecipes(RecipeTypes.WOK);
     }
     
-    public static boolean removePanRecipe(ItemStack input, ItemStack output) {
-        return getRecipes("pan").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    public static boolean removeWokRecipe(ItemStack output) {
+        return getWokRecipes().removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
     
-    public static boolean removePanRecipe(Ingredient input, ItemStack output) {
+    public static boolean removeWokRecipe(ItemStack input, ItemStack output) {
+        return getWokRecipes().removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+    
+    public static boolean removeWokRecipe(Ingredient input, ItemStack output) {
         boolean changed = false;
         for (ItemStack i : input.getMatchingStacks()) {
-            if (removePanRecipe(i, output)) 
+            if (removeWokRecipe(i, output))
                 changed = true;
         }
         return changed;
     }
     
     public static boolean removeSmelterRecipe(ItemStack output) {
-        return getRecipes("smelter").removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+        return getRecipes(RecipeTypes.SMELTER).removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
     
     public static boolean removeSmelterRecipe(ItemStack input, ItemStack output) {
-        return getRecipes("smelter").removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+        return getRecipes(RecipeTypes.SMELTER).removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
     
     public static boolean removeSmelterRecipe(Ingredient input, ItemStack output) {
@@ -112,23 +117,27 @@ public class Recipes {
         }
         return changed;
     }
+
+    public static List<KettleRecipe> getKettleRecipes() {
+        return getRecipes(RecipeTypes.KETTLE);
+    }
     
     public static boolean removeKettleRecipe(ItemStack output) {
-        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).contains(output));
+        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).contains(output));
     }
     
     public static boolean removeKettleRecipe(List<ItemStack> outputs) {
-        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs));
+        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs));
     }
     
     public static boolean removeKettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack fluid, List<ItemStack> outputs, int cookTime) {
-        return getRecipes("kettle").removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs)
+        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs)
                                                && r.getResults(new ItemStackHandler()).size() == outputs.size()
                                                && r.getIngredients().containsAll(inputs)
                                                && r.getIngredients().size() == inputs.size()
-                                               && (((KettleRecipe)r).getCatalyst().equals(catalyst) || catalyst == null)
-                                               && ((((KettleRecipe)r).getInputFluid() == null && fluid == null) || (((KettleRecipe)r).getInputFluid() != null && ((KettleRecipe)r).getInputFluid().containsFluid(fluid)))
-                                               && (cookTime == -1 || ((KettleRecipe)r).getCookTime() == cookTime));
+                                               && (r.getCatalyst().equals(catalyst) || catalyst == null)
+                                               && (r.getInputFluid() == null && fluid == null || (r.getInputFluid() != null && r.getInputFluid().containsFluid(fluid)))
+                                               && (cookTime == -1 || r.getCookTime() == cookTime));
     }
     
 
@@ -158,7 +167,7 @@ public class Recipes {
     }
 
     public static <I extends IItemHandler, F extends IFluidHandler> KettleRecipe findKettleRecipe(I handler,F fluidHandler) {
-        List<KettleRecipe> recipes = getRecipes("kettle");
+        List<KettleRecipe> recipes = getKettleRecipes();
         for (KettleRecipe recipe : recipes) {
             if (recipe.itemMatch(handler) && recipe.fluidMatch(fluidHandler))
                 return recipe;
@@ -227,6 +236,8 @@ public class Recipes {
         return (List<R>) Recipes.recipes.get(type);
     }
 
+
+
     public static boolean isHeatSource(IBlockState state) {
         return heatSources.contains(state);
     }
@@ -274,14 +285,14 @@ public class Recipes {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void postInit() {
-        List<CustomRecipe<?>> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
+        List<FryingPanRecipe> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
                 .map(entry -> new FryingPanRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
                 .collect(Collectors.toList());
 
-        defaultPanRecipes.forEach(recipe -> getRecipes("pan").add((CustomRecipe<IItemHandler>) recipe));
+        defaultPanRecipes.forEach(recipe -> getWokRecipes().add(recipe));
 
-        List kettleRecipes = recipes.get("kettle");
+        List kettleRecipes = recipes.get(RecipeTypes.KETTLE);
         Collections.sort(kettleRecipes);
     }
 
