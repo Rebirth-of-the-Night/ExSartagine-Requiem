@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.recipe.Recipes;
 
-public class TileEntityPan extends TileEntityCooker {
+public class WokBlockEntity extends TileEntityCooker {
 
-	public TileEntityPan() {
+	public WokBlockEntity() {
 		initInventory();
 	}
 	

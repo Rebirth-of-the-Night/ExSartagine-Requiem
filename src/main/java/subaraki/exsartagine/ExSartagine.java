@@ -59,7 +59,7 @@ public class ExSartagine {
         @SubscribeEvent
         public static void models(ModelRegistryEvent e) {
             ExSartagineItems.registerRenders();
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPan.class, new TileEntityRenderFood());
+            ClientRegistry.bindTileEntitySpecialRenderer(WokBlockEntity.class, new TileEntityRenderFood());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new TileEntityRenderFood());
         }
     }
@@ -69,7 +69,7 @@ public class ExSartagine {
     public static void blocks(RegistryEvent.Register<Block> e) {
         ExSartagineBlocks.load(e.getRegistry());
 
-        GameRegistry.registerTileEntity(TileEntityPan.class, new ResourceLocation(MODID, "pan"));
+        GameRegistry.registerTileEntity(WokBlockEntity.class, new ResourceLocation(MODID, "pan"));
         GameRegistry.registerTileEntity(TileEntitySmelter.class, new ResourceLocation(MODID, "smelter"));
         GameRegistry.registerTileEntity(TileEntityPot.class, new ResourceLocation(MODID, "pot"));
         GameRegistry.registerTileEntity(TileEntityRange.class, new ResourceLocation(MODID, "range"));

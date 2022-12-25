@@ -33,7 +33,7 @@ import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.Reference;
 
-public class BlockPot extends BlockHeatable {
+public class BlockPot extends HeatableGuiBlock {
 
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.15D, 0.0D, 0.15D, 0.85D, 0.6D, 0.85D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;

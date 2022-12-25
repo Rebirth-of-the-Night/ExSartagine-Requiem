@@ -18,8 +18,6 @@ public class GuiHandler implements IGuiHandler {
 		BlockPos pos = new BlockPos(x, y, z);
 		TileEntity te = world.getTileEntity(pos);
 
-		if(te instanceof TileEntityPan && ID == Reference.PAN)
-			return new ContainerPan(player.inventory, (TileEntityPan)te);
 		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new ContainerSmelter(player.inventory, (TileEntitySmelter)te);
 		if(te instanceof TileEntityPot && ID == Reference.POT)
@@ -38,8 +36,6 @@ public class GuiHandler implements IGuiHandler {
 		BlockPos pos = new BlockPos(x, y, z);
 		TileEntity te = world.getTileEntity(pos);
 
-		if(te instanceof TileEntityPan && ID == Reference.PAN)
-			return new GuiPan(player, (TileEntityPan)te);
 		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new GuiSmelter(player, (TileEntitySmelter)te);
 		if(te instanceof TileEntityPot && ID == Reference.POT)

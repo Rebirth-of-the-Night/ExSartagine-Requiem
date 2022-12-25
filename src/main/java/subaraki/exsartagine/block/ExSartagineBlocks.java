@@ -16,7 +16,7 @@ public class ExSartagineBlocks {
 	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
-		pan = new BlockPan();
+		pan = new WokBlock();
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
 		range = new BlockRange();

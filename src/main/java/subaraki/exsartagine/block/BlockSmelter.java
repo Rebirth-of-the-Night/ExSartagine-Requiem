@@ -25,7 +25,7 @@ import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 import subaraki.exsartagine.util.Reference;
 
-public class BlockSmelter extends BlockHeatable {
+public class BlockSmelter extends HeatableGuiBlock {
 
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;

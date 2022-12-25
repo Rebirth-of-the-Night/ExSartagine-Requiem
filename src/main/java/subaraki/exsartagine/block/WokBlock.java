@@ -20,16 +20,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.item.ExSartagineItems;
-import subaraki.exsartagine.tileentity.TileEntityPan;
+import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.util.Reference;
 
-public class BlockPan extends BlockHeatable {
+public class WokBlock extends BlockHeatable {
 
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-	public BlockPan() {
-		super(Material.IRON, Reference.PAN);
+	public WokBlock() {
+		super(Material.IRON);
 
 		setLightLevel(0.0f);
 		setSoundType(SoundType.METAL);
@@ -51,7 +51,7 @@ public class BlockPan extends BlockHeatable {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileEntityPan();
+		return new WokBlockEntity();
 	}
 
 	/////////////// MISC //////////////////////
@@ -75,9 +75,9 @@ public class BlockPan extends BlockHeatable {
 		double d1 = (double)pos.getY() + 0.15D;
 		double d2 = (double)pos.getZ() + 0.5D;
 
-		if(worldIn.getTileEntity(pos) instanceof TileEntityPan)
+		if(worldIn.getTileEntity(pos) instanceof WokBlockEntity)
 		{
-			if(((TileEntityPan)worldIn.getTileEntity(pos)).isCooking())
+			if(((WokBlockEntity)worldIn.getTileEntity(pos)).isCooking())
 			{
 				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
 				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
@@ -126,6 +126,6 @@ public class BlockPan extends BlockHeatable {
 
 	@Override
 	public Class<?> getTileEntity() {
-		return TileEntityPan.class;
+		return WokBlockEntity.class;
 	}
 }
