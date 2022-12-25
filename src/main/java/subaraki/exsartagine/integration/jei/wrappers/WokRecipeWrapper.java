@@ -7,17 +7,17 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.recipe.FryingPanRecipe;
+import subaraki.exsartagine.recipe.WokRecipe;
 
 import java.util.List;
 
-public class FryingPanRecipeWrapper implements IRecipeWrapper {
+public class WokRecipeWrapper implements IRecipeWrapper {
 
 
-    private final FryingPanRecipe recipe;
+    private final WokRecipe recipe;
     private final IJeiHelpers jeiHelpers;
 
-    public FryingPanRecipeWrapper(FryingPanRecipe recipe, IJeiHelpers jeiHelpers) {
+    public WokRecipeWrapper(WokRecipe recipe, IJeiHelpers jeiHelpers) {
         this.recipe = recipe;
         this.jeiHelpers = jeiHelpers;
     }

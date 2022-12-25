@@ -7,14 +7,14 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 
-public class FryingPanRecipe implements CustomRecipe<IItemHandler> {
+public class WokRecipe implements CustomRecipe<IItemHandler> {
 
     private final Ingredient ingredient;
     private final ItemStack output;
 
     private static final int INPUT = 0;
 
-    public FryingPanRecipe(Ingredient input, ItemStack output) {
+    public WokRecipe(Ingredient input, ItemStack output) {
         ingredient = input;
         this.output = output;
     }

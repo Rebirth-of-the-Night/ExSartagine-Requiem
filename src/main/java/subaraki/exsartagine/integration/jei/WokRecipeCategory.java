@@ -9,14 +9,14 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.integration.jei.wrappers.FryingPanRecipeWrapper;
-import subaraki.exsartagine.recipe.FryingPanRecipe;
+import subaraki.exsartagine.integration.jei.wrappers.WokRecipeWrapper;
+import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.recipe.Recipes;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FryingPanRecipeCategory extends AbstractCookingRecipeCategory<FryingPanRecipeWrapper> {
+public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWrapper> {
 
     // Textures
 
@@ -27,7 +27,7 @@ public class FryingPanRecipeCategory extends AbstractCookingRecipeCategory<Fryin
     protected IDrawableStatic staticFlame;
 
 
-    public FryingPanRecipeCategory(ItemStack catalyst, IGuiHelper help) {
+    public WokRecipeCategory(ItemStack catalyst, IGuiHelper help) {
         super(catalyst, help);
     }
 
@@ -45,13 +45,13 @@ public class FryingPanRecipeCategory extends AbstractCookingRecipeCategory<Fryin
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<FryingPanRecipeWrapper> recipes = Recipes.getRecipes("pan").stream()
-                .map(fryingPanRecipe -> new FryingPanRecipeWrapper((FryingPanRecipe) fryingPanRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
+        List<WokRecipeWrapper> recipes = Recipes.getWokRecipes().stream()
+                .map(fryingPanRecipe -> new WokRecipeWrapper(fryingPanRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, FryingPanRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, WokRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
         guiItemStacks.init(inputSlot, true, 0, 0);

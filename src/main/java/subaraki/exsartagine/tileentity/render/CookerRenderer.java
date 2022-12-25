@@ -7,11 +7,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.tileentity.TileEntityCooker;
 
-public class TileEntityRenderFood extends TileEntitySpecialRenderer<TileEntityCooker> {
+public class CookerRenderer extends TileEntitySpecialRenderer<TileEntityCooker> {
 
 	private EntityItem ei;
 
-	public TileEntityRenderFood() {
+	public CookerRenderer() {
 	}
 
 	@Override

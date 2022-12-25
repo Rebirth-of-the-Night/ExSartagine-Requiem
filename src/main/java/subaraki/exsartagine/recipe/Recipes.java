@@ -47,7 +47,7 @@ public class Recipes {
     }
 
     public static void addPanRecipe(Ingredient ingredient, ItemStack itemStack) {
-        getRecipes(RecipeTypes.WOK).add(new FryingPanRecipe(ingredient, itemStack));
+        getRecipes(RecipeTypes.WOK).add(new WokRecipe(ingredient, itemStack));
     }
 
     public static void addSmelterRecipe(Ingredient ingredient, ItemStack itemStack) {
@@ -80,7 +80,7 @@ public class Recipes {
         return changed;
     }
 
-    public static List<FryingPanRecipe> getWokRecipes() {
+    public static List<WokRecipe> getWokRecipes() {
         return getRecipes(RecipeTypes.WOK);
     }
     
@@ -285,9 +285,9 @@ public class Recipes {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void postInit() {
-        List<FryingPanRecipe> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
+        List<WokRecipe> defaultPanRecipes = FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
-                .map(entry -> new FryingPanRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
+                .map(entry -> new WokRecipe(Ingredient.fromStacks(entry.getKey()), entry.getValue()))
                 .collect(Collectors.toList());
 
         defaultPanRecipes.forEach(recipe -> getWokRecipes().add(recipe));

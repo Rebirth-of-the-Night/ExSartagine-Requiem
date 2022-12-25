@@ -218,64 +218,64 @@ public class ExSartagineItems {
 	}
 
 	public static void registerRenders(){
-		registerRender(pan, "pan", MODID);
-		registerRender(smelter, "smelter", MODID);
-		registerRender(pot, "pot", MODID);
-		registerRender(range, "range", MODID);
-		registerRender(kettle,"kettle",MODID);
+		registerRender(pan, MODID, "pan");
+		registerRender(smelter, MODID, "smelter");
+		registerRender(pot, MODID, "pot");
+		registerRender(range, MODID, "range");
+		registerRender(kettle, MODID, "kettle");
 
-		registerRender(boiled_egg, "egg", MODID);
-		registerRender(boiled_beans, "beans", MODID);
-		registerRender(boiled_potato, "potato", MODID);
+		registerRender(boiled_egg, MODID, "egg");
+		registerRender(boiled_beans, MODID, "beans");
+		registerRender(boiled_potato, MODID, "potato");
 
-		registerRender(pizza_plain, "pizza_plain", MODID);
+		registerRender(pizza_plain, MODID, "pizza_plain");
 
-		registerRender(pizza_chicken, "pizza_chicken_cooked", MODID);
-		registerRender(pizza_sweet, "pizza_sweet_cooked", MODID);
-		registerRender(pizza_meat, "pizza_meat_cooked", MODID);
-		registerRender(pizza_fish, "pizza_fish_cooked", MODID);
+		registerRender(pizza_chicken, MODID, "pizza_chicken_cooked");
+		registerRender(pizza_sweet, MODID, "pizza_sweet_cooked");
+		registerRender(pizza_meat, MODID, "pizza_meat_cooked");
+		registerRender(pizza_fish, MODID, "pizza_fish_cooked");
 
-		registerRender(pizza_chicken_raw, "pizza_chicken_raw", MODID);
-		registerRender(pizza_sweet_raw, "pizza_sweet_raw", MODID);
-		registerRender(pizza_meat_raw, "pizza_meat_raw", MODID);
-		registerRender(pizza_fish_raw, "pizza_fish_raw", MODID);
+		registerRender(pizza_chicken_raw, MODID, "pizza_chicken_raw");
+		registerRender(pizza_sweet_raw, MODID, "pizza_sweet_raw");
+		registerRender(pizza_meat_raw, MODID, "pizza_meat_raw");
+		registerRender(pizza_fish_raw, MODID, "pizza_fish_raw");
 
-		registerRender(bread_fine, "fine_bread", MODID);
-		registerRender(bread_meat, "meat_minibread", MODID);
-		registerRender(bread_veggie, "veggie_bread", MODID);
+		registerRender(bread_fine, MODID, "fine_bread");
+		registerRender(bread_meat, MODID, "meat_minibread");
+		registerRender(bread_veggie, MODID, "veggie_bread");
 
-		registerRender(bread_meat_raw, "meat_minibread_raw", MODID);
-		registerRender(bread_veggie_raw, "veggie_bread_raw", MODID);
+		registerRender(bread_meat_raw, MODID, "meat_minibread_raw");
+		registerRender(bread_veggie_raw, MODID, "veggie_bread_raw");
 
-		registerRender(pizza_dough, "dough", MODID);
-		registerRender(bread_dough, "dough", MODID);
-		registerRender(dough, "dough", MODID);
-		registerRender(salt, "salt", MODID);
-		registerRender(flour, "flour", MODID);
-		registerRender(yeast, "yeast", MODID);
-		registerRender(curd, "curd", MODID);
+		registerRender(pizza_dough, MODID, "dough");
+		registerRender(bread_dough, MODID, "dough");
+		registerRender(dough, MODID, "dough");
+		registerRender(salt, MODID, "salt");
+		registerRender(flour, MODID, "flour");
+		registerRender(yeast, MODID, "yeast");
+		registerRender(curd, MODID, "curd");
 
-		registerRender(dry_strings, "dry_strings", MODID);
+		registerRender(dry_strings, MODID, "dry_strings");
 
-		registerRender(noodles_chicken, "noodles_chicken", MODID);
-		registerRender(noodles_fish, "noodles_fish", MODID);
-		registerRender(noodles_meat, "noodles_meat", MODID);
-		registerRender(noodles_veggie, "noodles_veggie", MODID);
+		registerRender(noodles_chicken, MODID, "noodles_chicken");
+		registerRender(noodles_fish, MODID, "noodles_fish");
+		registerRender(noodles_meat, MODID, "noodles_meat");
+		registerRender(noodles_veggie, MODID, "noodles_veggie");
 
-		registerRender(noodles_chicken_cooked, "noodles_chicken_cooked", MODID);
-		registerRender(noodles_fish_cooked, "noodles_fish_cooked", MODID);
-		registerRender(noodles_meat_cooked, "noodles_meat_cooked", MODID);
-		registerRender(noodles_veggie_cooked, "noodles_veggie_cooked", MODID);
+		registerRender(noodles_chicken_cooked, MODID, "noodles_chicken_cooked");
+		registerRender(noodles_fish_cooked, MODID, "noodles_fish_cooked");
+		registerRender(noodles_meat_cooked, MODID, "noodles_meat_cooked");
+		registerRender(noodles_veggie_cooked, MODID, "noodles_veggie_cooked");
 
-		registerRender(spaghetti_raw, "spaghetti_raw", MODID);
-		registerRender(spaghetti_cooked, "spaghetti_cooked", MODID);
-		registerRender(spaghetti_sauced, "spaghetti_sauced", MODID);
-		registerRender(spaghetti_bolognaise, "spaghetti_bolognaise", MODID);
-		registerRender(spaghetti_cheese, "spaghetti_cheese", MODID);
-		registerRender(spaghetti_veggie, "spaghetti_veggie", MODID);
+		registerRender(spaghetti_raw, MODID, "spaghetti_raw");
+		registerRender(spaghetti_cooked, MODID, "spaghetti_cooked");
+		registerRender(spaghetti_sauced, MODID, "spaghetti_sauced");
+		registerRender(spaghetti_bolognaise, MODID, "spaghetti_bolognaise");
+		registerRender(spaghetti_cheese, MODID, "spaghetti_cheese");
+		registerRender(spaghetti_veggie, MODID, "spaghetti_veggie");
 	}
 
-	public static void registerRender(Item item, String name, String modid) {
+	public static void registerRender(Item item, String modid, String name) {
 		ModelLoader.setCustomModelResourceLocation(item,0,new ModelResourceLocation(new ResourceLocation(modid,name),"inventory"));
 	}
 }

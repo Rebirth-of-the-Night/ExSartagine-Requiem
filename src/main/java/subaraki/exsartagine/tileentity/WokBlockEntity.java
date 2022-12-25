@@ -3,6 +3,7 @@ package subaraki.exsartagine.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class WokBlockEntity extends TileEntityCooker {
@@ -10,11 +11,14 @@ public class WokBlockEntity extends TileEntityCooker {
 	public WokBlockEntity() {
 		initInventory();
 	}
-	
+
+
+	public static final int COOK_TIME = 125;
+
 	@Override
 	public void update() {
 
-		if(progress == 125) {
+		if(progress >= COOK_TIME) {
 			if(!world.isRemote) {
 				ItemStack input = getInput();
 				ItemStack output = getOutput();
@@ -22,7 +26,7 @@ public class WokBlockEntity extends TileEntityCooker {
 				{
 					if(output.isEmpty())
 					{
-						ItemStack itemstack = Recipes.getCookingResult(getInventory(),"pan").copy();
+						ItemStack itemstack = Recipes.getCookingResult(getInventory(),RecipeTypes.WOK).copy();
 						setResult(itemstack.copy());
 					}
 					else
@@ -39,7 +43,7 @@ public class WokBlockEntity extends TileEntityCooker {
 		if(isCooking)
 		{
 			if(!getInput().isEmpty() &&
-					(getOutput().getItem().equals(Recipes.getCookingResult(getInventory(),"pan").getItem()) || getOutput().isEmpty()))
+					(getOutput().getItem().equals(Recipes.getCookingResult(getInventory(), RecipeTypes.WOK).getItem()) || getOutput().isEmpty()))
 				progress++;
 			else if (progress > 0)
 				progress--;
@@ -53,7 +57,7 @@ public class WokBlockEntity extends TileEntityCooker {
 
 	@Override
 	public boolean isValid(ItemStack stack) {
-		return Recipes.hasResult(stack,"pan");
+		return Recipes.hasResult(stack,RecipeTypes.WOK);
 	}
 	
 	@Override
