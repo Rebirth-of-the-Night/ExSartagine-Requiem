@@ -9,6 +9,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.PotRecipeWrapper;
 import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.recipe.Recipes;
@@ -44,7 +45,7 @@ public class PotRecipeCategory extends AbstractCookingRecipeCategory<PotRecipeWr
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<PotRecipeWrapper> recipes = Recipes.getRecipes("pot").stream()
+        List<PotRecipeWrapper> recipes = Recipes.getRecipes(RecipeTypes.POT).stream()
                 .map(potRecipe -> new PotRecipeWrapper((PotRecipe) potRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());
     }

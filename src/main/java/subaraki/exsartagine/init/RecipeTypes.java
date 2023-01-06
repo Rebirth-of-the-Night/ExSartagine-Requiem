@@ -1,17 +1,19 @@
 package subaraki.exsartagine.init;
 
 import com.google.common.collect.Lists;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.recipe.*;
 
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeTypes {
 
-    public static final String WOK = "wok";
-    public static final String KETTLE = "kettle";
-    public static final String SMELTER = "smelter";
-    public static final String POT = "pot";
+    public static final IRecipeType<ItemStackHandler> WOK = IRecipeType.create("wok");
+    public static final IRecipeType<IItemHandler> KETTLE = IRecipeType.create("kettle");
+    public static final IRecipeType<IItemHandler> SMELTER = IRecipeType.create("smelter");
+    public static final IRecipeType<IItemHandler> POT = IRecipeType.create("pot");
 
-    public static final List<String> TYPES = Lists.newArrayList(WOK,KETTLE,SMELTER,POT);
+    public static final List<IRecipeType<?>> TYPES = Lists.newArrayList(WOK,KETTLE,SMELTER,POT);
 
 }

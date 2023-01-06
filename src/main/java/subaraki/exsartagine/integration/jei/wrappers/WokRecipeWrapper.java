@@ -27,6 +27,8 @@ public class WokRecipeWrapper implements IRecipeWrapper {
         IStackHelper stackHelper = jeiHelpers.getStackHelper();
         List<List<ItemStack>> inputLists = stackHelper.expandRecipeItemStackInputs(Lists.newArrayList(recipe.getIngredients()));
         ingredients.setInputLists(VanillaTypes.ITEM, inputLists);
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getDisplay());
+        ingredients.setOutputs(VanillaTypes.ITEM, recipe.getResults(null));
+
+        ingredients.setInput(VanillaTypes.FLUID,recipe.getInputFluid());
     }
 }

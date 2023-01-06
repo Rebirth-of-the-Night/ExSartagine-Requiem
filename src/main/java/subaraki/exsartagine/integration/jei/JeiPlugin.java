@@ -28,7 +28,7 @@ public class JeiPlugin implements IModPlugin {
         categories.add(new SmelterSmeltingRecipeCategory(new ItemStack(ExSartagineBlocks.smelter),helper));
         categories.add(new PotRecipeCategory(new ItemStack(ExSartagineBlocks.pot),helper));
         categories.add(new KettleRecipeCategory(new ItemStack(ExSartagineBlocks.kettle),helper));
-        categories.add(new WokRecipeCategory(new ItemStack(ExSartagineBlocks.pan),helper));
+        categories.add(new WokRecipeCategory(new ItemStack(ExSartagineBlocks.wok),helper));
 
         for (AbstractCookingRecipeCategory<?> category : categories) {
             reg.addRecipeCategories(category);

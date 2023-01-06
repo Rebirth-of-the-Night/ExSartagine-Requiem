@@ -7,6 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.init.RecipeTypes;
+import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
@@ -18,7 +20,7 @@ public class ContainerSmelter extends Container {
     public ContainerSmelter(InventoryPlayer playerInventory, TileEntitySmelter smelter) {
         this.smelter = smelter;
 
-        this.addSlotToContainer(new SlotInput(smelter.getInventory(), 0, 56, 17, "smelter"));
+        this.addSlotToContainer(new SlotInput<>(smelter.getInventory(), 0, 56, 17, RecipeTypes.SMELTER));
         this.addSlotToContainer(new SlotOutput(playerInventory.player, smelter.getInventory(), 1, 116, 35));
         this.addSlotToContainer(new SlotOutput(playerInventory.player, smelter.getInventory(), 2, 140, 39));
 
@@ -56,7 +58,7 @@ public class ContainerSmelter extends Container {
                 slot.onSlotChange(slotStack, bufferStack);
             } else if (index != 0)// player inventory
             {
-                if (Recipes.hasResult(new ItemStackHandler(NonNullList.from(ItemStack.EMPTY, slotStack)), "smelter")) //if the item clicked can be smolten
+                if (Recipes.hasResult(new ItemStackHandler(NonNullList.from(ItemStack.EMPTY, slotStack)), RecipeTypes.SMELTER)) //if the item clicked can be smolten
                 {
                     if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
                     {

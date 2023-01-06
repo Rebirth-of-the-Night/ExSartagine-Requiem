@@ -9,19 +9,23 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
-import subaraki.exsartagine.util.Reference;
 
 public class WokBlock extends BlockHeatable {
 
@@ -30,13 +34,10 @@ public class WokBlock extends BlockHeatable {
 
 	public WokBlock() {
 		super(Material.IRON);
-
 		setLightLevel(0.0f);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setTranslationKey(Reference.MODID+".pan");
-		setRegistryName("pan");
 		setHardness(3.5f);
 		this.setLightOpacity(0);
 	}
@@ -52,6 +53,37 @@ public class WokBlock extends BlockHeatable {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new WokBlockEntity();
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack stack = playerIn.getHeldItem(hand);
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+		if (tileEntity instanceof WokBlockEntity) {
+			WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
+			if (!worldIn.isRemote) {
+
+				if (!stack.isEmpty()) {
+
+					FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, wokBlockEntity.getFluidInventoryInput(),
+							new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
+					if (fluidActionResult.isSuccess()) {
+						playerIn.setHeldItem(hand, fluidActionResult.getResult());
+					} else {
+						ItemStack single = stack.copy();
+						single.setCount(1);
+						ItemStack returns = wokBlockEntity.addSingleItem(single);
+						if (returns.isEmpty() && !playerIn.capabilities.isCreativeMode) {
+							stack.shrink(1);
+						}
+					}
+				} else {
+					wokBlockEntity.giveItems(playerIn);
+				}
+			}
+		}
+		return true;
 	}
 
 	/////////////// MISC //////////////////////

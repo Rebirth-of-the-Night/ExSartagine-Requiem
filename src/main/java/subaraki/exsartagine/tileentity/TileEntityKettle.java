@@ -156,7 +156,7 @@ public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
     }
 
     public KettleRecipe getOrCreateRecipe() {
-        if (cached != null && cached.itemMatch(handler)) {
+        if (cached != null && cached.match(handler,fluidInputTank)) {
             return cached;
         }
         return cached = Recipes.findKettleRecipe(handler, fluidInputTank);

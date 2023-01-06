@@ -10,6 +10,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.SmelterSmeltingRecipeWrapper;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.recipe.SmelterRecipe;
@@ -45,7 +46,7 @@ public class SmelterSmeltingRecipeCategory extends AbstractCookingRecipeCategory
     @Override
     public void setupRecipes(IModRegistry registry) {
         IJeiHelpers helpers = registry.getJeiHelpers();
-        List<SmelterSmeltingRecipeWrapper> smelterSmeltingRecipeWrappers = Recipes.getRecipes("smelter").stream()
+        List<SmelterSmeltingRecipeWrapper> smelterSmeltingRecipeWrappers = Recipes.getRecipes(RecipeTypes.SMELTER).stream()
                 .map(customRecipe -> new SmelterSmeltingRecipeWrapper((SmelterRecipe) customRecipe,helpers)).collect(Collectors.toList());
         registry.addRecipes(smelterSmeltingRecipeWrappers, getUid());
     }

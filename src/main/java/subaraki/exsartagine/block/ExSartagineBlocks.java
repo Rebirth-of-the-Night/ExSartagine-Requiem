@@ -7,7 +7,7 @@ import subaraki.exsartagine.util.Reference;
 
 public class ExSartagineBlocks {
 
-	public static Block pan;
+	public static Block wok;
 	public static Block smelter;
 	public static Block pot;
 	public static Block range;
@@ -16,7 +16,7 @@ public class ExSartagineBlocks {
 	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
-		pan = new WokBlock();
+		wok = new WokBlock().setRegistryName("wok").setTranslationKey(Reference.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
 		range = new BlockRange();
@@ -27,7 +27,7 @@ public class ExSartagineBlocks {
 	}
 	
 	private static void register(IForgeRegistry<Block> registry) {
-		registry.register(pan);
+		registry.register(wok);
 		registry.register(smelter);
 		registry.register(pot);
 		registry.register(range);

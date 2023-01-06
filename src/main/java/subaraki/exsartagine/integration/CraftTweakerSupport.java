@@ -11,6 +11,7 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -103,75 +104,62 @@ public class CraftTweakerSupport {
     }
 
     @ZenMethod
-    public static void addPanRecipe(IIngredient input, IItemStack output) {
-        CraftTweakerAPI.apply(new AddPanAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output)));
+    public static void addWokRecipe(IIngredient[] inputs,ILiquidStack liquid, IItemStack[] outputs) {
+
+        List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
+        FluidStack fluidStack = CraftTweakerMC.getLiquidStack(liquid);
+
+        List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
+
+        CraftTweakerAPI.apply(new AddWokAction(iinputs,fluidStack, iOutputs));
     }
 
     @ZenMethod
-    public static void removePanRecipe(IItemStack output) {
-        CraftTweakerAPI.apply(new RemovePanAction(CraftTweakerMC.getItemStack(output)));
+    public static void removeWokRecipe(String name) {
+        CraftTweakerAPI.apply(new RemoveWokAction(new ResourceLocation(name)));
     }
 
-    @ZenMethod
-    public static void removePanRecipe(IIngredient input, IItemStack output) {
-        CraftTweakerAPI.apply(new RemovePanAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output)));
-    }
+    private static class AddWokAction implements IAction {
+        private final List<Ingredient> inputs;
+        private final FluidStack fluid;
+        private final List<ItemStack> output;
 
-    private static class AddPanAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
-
-        public AddPanAction(Ingredient input, ItemStack output) {
-            this.input = input;
+        public AddWokAction(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> output) {
+            this.inputs = inputs;
+            this.fluid = fluid;
             this.output = output;
         }
 
         @Override
         public String describe() {
-            return "Adding pot recipe with input " + input;
+            return "Adding wok recipe with input " + inputs;
         }
 
         @Override
         public void apply() {
-            Recipes.addPanRecipe(input, output);
+            Recipes.addWokRecipe(inputs,fluid, output);
         }
     }
 
-    private static class RemovePanAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
+    private static class RemoveWokAction implements IAction {
+        private final ResourceLocation name;
 
-        public RemovePanAction(ItemStack output) {
-            this.input = null;
-            this.output = output;
-        }
-
-        public RemovePanAction(Ingredient input, ItemStack output) {
-            this.input = input;
-            this.output = output;
+        public RemoveWokAction(ResourceLocation name) {
+            this.name = name;
         }
 
         @Override
         public String describe() {
-            if (this.input == null)
-                return "Removing pan recipe with output " + output;
-            else
-                return "Removing pan recipe with input " + input + " and output " + output;
+                return "Removing wok recipe with name " + name;
         }
 
         @Override
         public void apply() {
             boolean done;
-            if (this.input == null)
-                done = Recipes.removeWokRecipe(output);
-            else
-                done = Recipes.removeWokRecipe(input, output);
+                done = Recipes.removeWokRecipe(name);
 
             if (!done) {
-                if (this.input == null)
-                    CraftTweakerAPI.logWarning("No pot recipes removed for output " + output);
-                else
-                    CraftTweakerAPI.logWarning("No pot recipes removed for input " + input + " and output " + output);
+                    CraftTweakerAPI.logWarning("No pot recipes removed for name " + name);
             }
         }
     }

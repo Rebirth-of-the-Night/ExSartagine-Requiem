@@ -5,13 +5,14 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
 import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.util.ConfigHandler;
 
 public class TileEntitySmelter extends TileEntityCooker {
 
 	private static final int BONUSSLOT = 2;
-	private int bonusChance = ConfigHandler.percent; // in percentage
+	private final int bonusChance = ConfigHandler.percent; // in percentage
 
 	public TileEntitySmelter() {
 		initInventory(3);
@@ -86,7 +87,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 	@Override
 	public boolean isValid(ItemStack stack) {
-		return Recipes.hasResult(stack,"smelter");
+		return Recipes.hasResult(stack, RecipeTypes.SMELTER);
 	}
 	
 	@Override

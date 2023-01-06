@@ -11,11 +11,12 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
+import subaraki.exsartagine.init.RecipeTypes;
 
 import java.util.List;
 
 
-public class KettleRecipe implements CustomRecipe<IItemHandler> {
+public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandler> {
 
     private final List<Ingredient> inputs;
     private final Ingredient catalyst;
@@ -79,14 +80,6 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
         return ret;
     }
 
-    public int getCookTime() {
-        return time;
-    }
-
-    public FluidStack getInputFluid() {
-        return inputFluid;
-    }
-
     @Override
     public boolean itemMatch(IItemHandler handler) {
 
@@ -131,6 +124,16 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
         return inputs;
     }
 
+    @Override
+    public FluidStack getInputFluid() {
+        return inputFluid;
+    }
+
+    @Override
+    public int getCookTime() {
+        return time;
+    }
+
     public FluidStack getOutputFluid() {
         return outputFluid;
     }
@@ -158,5 +161,10 @@ public class KettleRecipe implements CustomRecipe<IItemHandler> {
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    public IRecipeType<IItemHandler> getType() {
+        return RecipeTypes.KETTLE;
     }
 }

@@ -3,7 +3,7 @@
 
     "textures": {
         "0": "blocks/furnace_side",
-        "1": "exsartagine:blocks/smelter_top",
+        "1": "exsartagine:block/smelter_top",
         "2": "blocks/cobblestone"
     },
     "elements": [

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ExSartagineItems {
 
-	public static Item pan;
+	public static Item wok;
 	public static Item smelter;
 	public static Item pot;
 	public static Item range;
@@ -92,7 +92,7 @@ public class ExSartagineItems {
 		}
 	};
 	public static void load(IForgeRegistry<Item> registry) {
-		pan = new ItemBlock(ExSartagineBlocks.pan).setRegistryName(ExSartagineBlocks.pan.getRegistryName()).setCreativeTab(pots);
+		wok = new ItemBlock(ExSartagineBlocks.wok).setRegistryName(ExSartagineBlocks.wok.getRegistryName()).setCreativeTab(pots);
 		smelter = new ItemBlock(ExSartagineBlocks.smelter).setRegistryName(ExSartagineBlocks.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
@@ -163,7 +163,7 @@ public class ExSartagineItems {
 	}
 
 	private static void register(IForgeRegistry<Item> registry) {
-		registry.register(pan);
+		registry.register(wok);
 		registry.register(smelter);
 		registry.register(pot);
 		registry.register(range);
@@ -218,7 +218,7 @@ public class ExSartagineItems {
 	}
 
 	public static void registerRenders(){
-		registerRender(pan, MODID, "pan");
+		registerRender(wok, MODID, "wok");
 		registerRender(smelter, MODID, "smelter");
 		registerRender(pot, MODID, "pot");
 		registerRender(range, MODID, "range");

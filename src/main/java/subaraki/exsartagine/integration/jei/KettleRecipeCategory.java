@@ -1,5 +1,6 @@
 package subaraki.exsartagine.integration.jei;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,14 +14,14 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.KettleRecipeWrapper;
 import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.Recipes;
 
 public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRecipeWrapper> {
 
-    protected static final int inputSlot = 0;
-    protected static final int outputSlot = 2;
+
 
     protected IDrawableStatic staticFlame;
 
@@ -43,8 +44,12 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<KettleRecipeWrapper> recipes = Recipes.getRecipes("kettle").stream()
-                .map(potRecipe -> new KettleRecipeWrapper((KettleRecipe) potRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
+
+        Collection<KettleRecipe> recs = Recipes.getRecipes(RecipeTypes.KETTLE);
+        if (recs == null) return;
+
+        List<KettleRecipeWrapper> recipes = recs.stream()
+                .map(kettleRecipe -> new KettleRecipeWrapper(kettleRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());
     }
 

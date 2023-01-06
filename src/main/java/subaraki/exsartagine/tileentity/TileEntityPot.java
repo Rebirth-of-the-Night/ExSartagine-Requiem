@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.block.BlockPot;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.recipe.Recipes;
 
@@ -101,14 +102,14 @@ public class TileEntityPot extends TileEntityCooker {
         if (cached != null && cached.itemMatch(getInventory())) {
             return cached;
         }
-        return cached = (PotRecipe) Recipes.findRecipe(getInventory(), "pot");
+        return cached = (PotRecipe) Recipes.findRecipe(getInventory(), RecipeTypes.POT);
     }
 
     public void process() {
         progress = 0;
         if (getInput().getCount() > 0) {
             if (getOutput().getCount() < getOutput().getMaxStackSize()) {
-                ItemStack result = Recipes.getCookingResult(getInventory(), "pot");
+                ItemStack result = Recipes.getCookingResult(getInventory(), RecipeTypes.POT);
                 if (getOutput().isEmpty()) {
                     setResult(result.copy());
                 } else {
@@ -121,7 +122,7 @@ public class TileEntityPot extends TileEntityCooker {
 
     @Override
     public boolean isValid(ItemStack stack) {
-        return Recipes.hasResult(stack, "pot");
+        return Recipes.hasResult(stack, RecipeTypes.POT);
     }
 
     @Override

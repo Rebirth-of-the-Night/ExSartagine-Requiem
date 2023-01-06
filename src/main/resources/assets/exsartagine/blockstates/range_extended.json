@@ -21,12 +21,12 @@
         "endblock":{
             "true":{
                 "textures":{
-                     "0": "exsartagine:blocks/top_right"
+                     "0": "exsartagine:block/top_right"
                      }
             },
             "false":{
              "textures":{
-                "0": "exsartagine:blocks/top_mid"
+                "0": "exsartagine:block/top_mid"
                 }
             }
         }

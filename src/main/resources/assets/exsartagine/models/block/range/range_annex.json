@@ -1,9 +1,9 @@
 {
     "textures": {
-        "0": "exsartagine:blocks/stove_top",
+        "0": "exsartagine:block/stove_top",
         "1": "blocks/furnace_side",
         "2": "blocks/coal_block",
-        "3": "exsartagine:blocks/bars",
+        "3": "exsartagine:block/bars",
         "particle" : "blocks/cobblestone"
     },
     "elements": [

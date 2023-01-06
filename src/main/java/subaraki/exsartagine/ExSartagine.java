@@ -23,6 +23,7 @@ import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.CookerRenderer;
+import subaraki.exsartagine.tileentity.render.WokRenderer;
 import subaraki.exsartagine.util.ConfigHandler;
 
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class ExSartagine {
         @SubscribeEvent
         public static void models(ModelRegistryEvent e) {
             ExSartagineItems.registerRenders();
-            ClientRegistry.bindTileEntitySpecialRenderer(WokBlockEntity.class, new CookerRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(WokBlockEntity.class, new WokRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new CookerRenderer());
         }
     }

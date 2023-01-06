@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
@@ -14,7 +15,7 @@ public class ContainerPot extends Container {
 
 	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
 		this.pot = pot;
-		this.addSlotToContainer(new SlotInput(pot.getInventory(), 0, 56, 17,"pot"));
+		this.addSlotToContainer(new SlotInput<>(pot.getInventory(), 0, 56, 17, RecipeTypes.POT));
         this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
 
         for (int i = 0; i < 3; ++i)
@@ -54,7 +55,7 @@ public class ContainerPot extends Container {
             }
             else if (index != 0)
             {
-                if (!Recipes.getCookingResults(pot.getInventory(),"pot").isEmpty())
+                if (!Recipes.getCookingResults(pot.getInventory(),RecipeTypes.POT).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
