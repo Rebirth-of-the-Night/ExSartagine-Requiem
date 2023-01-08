@@ -24,8 +24,8 @@ public class WokRenderer extends TileEntitySpecialRenderer<WokBlockEntity> {
     public void render(WokBlockEntity wokBlockEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         super.render(wokBlockEntity, x, y, z, partialTicks, destroyStage, alpha);
 
-        renderItems(wokBlockEntity.getInventoryInput(), x,y,z);
-        renderItems(wokBlockEntity.getInventoryOutput(), x,y,z);
+        renderItems(wokBlockEntity.getInventoryInput(), x,y,z,wokBlockEntity.rotation);
+        renderItems(wokBlockEntity.getInventoryOutput(), x,y,z, wokBlockEntity.rotation);
 
         renderFluid(wokBlockEntity.getFluidInventoryInput().getFluid(),x,y,z);
     }
@@ -39,13 +39,16 @@ public class WokRenderer extends TileEntitySpecialRenderer<WokBlockEntity> {
         }
     }
 
-    public <T extends IItemHandler> void renderItems(T handler, double x, double y, double z) {
+    public <T extends IItemHandler> void renderItems(T handler, double x, double y, double z,double rot) {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
             if (!stack.isEmpty()) {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(x + 0.5F, y+.15, z + 0.5F);
                 GlStateManager.rotate(90, 1, 0, 0);      //and is rendered flat down on the pan
+
+                GlStateManager.rotate((float) rot, 0, 0, 1);      //random rotation
+
                 Minecraft.getMinecraft().getItemRenderer().renderItem(Minecraft.getMinecraft().player,stack, ItemCameraTransforms.TransformType.GROUND);
                 GlStateManager.popMatrix();
             }

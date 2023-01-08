@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 
@@ -65,17 +66,21 @@ public class WokBlock extends BlockHeatable {
 			if (!worldIn.isRemote) {
 
 				if (!stack.isEmpty()) {
-
-					FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, wokBlockEntity.getFluidInventoryInput(),
-							new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
-					if (fluidActionResult.isSuccess()) {
-						playerIn.setHeldItem(hand, fluidActionResult.getResult());
+					if (OreDictionary.containsMatch(false, OreDictionary.getOres("ore:spatula"),stack)) {
+						wokBlockEntity.flip(playerIn, stack);
 					} else {
-						ItemStack single = stack.copy();
-						single.setCount(1);
-						ItemStack returns = wokBlockEntity.addSingleItem(single);
-						if (returns.isEmpty() && !playerIn.capabilities.isCreativeMode) {
-							stack.shrink(1);
+
+						FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, wokBlockEntity.getFluidInventoryInput(),
+								new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
+						if (fluidActionResult.isSuccess()) {
+							playerIn.setHeldItem(hand, fluidActionResult.getResult());
+						} else {
+							ItemStack single = stack.copy();
+							single.setCount(1);
+							ItemStack returns = wokBlockEntity.addSingleItem(single);
+							if (returns.isEmpty() && !playerIn.capabilities.isCreativeMode) {
+								stack.shrink(1);
+							}
 						}
 					}
 				} else {

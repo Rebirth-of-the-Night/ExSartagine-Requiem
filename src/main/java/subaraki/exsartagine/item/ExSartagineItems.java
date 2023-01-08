@@ -16,7 +16,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 
-import static subaraki.exsartagine.util.Reference.MODID;
+import static subaraki.exsartagine.ExSartagine.MODID;
 
 import java.util.List;
 

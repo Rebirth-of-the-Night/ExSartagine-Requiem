@@ -4,13 +4,16 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.util.Translator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.WokRecipeWrapper;
-import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.util.Reference;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +23,7 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
     // Textures
     protected IDrawableStatic staticFlame;
 
-    public static final ResourceLocation WOK_BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/jei/wok.png");
+    public static final ResourceLocation WOK_BACKGROUND = new ResourceLocation(ExSartagine.MODID, "textures/gui/jei/wok.png");
 
 
     public WokRecipeCategory(ItemStack catalyst, IGuiHelper help) {
@@ -41,8 +44,9 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<WokRecipeWrapper> recipes = Recipes.getWokRecipes().stream()
-                .map(wokRecipe -> new WokRecipeWrapper(wokRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
+        List<WokRecipeWrapper> recipes = Recipes.getRecipeMap(RecipeTypes.WOK).entrySet().stream()
+                .map(resourceLocationCustomRecipeEntry ->
+                        new WokRecipeWrapper(resourceLocationCustomRecipeEntry.getValue(), registry.getJeiHelpers(), resourceLocationCustomRecipeEntry.getKey())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());
     }
 
@@ -71,5 +75,33 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
         IGuiFluidStackGroup guiFluidStackGroup = recipeLayout.getFluidStacks();
         guiFluidStackGroup.init(0,true,1,1,7,52,1000,true,null);
         guiFluidStackGroup.set(ingredients);
+
+        ResourceLocation registryName = recipeWrapper.getName();
+        if (registryName != null) {
+            guiItemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+                if (slotIndex > 8) {
+                //    String recipeModId = registryName.getNamespace();
+
+                 //   boolean modIdDifferent = false;
+                //    ResourceLocation itemRegistryName = ingredient.getItem().getRegistryName();
+                //    if (itemRegistryName != null) {
+                //        String itemModId = itemRegistryName.getNamespace();
+                //        modIdDifferent = !recipeModId.equals(itemModId);
+                //    }
+
+                //    if (modIdDifferent) {
+                //        String modName = ForgeModIdHelper.getInstance().getFormattedModNameForModId(recipeModId);
+                //        if (modName != null) {
+                //            tooltip.add(TextFormatting.GRAY + Translator.translateToLocalFormatted("jei.tooltip.recipe.by", modName));
+                //        }
+              //      }
+
+                    boolean showAdvanced = Minecraft.getMinecraft().gameSettings.advancedItemTooltips || GuiScreen.isShiftKeyDown();
+                    if (showAdvanced) {
+                        tooltip.add(TextFormatting.DARK_GRAY + Translator.translateToLocalFormatted("jei.tooltip.recipe.id", registryName.toString()));
+                    }
+                }
+            });
+        }
     }
 }

@@ -1,6 +1,5 @@
 package subaraki.exsartagine.recipe;
 
-import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -14,17 +13,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Recipes {
 
@@ -38,8 +36,8 @@ public class Recipes {
         i++;
         addRecipe(name,recipe);
     }
-        public static <I extends IItemHandler,T extends CustomRecipe<I>> void addRecipe(ResourceLocation name,T recipe) {
-        IRecipeType<I> type = recipe.getType();
+        public static <I extends IItemHandler, R extends CustomRecipe<I>> void addRecipe(ResourceLocation name, R recipe) {
+        IRecipeType<R> type = (IRecipeType<R>) recipe.getType();
         Map<ResourceLocation,CustomRecipe<?>> recs = recipes.get(type);
 
         if (recs == null) {
@@ -54,8 +52,8 @@ public class Recipes {
     }
 
     static int i = 0;
-    public static void addWokRecipe(List<Ingredient> ingredients, FluidStack fluid, List<ItemStack> stacks) {
-        WokRecipe wokRecipe = new WokRecipe(ingredients,fluid, stacks);
+    public static void addWokRecipe(List<Ingredient> ingredients, FluidStack fluid, List<ItemStack> stacks, int flips) {
+        WokRecipe wokRecipe = new WokRecipe(ingredients,fluid, stacks,flips);
         addRecipe(wokRecipe);
     }
 
@@ -68,7 +66,7 @@ public class Recipes {
         addRecipe(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime));
     }
 
-    public static <T extends IItemHandler,U extends CustomRecipe<T>> boolean hasResult(ItemStack stack, IRecipeType<T> type) {
+    public static <T extends IItemHandler,U extends CustomRecipe<T>> boolean hasResult(ItemStack stack, IRecipeType<U> type) {
         return hasResult((T)new ItemStackHandler(NonNullList.from(ItemStack.EMPTY, stack)), type);
     }
     
@@ -138,7 +136,7 @@ public class Recipes {
     }
     
 
-    public static <I extends IItemHandler,T extends CustomRecipe<I>> ItemStack getCookingResult(I handler, IRecipeType<I> type) {
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> ItemStack getCookingResult(I handler, IRecipeType<R> type) {
         for (CustomRecipe<I> recipe : getRecipes(type)) {
             if (recipe.itemMatch(handler))
                 return recipe.getResult(handler);
@@ -146,7 +144,7 @@ public class Recipes {
         return ItemStack.EMPTY;
     }
 
-    public static <I extends IItemHandler,T extends CustomRecipe<I>> List<ItemStack> getCookingResults(I handler, IRecipeType<I> type) {
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> List<ItemStack> getCookingResults(I handler, IRecipeType<R> type) {
         for (CustomRecipe<I> recipe : getRecipes(type)) {
             if (recipe.itemMatch(handler))
                 return recipe.getResults(handler);
@@ -154,8 +152,8 @@ public class Recipes {
         return new ArrayList<>();
     }
 
-    public static <I extends IItemHandler,T extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler,  IRecipeType<I> type) {
-        Collection<T> recipes = getRecipes(type);
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {
+        Collection<R> recipes = getRecipes(type);
         for (CustomRecipe<I> recipe : recipes) {
             if (recipe.itemMatch(handler))
                 return recipe;
@@ -163,10 +161,10 @@ public class Recipes {
         return null;
     }
 
-    public static <I extends IItemHandler, F extends IFluidHandler,T extends CustomFluidRecipe<I,F>>
-    T findFluidRecipe(I handler,F fluidHandler,IRecipeType<I> type) {
-        Collection<T> recipes = getRecipes(type);
-        for (T recipe : recipes) {
+    public static <I extends IItemHandler, F extends IFluidHandler, FR extends CustomFluidRecipe<I,F>>
+    FR findFluidRecipe(I handler, F fluidHandler, IRecipeType<FR> type) {
+        Collection<FR> recipes = getRecipes(type);
+        for (FR recipe : recipes) {
             if (recipe.match(handler,fluidHandler))
                 return recipe;
         }
@@ -177,7 +175,7 @@ public class Recipes {
         return findFluidRecipe(handler,fluidHandler,RecipeTypes.KETTLE);
     }
 
-    public static <I extends IItemHandler,T extends CustomRecipe<I>> boolean hasResult(I handler, IRecipeType<I> type) {
+    public static <I extends IItemHandler,T extends CustomRecipe<I>> boolean hasResult(I handler, IRecipeType<T> type) {
         return getRecipes(type).stream().anyMatch(customRecipe -> customRecipe.itemMatch(handler));
     }
 
@@ -231,17 +229,17 @@ public class Recipes {
         return placeable.removeAll(states);
     }
 
-    public static <I extends IItemHandler, R extends CustomRecipe<I>> Collection<R> getRecipes(IRecipeType<I> type) {
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> Collection<R> getRecipes(IRecipeType<R> type) {
         Map<ResourceLocation,R> map = getRecipeMap(type);
         if (map != null) {
             return map.values();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @SuppressWarnings("unchecked")
-    public static <I extends IItemHandler, R extends CustomRecipe<I>> Map<ResourceLocation,R> getRecipeMap(IRecipeType<I> type) {
-        return (Map<ResourceLocation, R>) Recipes.recipes.get(type);
+    public static <I extends IItemHandler, R extends CustomRecipe<I>,S extends Map<ResourceLocation,R>> S getRecipeMap(IRecipeType<R> type) {
+        return (S) Recipes.recipes.get(type);
     }
 
 
@@ -287,11 +285,6 @@ public class Recipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
 
-        //testRecipes();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void postInit() {
         FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
                 .forEach(entry -> {
@@ -303,14 +296,18 @@ public class Recipes {
 
                     o.add(entry.getValue());
 
-                    WokRecipe wokRecipe =  new WokRecipe(i,null,o);
+                    WokRecipe wokRecipe =  new WokRecipe(i,null,o, 0);
 
                     addRecipe(entry.getKey().getItem().getRegistryName(),wokRecipe);
 
                 });
+        if (ExSartagine.DEBUG) {
+            ExSartagine.DebugStuff.run();
+        }
+
     }
 
-    public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, IRecipeType<I> type) {
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, IRecipeType<R> type) {
 
         Collection<R> recipes = getRecipes(type);
 

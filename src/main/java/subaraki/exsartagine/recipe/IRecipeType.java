@@ -3,11 +3,11 @@ package subaraki.exsartagine.recipe;
 import net.minecraftforge.items.IItemHandler;
 
 @FunctionalInterface
-public interface IRecipeType<T extends IItemHandler> {
+public interface IRecipeType<R extends CustomRecipe<?>> {
 
     String name();
 
-    static <T extends IItemHandler,U extends CustomRecipe<T>> IRecipeType<T> create(String s) {
+    static <I extends IItemHandler,R extends CustomRecipe<I>> IRecipeType<R> create(String s) {
      return () -> s;
     }
 }

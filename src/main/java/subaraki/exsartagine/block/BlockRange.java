@@ -42,7 +42,7 @@ public class BlockRange extends Block {
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setTranslationKey(Reference.MODID+".range");
+		setTranslationKey(ExSartagine.MODID+".range");
 		setRegistryName("range");
 		setHardness(3.5f);
 		this.setLightOpacity(0);

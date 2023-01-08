@@ -26,13 +26,17 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		initInventory();
 	}
 
+	private int flips;
+
+	public double rotation;
+
 	@Override
 	public void update() {
 		if (!world.isRemote) {
 			if (canStart()) {
 				WokRecipe recipe = getOrCreateRecipe();
 				if (recipe != null) {
-					if (cookTime == progress) {
+					if (cookTime <= progress && canProcess(recipe)) {
 						process();
 					} else {
 						if (running) {
@@ -50,6 +54,10 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		}
 	}
 
+	public boolean canProcess(WokRecipe recipe) {
+		return recipe.getFlips() <= flips;
+	}
+
 	public ItemStack addSingleItem(ItemStack stack) {
 		ItemStack stack1 = stack.copy();
 		for (int i = 0; i < inventoryInput.getSlots();i++) {
@@ -57,6 +65,19 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 			if (stack1.isEmpty()) return ItemStack.EMPTY;
 		}
 		return stack1;
+	}
+
+	public void flip(EntityPlayer player,ItemStack stack) {
+		WokRecipe recipe = getOrCreateRecipe();
+		if (recipe == null) return;
+		flips++;
+
+		if (flips == recipe.getFlips()) {
+			stack.damageItem(1,player);
+		}
+
+		rotation = world.rand.nextDouble() * 360;
+		markDirty();
 	}
 
 	@Override
@@ -80,6 +101,12 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 				}
 			}
 		}
+	}
+
+	@Override
+	public void process() {
+		super.process();
+		flips = 0;
 	}
 
 	@Override
@@ -138,6 +165,8 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		compound.setTag("inv", inventoryInput.serializeNBT());
 		compound.setTag("invO", inventoryOutput.serializeNBT());
 		compound.setTag("fluidinv",fluidInventoryInput.writeToNBT(new NBTTagCompound()));
+		compound.setInteger("flips",flips);
+		compound.setDouble("rotation",rotation);
 		return compound;
 	}
 
@@ -151,6 +180,8 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		inventoryInput.deserializeNBT(compound.getCompoundTag("inv"));
 		inventoryOutput.deserializeNBT(compound.getCompoundTag("invO"));
 		fluidInventoryInput.readFromNBT(compound.getCompoundTag("fluidinv"));
+		flips = compound.getInteger("flips");
+		rotation = compound.getDouble("rotation");
 	}
 
 	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////

@@ -41,7 +41,7 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
-    public IRecipeType<IItemHandler> getType() {
+    public IRecipeType<?> getType() {
         return RecipeTypes.SMELTER;
     }
 }

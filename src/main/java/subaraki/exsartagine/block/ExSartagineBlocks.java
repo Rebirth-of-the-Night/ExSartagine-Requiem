@@ -3,7 +3,7 @@ package subaraki.exsartagine.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.registries.IForgeRegistry;
-import subaraki.exsartagine.util.Reference;
+import subaraki.exsartagine.ExSartagine;
 
 public class ExSartagineBlocks {
 
@@ -16,13 +16,13 @@ public class ExSartagineBlocks {
 	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
-		wok = new WokBlock().setRegistryName("wok").setTranslationKey(Reference.MODID+".wok");
+		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
 		range = new BlockRange();
 		range_extension = new BlockRangeExtension("range_extended");
 		range_extension_lit = new BlockRangeExtension("range_extended_lit");
-		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(Reference.MODID +".kettle").setHardness(5);
+		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
 		register(registry);
 	}
 	

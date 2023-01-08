@@ -36,7 +36,7 @@ public class PotRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
-    public IRecipeType<IItemHandler> getType() {
+    public IRecipeType<?> getType() {
         return RecipeTypes.POT;
     }
 }

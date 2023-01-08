@@ -29,6 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.Reference;
@@ -47,7 +48,7 @@ public class BlockPot extends HeatableGuiBlock {
 		setSoundType(SoundType.STONE);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setTranslationKey(Reference.MODID+".pot");
+		setTranslationKey(ExSartagine.MODID+".pot");
 		setRegistryName("pot");
 		setHardness(3.5f);
 		this.setLightOpacity(0);

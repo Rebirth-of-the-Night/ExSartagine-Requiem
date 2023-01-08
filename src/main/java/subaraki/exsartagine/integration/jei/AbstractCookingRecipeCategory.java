@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.util.Reference;
 
 public abstract class AbstractCookingRecipeCategory<T extends IRecipeWrapper> implements IRecipeCategory<T> {
@@ -19,10 +20,10 @@ public abstract class AbstractCookingRecipeCategory<T extends IRecipeWrapper> im
     protected IDrawableAnimated cookProgress;
 
     public static final String BACKGROUND = "textures/gui/jei/backgrounds.png";
-    public static final ResourceLocation BACKGROUNDS = new ResourceLocation(Reference.MODID, BACKGROUND);
+    public static final ResourceLocation BACKGROUNDS = new ResourceLocation(ExSartagine.MODID, BACKGROUND);
 
     public AbstractCookingRecipeCategory(ItemStack catalyst, IGuiHelper helper) {
-        this.uid = Reference.MODID+"."+catalyst.getItem().getRegistryName().getPath();
+        this.uid = ExSartagine.MODID+"."+catalyst.getItem().getRegistryName().getPath();
         this.catalyst = catalyst;
         this.guiHelper = helper;
         setupGui();

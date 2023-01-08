@@ -5,8 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.init.RecipeTypes;
 
@@ -17,11 +15,13 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
     private final List<Ingredient> ingredients;
     private final FluidStack fluid;
     private final List<ItemStack> outputs;
+    private final int flips;
 
-    public WokRecipe(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> outputs) {
+    public WokRecipe(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> outputs, int flips) {
         ingredients = inputs;
         this.fluid = fluid;
         this.outputs = outputs;
+        this.flips = flips;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
 
     @Override
     public FluidStack getInputFluid() {
-        return null;
+        return fluid;
     }
 
     @Override
@@ -67,8 +67,12 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
         return 125;
     }
 
+    public int getFlips() {
+        return flips;
+    }
+
     @Override
-    public IRecipeType<ItemStackHandler> getType() {
+    public IRecipeType<?> getType() {
         return RecipeTypes.WOK;
     }
 }

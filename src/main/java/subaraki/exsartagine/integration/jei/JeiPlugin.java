@@ -6,12 +6,12 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.gui.client.screen.GuiPot;
 import subaraki.exsartagine.gui.client.screen.GuiSmelter;
 import subaraki.exsartagine.gui.client.screen.KettleScreen;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.util.Reference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,8 @@ public class JeiPlugin implements IModPlugin {
             category.setup(registry);
 
         //xpos, ypos,width,height
-        registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, Reference.MODID+"."+ RecipeTypes.POT);
-        registry.addRecipeClickArea(GuiSmelter.class, 78, 20, 28, 23, Reference.MODID+"."+RecipeTypes.SMELTER);
-        registry.addRecipeClickArea(KettleScreen.class, 88, 32, 24, 23, Reference.MODID+"."+RecipeTypes.KETTLE);
+        registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, ExSartagine.MODID+"."+ RecipeTypes.POT);
+        registry.addRecipeClickArea(GuiSmelter.class, 78, 20, 28, 23, ExSartagine.MODID+"."+RecipeTypes.SMELTER);
+        registry.addRecipeClickArea(KettleScreen.class, 88, 32, 24, 23, ExSartagine.MODID+"."+RecipeTypes.KETTLE);
     }
 }

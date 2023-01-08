@@ -8,11 +8,10 @@ import net.minecraftforge.items.IItemHandler;
 import subaraki.exsartagine.recipe.CustomFluidRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.tileentity.WokBlockEntity;
 
 import java.util.List;
 
-public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler,V extends CustomFluidRecipe<T,U>> extends TileEntity implements ITickable {
+public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler, R extends CustomFluidRecipe<T,U>> extends TileEntity implements ITickable {
 
     protected T inventoryInput;
 
@@ -20,9 +19,9 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
     protected U fluidInventoryInput;
     protected U fluidInventoryOutput;
 
-    protected V cached;
+    protected R cached;
 
-    protected IRecipeType<T> recipeType;
+    protected IRecipeType<R> recipeType;
 
     public int progress;
     public boolean running;
@@ -51,7 +50,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
         return fluidInventoryInput;
     }
 
-    public V getOrCreateRecipe() {
+    public R getOrCreateRecipe() {
         if (cached != null && cached.match(inventoryInput, fluidInventoryInput)) {
             return cached;
         }
@@ -59,7 +58,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
     }
 
     public boolean canStart() {
-        V recipe = getOrCreateRecipe();
+        R recipe = getOrCreateRecipe();
         if (recipe == null)
             return false;
 
@@ -110,13 +109,13 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
         }
     }
 
-    public boolean checkFluids(V recipe) {
+    public boolean checkFluids(R recipe) {
         if (!recipe.fluidMatch(fluidInventoryInput)) {
             return false;
         }
         return checkFluidInv(recipe);
     }
 
-    public abstract boolean checkFluidInv(V recipe);
+    public abstract boolean checkFluidInv(R recipe);
 
 }

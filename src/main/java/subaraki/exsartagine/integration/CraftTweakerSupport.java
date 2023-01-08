@@ -16,9 +16,9 @@ import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.recipe.IIngredientWrapper;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.util.Reference;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Sets;
 
 @ZenRegister
-@ZenClass("mods." + Reference.MODID + ".ExSartagine")
+@ZenClass("mods." + ExSartagine.MODID + ".ExSartagine")
 public class CraftTweakerSupport {
 
     @ZenMethod
@@ -103,15 +103,21 @@ public class CraftTweakerSupport {
         }
     }
 
+
     @ZenMethod
-    public static void addWokRecipe(IIngredient[] inputs,ILiquidStack liquid, IItemStack[] outputs) {
+    public static void addWokRecipe(IIngredient[] inputs, IItemStack[] outputs,@Optional int flips) {
+        addWokRecipe(inputs,null,outputs,flips);
+    }
+
+    @ZenMethod
+    public static void addWokRecipe(IIngredient[] inputs,ILiquidStack liquid, IItemStack[] outputs,@Optional int flips) {
 
         List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
         FluidStack fluidStack = CraftTweakerMC.getLiquidStack(liquid);
 
         List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
 
-        CraftTweakerAPI.apply(new AddWokAction(iinputs,fluidStack, iOutputs));
+        CraftTweakerAPI.apply(new AddWokAction(iinputs,fluidStack, iOutputs,flips));
     }
 
     @ZenMethod
@@ -123,11 +129,13 @@ public class CraftTweakerSupport {
         private final List<Ingredient> inputs;
         private final FluidStack fluid;
         private final List<ItemStack> output;
+        private final int flips;
 
-        public AddWokAction(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> output) {
+        public AddWokAction(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> output, int flips) {
             this.inputs = inputs;
             this.fluid = fluid;
             this.output = output;
+            this.flips = flips;
         }
 
         @Override
@@ -137,7 +145,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            Recipes.addWokRecipe(inputs,fluid, output);
+            Recipes.addWokRecipe(inputs,fluid, output,flips);
         }
     }
 
@@ -238,6 +246,10 @@ public class CraftTweakerSupport {
         }
     }
 
+    @ZenMethod
+    public static void addKettleRecipe(IIngredient[] inputs, ILiquidStack fluidInput,IItemStack[] outputs, @Optional("200") int time) {
+        addKettleRecipe(inputs, null, fluidInput, null, outputs, time);
+    }
     @ZenMethod
     public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluidInput,IItemStack[] outputs, @Optional("200") int time) {
         addKettleRecipe(inputs, catalyst, fluidInput, null, outputs, time);

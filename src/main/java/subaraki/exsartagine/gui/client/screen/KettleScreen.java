@@ -18,11 +18,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
-import subaraki.exsartagine.util.Reference;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class KettleScreen extends GuiContainer {
 
-    private static final ResourceLocation GUI_POT = new ResourceLocation(Reference.MODID, "textures/gui/kettle.png");
+    private static final ResourceLocation GUI_POT = new ResourceLocation(ExSartagine.MODID, "textures/gui/kettle.png");
 
     private final InventoryPlayer playerInventory;
     private final TileEntityKettle pot;
@@ -45,7 +45,7 @@ public class KettleScreen extends GuiContainer {
     }
 
     private static final int BUTTON_ID = 837890435;
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation(Reference.MODID,"textures/gui/switch.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation(ExSartagine.MODID,"textures/gui/switch.png");
 
     @Override
     public void initGui() {

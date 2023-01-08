@@ -164,7 +164,7 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
     }
 
     @Override
-    public IRecipeType<IItemHandler> getType() {
+    public IRecipeType<?> getType() {
         return RecipeTypes.KETTLE;
     }
 }

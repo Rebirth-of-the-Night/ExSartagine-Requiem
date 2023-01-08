@@ -13,7 +13,7 @@ public interface CustomRecipe<T extends IItemHandler> extends Comparable<CustomR
 
     ItemStack getDisplay();
 
-    IRecipeType<T> getType();
+    IRecipeType<?> getType();
 
     List<Ingredient> getIngredients();
 

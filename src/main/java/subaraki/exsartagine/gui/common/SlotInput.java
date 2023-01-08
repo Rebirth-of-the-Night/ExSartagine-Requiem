@@ -10,9 +10,9 @@ import subaraki.exsartagine.recipe.Recipes;
 public class SlotInput<T extends IItemHandler,U extends CustomRecipe<T>> extends SlotItemHandler {
 
 
-    protected final IRecipeType<T> type;
+    protected final IRecipeType<U> type;
 
-    public SlotInput(IItemHandler itemHandler, int index, int xPosition, int yPosition, IRecipeType<T> type) {
+    public SlotInput(IItemHandler itemHandler, int index, int xPosition, int yPosition, IRecipeType<U> type) {
         super(itemHandler, index, xPosition, yPosition);
         this.type = type;
     }
