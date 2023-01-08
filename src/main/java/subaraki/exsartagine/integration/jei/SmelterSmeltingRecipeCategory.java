@@ -47,7 +47,7 @@ public class SmelterSmeltingRecipeCategory extends AbstractCookingRecipeCategory
     public void setupRecipes(IModRegistry registry) {
         IJeiHelpers helpers = registry.getJeiHelpers();
         List<SmelterSmeltingRecipeWrapper> smelterSmeltingRecipeWrappers = Recipes.getRecipes(RecipeTypes.SMELTER).stream()
-                .map(customRecipe -> new SmelterSmeltingRecipeWrapper((SmelterRecipe) customRecipe,helpers)).collect(Collectors.toList());
+                .map(customRecipe -> new SmelterSmeltingRecipeWrapper(customRecipe,helpers)).collect(Collectors.toList());
         registry.addRecipes(smelterSmeltingRecipeWrappers, getUid());
     }
 

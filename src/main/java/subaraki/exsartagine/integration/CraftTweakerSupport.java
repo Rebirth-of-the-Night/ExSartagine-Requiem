@@ -164,7 +164,7 @@ public class CraftTweakerSupport {
         @Override
         public void apply() {
             boolean done;
-                done = Recipes.removeWokRecipe(name);
+                done = Recipes.removeWokRecipeByName(name);
 
             if (!done) {
                     CraftTweakerAPI.logWarning("No pot recipes removed for name " + name);
@@ -301,102 +301,28 @@ public class CraftTweakerSupport {
     }
     
     @ZenMethod
-    public static void removeKettleRecipe(IItemStack output) {
-        CraftTweakerAPI.apply(new RemoveKettleOutputAction(CraftTweakerMC.getItemStack(output)));
-    }
-    
-    @ZenMethod
-    public static void removeKettleRecipe(IItemStack[] outputs) {
-        List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
-        CraftTweakerAPI.apply(new RemoveKettleOutputsAction(iOutputs));
-    }
-    
-    @ZenMethod
-    public static void removeKettleRecipe(IIngredient[] inputs, IIngredient catalyst, IItemStack[] outputs, @Optional("-1") int time) {
-        List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
-        Ingredient iCatalyst = CraftTweakerMC.getIngredient(catalyst);
-        List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
-        CraftTweakerAPI.apply(new RemoveKettleAction(iinputs, iCatalyst, null, iOutputs, time));
-    }
-    
-    @ZenMethod
-    public static void removeKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack fluid, IItemStack[] outputs, @Optional("-1") int time) {
-        List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
-        Ingredient iCatalyst = CraftTweakerMC.getIngredient(catalyst);
-        FluidStack iFluid = CraftTweakerMC.getLiquidStack(fluid);
-        List<ItemStack> iOutputs = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
-        CraftTweakerAPI.apply(new RemoveKettleAction(iinputs, iCatalyst, iFluid, iOutputs, time));
-    }
-
-    private static class RemoveKettleOutputAction implements IAction {
-        private ItemStack output;
-
-        public RemoveKettleOutputAction(ItemStack output) {
-            this.output = output;
-        }
-
-        @Override
-        public String describe() {
-            return "Removing kettle recipes with output "+ output;
-        }
-
-        @Override
-        public void apply() {
-            if (!Recipes.removeKettleRecipe(output))
-                CraftTweakerAPI.logWarning("No kettle recipes for output " + output);
-        }
-    }
-
-    private static class RemoveKettleOutputsAction implements IAction {
-        private List<ItemStack> outputs;
-
-        public RemoveKettleOutputsAction(List<ItemStack> outputs) {
-            this.outputs = outputs;
-        }
-
-        @Override
-        public String describe() {
-            return "Removing kettle recipes with outputs " + outputs;
-        }
-
-        @Override
-        public void apply() {
-            if (!Recipes.removeKettleRecipe(outputs))
-                CraftTweakerAPI.logWarning("No kettle recipes for outputs " + outputs);
-        }
+    public static void removeKettleRecipe(String name) {
+        CraftTweakerAPI.apply(new RemoveKettleAction(new ResourceLocation(name)));
     }
 
     private static class RemoveKettleAction implements IAction {
-        private List<Ingredient> inputs;
-        private Ingredient catalyst;
-        private FluidStack fluidInput;
-        private List<ItemStack> outputs;
-        private int time;
+        private ResourceLocation name;
 
-        public RemoveKettleAction(List<Ingredient> inputs, Ingredient catalyst, 
-                @Nullable FluidStack fluidInput, List<ItemStack> outputs, int time) {
-            this.inputs = inputs;
-            this.catalyst = catalyst;
-            this.fluidInput = fluidInput;
-            this.outputs = outputs;
-            this.time = time;
+        public RemoveKettleAction(ResourceLocation name) {
+            this.name = name;
         }
 
         @Override
         public String describe() {
-            return "Removing kettle recipe with inputs " + inputs + ", catalyst " +
-                            catalyst + ", fluid input " + fluidInput +
-                            ", outputs " + outputs + ", and duration " + time;
+            return "Removing kettle recipe with name " + name;
         }
 
         @Override
         public void apply() {
-            boolean done = Recipes.removeKettleRecipe(inputs, catalyst, fluidInput, outputs, time);
+            boolean done = Recipes.removeKettleRecipeByName(name);
 
             if (!done)
-                CraftTweakerAPI.logWarning("No kettle recipes removed for inputs " + inputs + 
-                        ", catalyst " + catalyst + ", fluid input " + fluidInput +
-                        ", outputs " + outputs + ", and duration " + time);
+                CraftTweakerAPI.logWarning("No kettle recipes removed for name " + name);
         }
     }
 

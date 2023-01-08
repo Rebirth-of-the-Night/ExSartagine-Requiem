@@ -44,7 +44,14 @@ public class Recipes {
             recipes.put(type, new HashMap<>());
             recs = recipes.get(type);
         }
-        recs.put(name,recipe);
+        if(recs.put(name,recipe) != null) {
+            throw new RuntimeException("duplicate recipe:" + type + name);
+        }
+    }
+
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> boolean removeRecipeByName(ResourceLocation name, IRecipeType<R> type) {
+        Map<ResourceLocation,R> map = getRecipeMap(type);
+        return map.remove(name) != null;
     }
 
     public static void addPotRecipe(Ingredient input, ItemStack result) {
@@ -91,9 +98,8 @@ public class Recipes {
         return getRecipes(RecipeTypes.WOK);
     }
 
-    public static boolean removeWokRecipe(ResourceLocation name) {
-        Map<ResourceLocation,WokRecipe> map = getRecipeMap(RecipeTypes.WOK);
-        return map.remove(name) != null;
+    public static boolean removeWokRecipeByName(ResourceLocation name) {
+        return removeRecipeByName(name,RecipeTypes.WOK);
     }
 
     public static boolean removeSmelterRecipe(ItemStack output) {
@@ -117,22 +123,8 @@ public class Recipes {
         return getRecipes(RecipeTypes.KETTLE);
     }
     
-    public static boolean removeKettleRecipe(ItemStack output) {
-        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).contains(output));
-    }
-    
-    public static boolean removeKettleRecipe(List<ItemStack> outputs) {
-        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs));
-    }
-    
-    public static boolean removeKettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack fluid, List<ItemStack> outputs, int cookTime) {
-        return getKettleRecipes().removeIf(r -> r.getResults(new ItemStackHandler()).containsAll(outputs)
-                                               && r.getResults(new ItemStackHandler()).size() == outputs.size()
-                                               && r.getIngredients().containsAll(inputs)
-                                               && r.getIngredients().size() == inputs.size()
-                                               && (r.getCatalyst().equals(catalyst) || catalyst == null)
-                                               && (r.getInputFluid() == null && fluid == null || (r.getInputFluid() != null && r.getInputFluid().containsFluid(fluid)))
-                                               && (cookTime == -1 || r.getCookTime() == cookTime));
+    public static boolean removeKettleRecipeByName(ResourceLocation name) {
+        return removeRecipeByName(name,RecipeTypes.KETTLE);
     }
     
 
@@ -288,23 +280,18 @@ public class Recipes {
         FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
                 .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
                 .forEach(entry -> {
-
                     List<Ingredient> i = new ArrayList<>();
                     i.add(Ingredient.fromStacks(entry.getKey()));
-
                     List<ItemStack> o = new ArrayList<>();
-
                     o.add(entry.getValue());
-
                     WokRecipe wokRecipe =  new WokRecipe(i,null,o, 0);
-
-                    addRecipe(entry.getKey().getItem().getRegistryName(),wokRecipe);
-
+                    ResourceLocation name = entry.getKey().getItem().getRegistryName();
+                    String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
+                    addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
                 });
         if (ExSartagine.DEBUG) {
             ExSartagine.DebugStuff.run();
         }
-
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, IRecipeType<R> type) {

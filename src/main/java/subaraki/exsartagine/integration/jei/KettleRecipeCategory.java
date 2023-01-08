@@ -45,7 +45,7 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
     @Override
     public void setupRecipes(IModRegistry registry) {
 
-        Collection<KettleRecipe> recs = Recipes.getRecipes(RecipeTypes.KETTLE);
+        Collection<KettleRecipe> recs = Recipes.getKettleRecipes();
         if (recs == null) return;
 
         List<KettleRecipeWrapper> recipes = recs.stream()
