@@ -1,18 +1,18 @@
 package subaraki.exsartagine.tileentity.util;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import subaraki.exsartagine.recipe.CustomFluidRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
-import subaraki.exsartagine.tileentity.Cooker;
 
 import java.util.List;
 
-public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler, R extends CustomFluidRecipe<T,U>> extends TileEntity implements ITickable, Cooker {
+public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler, R extends CustomFluidRecipe<T,U>> extends KitchenwareBlockEntity {
 
     protected T inventoryInput;
     protected T inventoryOutput;
@@ -33,27 +33,16 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
 
     protected abstract void initInventory();
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public int getProgress() {
-        return progress;
-    }
-
-    @Override
-    public int getCookTime() {
-        return cookTime;
-    }
-
     public T getInventoryInput() {
         return inventoryInput;
     }
 
     public T getInventoryOutput() {
         return inventoryOutput;
+    }
+
+    public T getEntireItemInventory() {
+        return (T) new CombinedInvWrapper((IItemHandlerModifiable) inventoryInput,(IItemHandlerModifiable) inventoryOutput);
     }
 
     public U getFluidInventoryInput() {

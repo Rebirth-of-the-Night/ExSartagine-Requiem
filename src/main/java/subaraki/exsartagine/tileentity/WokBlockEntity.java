@@ -1,18 +1,13 @@
 package subaraki.exsartagine.tileentity;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockKettle;
@@ -22,7 +17,7 @@ import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
 
 import java.util.List;
 
-public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, FluidTank, WokRecipe> {
+public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, FluidTank, WokRecipe> implements ITickable {
 
 	public WokBlockEntity() {
 		initInventory();
@@ -152,17 +147,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		return super.getCapability(capability, facing);
 	}
 
-
-
-	public void setHeated(){
-		isCooking = true;
-	}
-
-	public void setCold(){
-		isCooking = false;
-		progress = 0;
-	}
-
 	public boolean isCooking(){
 		return isCooking;
 	}
@@ -170,7 +154,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setInteger("cooktime", progress);
 		compound.setBoolean("cooking", isCooking);
 		compound.setTag("inv", inventoryInput.serializeNBT());
 		compound.setTag("invO", inventoryOutput.serializeNBT());
@@ -183,9 +166,8 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		if(compound.hasKey("cooktime") && compound.hasKey("cooking")){
+		if(compound.hasKey("cooking")){
 			this.isCooking = compound.getBoolean("cooking");
-			this.progress = compound.getInteger("cooktime");
 		}
 		inventoryInput.deserializeNBT(compound.getCompoundTag("inv"));
 		inventoryOutput.deserializeNBT(compound.getCompoundTag("invO"));
@@ -194,59 +176,11 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		rotation = compound.getDouble("rotation");
 	}
 
-	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-
-		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt =  super.getUpdateTag();
-		writeToNBT(nbt);
-		return nbt;
-	}
-	////////////////////////////////////////////////////////////////////
-
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-		return oldState.getBlock() != newSate.getBlock();
-	}
-
 	public void giveItems(EntityPlayer playerIn) {
 		for (int i = 0; i < inventoryOutput.getSlots();i++) {
 			ItemStack stack = inventoryOutput.extractItem(i,Integer.MAX_VALUE,false);
 			ItemHandlerHelper.giveItemToPlayer(playerIn,stack);
 		}
-	}
-
-	@Override
-	public void setCooking() {
-
-	}
-
-	@Override
-	public void stopCooking() {
-
-	}
-
-	@Override
-	public IItemHandler getInventory() {
-		return null;
 	}
 
 	public class WokStackHandler extends ItemStackHandler {
