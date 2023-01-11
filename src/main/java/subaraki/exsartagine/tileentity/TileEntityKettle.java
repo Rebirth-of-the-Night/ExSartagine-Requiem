@@ -27,20 +27,19 @@ import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
 import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityKettle extends TileEntity implements ITickable {
+public class TileEntityKettle extends KitchenwareBlockEntity implements ITickable {
 
     private static final int OUTPUT_START = 10;
 
     public KettleRecipe cached;
-    public int progress;
     public boolean running;
-    public int cookTime = -1;
 
     public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9 + 1);
 
@@ -263,7 +262,7 @@ public class TileEntityKettle extends TileEntity implements ITickable {
     }
 
     @Override
-    public IItemHandler getInventory() {
+    public IItemHandler getEntireItemInventory() {
         return handler;
     }
 
@@ -288,9 +287,7 @@ public class TileEntityKettle extends TileEntity implements ITickable {
     @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger("cookTime", cookTime);
         compound.setBoolean("running", running);
-        compound.setInteger("progress", progress);
         compound.setTag("inv", handler.serializeNBT());
         NBTTagCompound fluidInputCompound = new NBTTagCompound();
         NBTTagCompound fluidOutputCompound = new NBTTagCompound();
@@ -307,8 +304,6 @@ public class TileEntityKettle extends TileEntity implements ITickable {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         this.running = compound.getBoolean("running");
-        this.cookTime = compound.getInteger("cookTime");
-        this.progress = compound.getInteger("progress");
         if (compound.hasKey("inv"))
             handler.deserializeNBT(compound.getCompoundTag("inv"));
 
@@ -317,36 +312,5 @@ public class TileEntityKettle extends TileEntity implements ITickable {
 
         fluidInputTank.readFromNBT(fluidInputCompound);
         fluidOutputTank.readFromNBT(fluidOutputCompound);
-    }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
-    }
-
-    /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return new SPacketUpdateTileEntity(getPos(), 0, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        this.readFromNBT(pkt.getNbtCompound());
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = super.getUpdateTag();
-        writeToNBT(nbt);
-        return nbt;
-    }
-
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return oldState.getBlock() != newSate.getBlock();
     }
 }

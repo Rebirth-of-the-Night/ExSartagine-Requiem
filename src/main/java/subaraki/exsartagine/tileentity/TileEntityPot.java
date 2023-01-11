@@ -12,13 +12,13 @@ import subaraki.exsartagine.recipe.Recipes;
 
 public class TileEntityPot extends TileEntityCooker {
 
-    private final int cookTime = 125;
     public PotRecipe cached;
 
     public FluidTank fluidTank = new FluidTank(1000);
 
     public TileEntityPot() {
         initInventory(2);
+        cookTime = 125;
     }
 
     public int getWaterLevel() {
@@ -26,7 +26,7 @@ public class TileEntityPot extends TileEntityCooker {
     }
 
     public void replenishWater() {
-        this.fluidTank.fill(new FluidStack(FluidRegistry.WATER,1000),false);
+        this.fluidTank.fill(new FluidStack(FluidRegistry.WATER, 1000), false);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TileEntityPot extends TileEntityCooker {
             if (canRun()) {
                 PotRecipe recipe = getOrCreateRecipe();
                 if (recipe != null) {
-                    if (cookTime == progress) {
+                    if (cookTime <= progress) {
                         process();
                     } else {
                         if (heated) {
@@ -46,7 +46,7 @@ public class TileEntityPot extends TileEntityCooker {
                         }
                         progress++;
                         if (world.rand.nextInt(10) == 0)
-                        fluidTank.drain(5,true);
+                            fluidTank.drain(5, true);
                         markDirty();
                     }
                 }
@@ -130,11 +130,6 @@ public class TileEntityPot extends TileEntityCooker {
         super.writeToNBT(compound);
         fluidTank.writeToNBT(compound);
         return compound;
-    }
-
-    @Override
-    public int getCookTime() {
-        return 125;
     }
 
     @Override

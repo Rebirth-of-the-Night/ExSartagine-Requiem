@@ -1,26 +1,19 @@
 package subaraki.exsartagine.tileentity;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
-public abstract class TileEntityCooker extends TileEntity implements ITickable {
+public abstract class TileEntityCooker extends KitchenwareBlockEntity implements ITickable {
 
 	protected boolean heated = false;
-	protected int progress = 0;
-
 	protected static final int RESULT = 1;
 	protected static final int INPUT = 0;
 
@@ -35,6 +28,11 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable {
 		input = new RangedWrapper(inventory, 0, 1);
 		output = new RangedWrapper(inventory, 1, slots);
 	}
+
+	public IItemHandler getEntireItemInventory() {
+		return inventory;
+	}
+
 
 	public void setResult(ItemStack stack){
 		setResult(RESULT, stack);
@@ -90,7 +88,7 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable {
 	}
 
 	public IItemHandler getInventory() {
-		return getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		return inventory;
 	}
 
 	@Override
@@ -106,15 +104,9 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable {
 	}
 
 	@Override
-	public int getProgress(){
-		return progress;
-	}
-
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setInteger("cooktime", progress);
-		compound.setBoolean("cooking", heated);
+		compound.setBoolean("heated", heated);
 		compound.setTag("inv", inventory.serializeNBT());
 		return compound;
 	}
@@ -123,51 +115,10 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		if(compound.hasKey("cooktime") && compound.hasKey("cooking")){
-			this.heated = compound.getBoolean("cooking");
-			this.progress = compound.getInteger("cooktime");
+			this.heated = compound.getBoolean("heated");
 		}
 		if(compound.hasKey("inv"))
 			inventory.deserializeNBT(compound.getCompoundTag("inv"));
-	}
-
-	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-
-		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt =  super.getUpdateTag();
-		writeToNBT(nbt);
-		return nbt;
-	}
-
-	//calls readFromNbt by default. no need to add anything in here
-	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
-	}
-	////////////////////////////////////////////////////////////////////
-
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
-	}
-
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-	{
-		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	public class ISHCooker extends ItemStackHandler {

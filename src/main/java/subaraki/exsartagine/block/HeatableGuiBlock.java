@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import subaraki.exsartagine.ExSartagine;
 
-public class HeatableGuiBlock extends BlockHeatable {
+public class HeatableGuiBlock extends KitchenwareBlock {
 
     protected final int guiID;
 

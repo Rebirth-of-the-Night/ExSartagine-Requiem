@@ -11,11 +11,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
-public abstract class BlockHeatable extends Block implements Heatable {
+public abstract class KitchenwareBlock extends Block implements Heatable {
 
 
-    public BlockHeatable(Material materialIn) {
+    public KitchenwareBlock(Material materialIn) {
         super(materialIn);
     }
 
@@ -28,13 +29,9 @@ public abstract class BlockHeatable extends Block implements Heatable {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof CookerInv) {
-            CookerInv te = (CookerInv)tileentity;
-            if(te.getInventory() instanceof ItemStackHandler)
-            {
-                ItemStackHandler inventory = (ItemStackHandler) te.getInventory();
-                Utils.scatter(worldIn, pos, inventory);
-            }
+        if (tileentity instanceof KitchenwareBlockEntity) {
+            KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
+            Utils.scatter(worldIn, pos, te.getEntireItemInventory());
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -73,7 +70,7 @@ public abstract class BlockHeatable extends Block implements Heatable {
 
     @Override
     public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
-        ((Cooker)world.getTileEntity(pos)).setHeated(hot);
+        ((KitchenwareBlockEntity)world.getTileEntity(pos)).setHeated(hot);
         world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
     }
 }

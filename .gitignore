@@ -21,12 +21,3 @@ build
 eclipse
 run
 *.txt
-/mods/
-/resourcepacks/
-/logs/
-/config/
-/saves/
-*.log
-/generated/
-/scripts/
-/crash-reports/

@@ -29,7 +29,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.item.ExSartagineItems;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 
-public class WokBlock extends BlockHeatable {
+public class WokBlock extends KitchenwareBlock {
 
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;

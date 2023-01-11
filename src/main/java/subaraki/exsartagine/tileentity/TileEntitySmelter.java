@@ -16,12 +16,13 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 	public TileEntitySmelter() {
 		initInventory(3);
+		cookTime = 199;
 	}
 
 	@Override
 	public void update() {
 
-		if(progress == 199)
+		if(progress >= cookTime)
 		{
 			if(!world.isRemote)
 			{

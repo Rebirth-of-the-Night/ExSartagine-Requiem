@@ -20,7 +20,7 @@ public class Utils {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void scatter(World worldIn, BlockPos pos, ItemStackHandler inventory) {
+    public static void scatter(World worldIn, BlockPos pos, IItemHandler inventory) {
         dropInventoryItems(worldIn, pos, inventory);
     }
 
