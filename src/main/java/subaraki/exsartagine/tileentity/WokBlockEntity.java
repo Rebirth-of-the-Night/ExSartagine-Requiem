@@ -36,7 +36,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 					if (cookTime <= progress && canProcess(recipe)) {
 						process();
 					} else {
-						if (running) {
+						if (cooking) {
 
 						} else {
 							start();

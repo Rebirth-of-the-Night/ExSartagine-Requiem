@@ -5,7 +5,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 import subaraki.exsartagine.recipe.CustomFluidRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
@@ -18,14 +17,9 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
     protected T inventoryOutput;
     protected U fluidInventoryInput;
     protected U fluidInventoryOutput;
-
     protected R cached;
-
     protected IRecipeType<R> recipeType;
-
-    public int progress;
-    public boolean running;
-    public int cookTime = -1;
+    public boolean cooking;
 
     protected FluidRecipeBlockEntity() {
         initInventory();
@@ -83,7 +77,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
             progress--;
             markDirty();
         }
-        running = false;
+        cooking = false;
     }
 
     public void process() {
@@ -93,7 +87,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
     }
 
     public void start() {
-        running = true;
+        cooking = true;
         cookTime = cached.getCookTime();
     }
 
