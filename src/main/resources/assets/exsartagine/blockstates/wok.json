@@ -1,0 +1,39 @@
+{
+    "variants": {
+        "normal": {
+             "model": "exsartagine:wok" 
+         },
+        "facing=east,heated=false": {
+            "model": "exsartagine:wok",
+            "y": 90
+        },
+        "facing=west,heated=false": {
+            "model": "exsartagine:wok",
+            "y": 270
+        },
+        "facing=south,heated=false": {
+            "model": "exsartagine:wok",
+            "y": 180
+        },
+        "facing=north,heated=false": {
+            "model": "exsartagine:wok",
+            "y": 0
+        },
+        "facing=east,heated=true": {
+            "model": "exsartagine:wok",
+            "y": 90
+        },
+        "facing=west,heated=true": {
+            "model": "exsartagine:wok",
+            "y": 270
+        },
+        "facing=south,heated=true": {
+            "model": "exsartagine:wok",
+            "y": 180
+        },
+        "facing=north,heated=true": {
+            "model": "exsartagine:wok",
+            "y": 0
+        }
+    }
+}

@@ -18,7 +18,7 @@ public class TileEntityPot extends TileEntityCooker {
     public FluidTank fluidTank = new FluidTank(1000);
 
     public TileEntityPot() {
-        initInventory();
+        initInventory(2);
     }
 
     public int getWaterLevel() {
@@ -39,7 +39,7 @@ public class TileEntityPot extends TileEntityCooker {
                     if (cookTime == progress) {
                         process();
                     } else {
-                        if (isCooking) {
+                        if (heated) {
 
                         } else {
                             start();
@@ -52,7 +52,7 @@ public class TileEntityPot extends TileEntityCooker {
                 }
             } else {
                 decreaseProgress();
-                isCooking = false;
+                heated = false;
                 markDirty();
             }
 
@@ -66,7 +66,7 @@ public class TileEntityPot extends TileEntityCooker {
     }
 
     public void start() {
-        isCooking = true;
+        heated = true;
     }
 
     public void decreaseProgress() {

@@ -42,7 +42,7 @@ public class GuiPot extends GuiContainer {
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
 		fade +=0.05f;
-		if(pot.isCooking())
+		if(pot.isHeated())
 		{
 			this.drawTexturedModalRect(i+56, j+53, 176, 28, 16, 16); //furnace lit
 

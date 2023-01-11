@@ -12,8 +12,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.block.BlockKettle;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
@@ -33,7 +35,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void update() {
 		if (!world.isRemote) {
-			if (canStart()) {
+			if (isHeated() && canStart()) {
 				WokRecipe recipe = getOrCreateRecipe();
 				if (recipe != null) {
 					if (cookTime <= progress && canProcess(recipe)) {
@@ -52,6 +54,14 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 				decreaseProgress();
 			}
 		}
+	}
+
+	public boolean isHeated() {
+		return world.getBlockState(pos).getValue(BlockKettle.HEATED);
+	}
+
+	public void setHeated(boolean heated) {
+		world.setBlockState(pos, blockType.getDefaultState().withProperty(BlockKettle.HEATED, heated));
 	}
 
 	public boolean canProcess(WokRecipe recipe) {
@@ -144,11 +154,11 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 
 
 
-	public void setCooking(){
+	public void setHeated(){
 		isCooking = true;
 	}
 
-	public void stopCooking(){
+	public void setCold(){
 		isCooking = false;
 		progress = 0;
 	}
@@ -222,6 +232,21 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 			ItemStack stack = inventoryOutput.extractItem(i,Integer.MAX_VALUE,false);
 			ItemHandlerHelper.giveItemToPlayer(playerIn,stack);
 		}
+	}
+
+	@Override
+	public void setCooking() {
+
+	}
+
+	@Override
+	public void stopCooking() {
+
+	}
+
+	@Override
+	public IItemHandler getInventory() {
+		return null;
 	}
 
 	public class WokStackHandler extends ItemStackHandler {

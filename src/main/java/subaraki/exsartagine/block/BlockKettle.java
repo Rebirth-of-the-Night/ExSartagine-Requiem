@@ -86,11 +86,7 @@ public class BlockKettle extends HeatableGuiBlock {
                 if (!Recipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
-                } else if (Recipes.isHeatSource(down)) {
-                    startHeating(world, state, pos);
-                } else {
-                    stopHeating(world, state, pos);
-                }
+                } else setHeating(world, state, pos,Recipes.isHeatSource(down));
             }
         }
     }
@@ -111,13 +107,8 @@ public class BlockKettle extends HeatableGuiBlock {
     }
 
     @Override
-    public void startHeating(World world, IBlockState state, BlockPos pos) {
-        world.setBlockState(pos, state.withProperty(HEATED,true));
-    }
-
-    @Override
-    public void stopHeating(World world, IBlockState state, BlockPos pos) {
-        world.setBlockState(pos, state.withProperty(HEATED,false));
+    public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
+        world.setBlockState(pos, state.withProperty(HEATED,hot));
     }
 
     @Override

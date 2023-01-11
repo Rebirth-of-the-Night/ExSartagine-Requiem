@@ -90,7 +90,7 @@ public class BlockSmelter extends HeatableGuiBlock {
 
 		if(worldIn.getTileEntity(pos) instanceof TileEntitySmelter)
 		{
-			if(((TileEntitySmelter)worldIn.getTileEntity(pos)).isCooking() && !((TileEntitySmelter)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty())
+			if(((TileEntitySmelter)worldIn.getTileEntity(pos)).isHeated() && !((TileEntitySmelter)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty())
 			{
 				for(int i = 0; i < 25; i++)
 				{

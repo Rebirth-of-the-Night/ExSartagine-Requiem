@@ -114,7 +114,7 @@ public class BlockPot extends HeatableGuiBlock {
 
 		if(worldIn.getTileEntity(pos) instanceof TileEntityPot)
 		{
-			if(((TileEntityPot)worldIn.getTileEntity(pos)).isCooking() && !((TileEntityPot)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty() && ((TileEntityPot)worldIn.getTileEntity(pos)).getWaterLevel() > 0)
+			if(((TileEntityPot)worldIn.getTileEntity(pos)).isHeated() && !((TileEntityPot)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty() && ((TileEntityPot)worldIn.getTileEntity(pos)).getWaterLevel() > 0)
 			{
 				for(int i = 0 ; i < 10 ; i++)
 					worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, -0.02D, 0.0D, new int[1]);
@@ -165,17 +165,9 @@ public class BlockPot extends HeatableGuiBlock {
 	}
 
 	@Override
-	public void startHeating(World world, IBlockState state, BlockPos pos) {
-		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0)
-		{
-			super.startHeating(world, state, pos);
-		}
-	}
-
-	@Override
-	public void stopHeating(World world, IBlockState state, BlockPos pos) {
+	public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
 		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0) {
-			super.stopHeating(world, state, pos);
+			super.setHeating(world, state, pos,hot);
 		}
 	}
 

@@ -33,13 +33,13 @@ public class KettleScreen extends GuiContainer {
     private static final ResourceLocation GUI_POT = new ResourceLocation(ExSartagine.MODID, "textures/gui/kettle.png");
 
     private final InventoryPlayer playerInventory;
-    private final TileEntityKettle pot;
+    private final TileEntityKettle kettle;
 
-    public KettleScreen(EntityPlayer player, TileEntityKettle pot) {
-        super(new ContainerKettle(player.inventory, pot));
+    public KettleScreen(EntityPlayer player, TileEntityKettle kettle) {
+        super(new ContainerKettle(player.inventory, kettle));
 
         playerInventory = player.inventory;
-        this.pot = pot;
+        this.kettle = kettle;
         xSize += 16;
         ySize += 16;
     }
@@ -76,12 +76,12 @@ public class KettleScreen extends GuiContainer {
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
-        float progress = 25 * (float) pot.getProgress() / pot.getCookTime();
+        float progress = 25 * (float) kettle.getProgress() / kettle.getCookTime();
         this.drawTexturedModalRect(i + 91, j + 33, 0, 184, (int) progress, 15); //Arrow
 
         //Draw fluid
-            renderFluid(mc, i + 9, j + 15, pot.fluidInputTank);
-            renderFluid(mc, i + 176, j + 15, pot.fluidOutputTank);
+            renderFluid(mc, i + 9, j + 15, kettle.fluidInputTank);
+            renderFluid(mc, i + 176, j + 15, kettle.fluidOutputTank);
     }
 
     public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {
@@ -215,11 +215,11 @@ public class KettleScreen extends GuiContainer {
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         super.renderHoveredToolTip(x, y);
-        if (isPointInRegion(8, 14, 7, 52, x, y) && pot.fluidInputTank.getFluid() != null) {
-            this.drawHoveringText(getFluidTooltip(pot.fluidInputTank), x, y, fontRenderer);
+        if (isPointInRegion(8, 14, 7, 52, x, y) && kettle.fluidInputTank.getFluid() != null) {
+            this.drawHoveringText(getFluidTooltip(kettle.fluidInputTank), x, y, fontRenderer);
         }
-        if (isPointInRegion(176, 14, 7, 52, x, y) && pot.fluidOutputTank.getFluid() != null) {
-            this.drawHoveringText(getFluidTooltip(pot.fluidOutputTank), x, y, fontRenderer);
+        if (isPointInRegion(176, 14, 7, 52, x, y) && kettle.fluidOutputTank.getFluid() != null) {
+            this.drawHoveringText(getFluidTooltip(kettle.fluidOutputTank), x, y, fontRenderer);
         }
     }
 }

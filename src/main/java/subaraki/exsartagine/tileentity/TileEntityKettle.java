@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
+public class TileEntityKettle extends TileEntity implements ITickable {
 
     private static final int OUTPUT_START = 10;
 
@@ -260,17 +260,6 @@ public class TileEntityKettle extends TileEntity implements ITickable, Cooker {
         public FluidStack drain(int maxDrain, boolean doDrain) {
             return fluidOutputTank.drain(maxDrain, doDrain);
         }
-    }
-
-    @Override
-    public void setCooking() {
-        setHeated(true);
-    }
-
-    @Override
-    public void stopCooking() {
-        setHeated(false);
-        progress = 0;
     }
 
     @Override

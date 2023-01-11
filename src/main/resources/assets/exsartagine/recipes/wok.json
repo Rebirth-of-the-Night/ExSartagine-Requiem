@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "exsartagine:wok",
+    "pattern": [
+        "   ",
+        "I S",
+        "III"
+    ],
+    "key": {
+        "I": { "item": "minecraft:iron_ingot"},
+        "S": { "item": "minecraft:stick"}
+    },
+    "result": {
+        "item": "exsartagine:wok"
+    }
+}

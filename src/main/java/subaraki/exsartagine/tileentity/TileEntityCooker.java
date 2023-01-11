@@ -16,9 +16,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
-public abstract class TileEntityCooker extends TileEntity implements ITickable, Cooker {
+public abstract class TileEntityCooker extends TileEntity implements ITickable {
 
-	protected boolean isCooking = false;
+	protected boolean heated = false;
 	protected int progress = 0;
 
 	protected static final int RESULT = 1;
@@ -27,13 +27,6 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 	private ISHCooker inventory;
 	private RangedWrapper input;
 	private RangedWrapper output;
-
-	/**inits inventory with 2 slots. input and output*/
-	protected void initInventory(){
-		inventory = new ISHCooker(2);
-		input = new RangedWrapper(inventory, 0, 1);
-		output = new RangedWrapper(inventory, 1, 2);
-	}
 	
 	/**init inventory with more slots, where 0 is input, and x>0 is output*/
 	protected void initInventory(int slots) {
@@ -41,11 +34,6 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 		
 		input = new RangedWrapper(inventory, 0, 1);
 		output = new RangedWrapper(inventory, 1, slots);
-		
-	}
-
-	public void setEntry(ItemStack stack){
-		getInventory().insertItem(INPUT, stack, false);
 	}
 
 	public void setResult(ItemStack stack){
@@ -106,18 +94,15 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 	}
 
 	@Override
-	public void setCooking(){
-		isCooking = true;
+	public void setHeated(boolean hot){
+		heated = hot;
+		if (!heated) {
+			progress = 0;
+		}
 	}
 
-	@Override
-	public void stopCooking(){
-		isCooking = false;
-		progress = 0;
-	}
-
-	public boolean isCooking(){
-		return isCooking;
+	public boolean isHeated(){
+		return heated;
 	}
 
 	@Override
@@ -129,7 +114,7 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("cooktime", progress);
-		compound.setBoolean("cooking", isCooking);
+		compound.setBoolean("cooking", heated);
 		compound.setTag("inv", inventory.serializeNBT());
 		return compound;
 	}
@@ -138,7 +123,7 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		if(compound.hasKey("cooktime") && compound.hasKey("cooking")){
-			this.isCooking = compound.getBoolean("cooking");
+			this.heated = compound.getBoolean("cooking");
 			this.progress = compound.getInteger("cooktime");
 		}
 		if(compound.hasKey("inv"))
@@ -193,15 +178,10 @@ public abstract class TileEntityCooker extends TileEntity implements ITickable, 
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (slot == 0 && TileEntityCooker.this.isValid(stack) || slot > 0)
+			if (slot == INPUT && TileEntityCooker.this.isValid(stack) || slot > INPUT)
 				return super.insertItem(slot, stack, simulate);
 			else
 				return stack;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return super.extractItem(slot, amount, simulate);
 		}
 
 		@Override

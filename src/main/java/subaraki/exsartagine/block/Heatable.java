@@ -5,9 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface Heatable {
-    void startHeating(World world, IBlockState state, BlockPos pos);
-
-    void stopHeating(World world, IBlockState state, BlockPos pos);
+    void setHeating(World world, IBlockState state, BlockPos pos,boolean hot);
 
     Class<?> getTileEntity();
 }

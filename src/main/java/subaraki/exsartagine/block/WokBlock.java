@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -33,6 +34,8 @@ public class WokBlock extends BlockHeatable {
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
+	public static final PropertyBool HEATED = PropertyBool.create("heated");
+
 	public WokBlock() {
 		super(Material.IRON);
 		setLightLevel(0.0f);
@@ -41,6 +44,7 @@ public class WokBlock extends BlockHeatable {
 		setHarvestLevel("pickaxe", 1);
 		setHardness(3.5f);
 		this.setLightOpacity(0);
+		setDefaultState(getDefaultState().withProperty(HEATED,false));
 	}
 
 	/////////////////rendering//////////////
@@ -127,13 +131,13 @@ public class WokBlock extends BlockHeatable {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FACING);
+		return new BlockStateContainer(this, FACING,HEATED);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(FACING).getHorizontalIndex();
+		return state.getValue(FACING).getHorizontalIndex() + (state.getValue(HEATED) ? 8 : 0);
 	}
 
 	@Override
@@ -146,7 +150,13 @@ public class WokBlock extends BlockHeatable {
 			enumfacing = EnumFacing.NORTH;
 		}
 
-		return this.getDefaultState().withProperty(FACING, enumfacing);
+		IBlockState state = this.getDefaultState().withProperty(FACING, enumfacing);
+
+		if ((meta & 0b1000)  == 0b1000) {
+			state = state.withProperty(HEATED,true);
+		}
+
+		return state;
 	}
 
 	@Override

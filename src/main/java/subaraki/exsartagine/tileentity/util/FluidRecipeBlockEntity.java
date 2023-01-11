@@ -8,13 +8,13 @@ import net.minecraftforge.items.IItemHandler;
 import subaraki.exsartagine.recipe.CustomFluidRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.tileentity.Cooker;
 
 import java.util.List;
 
-public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler, R extends CustomFluidRecipe<T,U>> extends TileEntity implements ITickable {
+public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IFluidHandler, R extends CustomFluidRecipe<T,U>> extends TileEntity implements ITickable, Cooker {
 
     protected T inventoryInput;
-
     protected T inventoryOutput;
     protected U fluidInventoryInput;
     protected U fluidInventoryOutput;
@@ -36,6 +36,16 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
+    }
+
+    @Override
+    public int getCookTime() {
+        return cookTime;
     }
 
     public T getInventoryInput() {
