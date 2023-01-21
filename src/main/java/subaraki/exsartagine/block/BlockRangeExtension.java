@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -36,25 +35,15 @@ public class BlockRangeExtension extends Block {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public BlockRangeExtension(String name) {
+    public BlockRangeExtension() {
         super(Material.ROCK);
-
-        setLightLevel(0.0f);
         setHardness(8f);
         setSoundType(SoundType.STONE);
         setCreativeTab(CreativeTabs.TOOLS);
         setHarvestLevel("pickaxe", 0);
-        setTranslationKey(ExSartagine.MODID + "." + name);
-        setRegistryName(name);
         setHardness(3.5f);
         this.setLightOpacity(0);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
-
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return false;
     }
 
     @Override
@@ -95,11 +84,11 @@ public class BlockRangeExtension extends Block {
                         IBlockState newState = null;
 
                         if (isLit)
-                            newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
+                            newState = ExSartagineBlocks.range_extended_lit.getDefaultState().
                                     withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
 
                         else
-                            newState = ExSartagineBlocks.range_extension.getDefaultState().
+                            newState = ExSartagineBlocks.range_extended.getDefaultState().
                                     withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
 
                         world.setBlockState(nextTo, newState, 3);

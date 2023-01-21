@@ -247,8 +247,8 @@ public class Recipes {
     public static void init() {
         addPlaceable(Blocks.FURNACE);
         addHeatSource(Blocks.LIT_FURNACE);
-        addPlaceable(ExSartagineBlocks.range_extension);
-        addHeatSource(ExSartagineBlocks.range_extension_lit);
+        addPlaceable(ExSartagineBlocks.range_extended);
+        addHeatSource(ExSartagineBlocks.range_extended_lit);
         addHeatSource(Blocks.LAVA);
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);

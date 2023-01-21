@@ -99,7 +99,7 @@ public class ExSartagineItems {
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
 		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
-		range_extension = new ItemBlock(ExSartagineBlocks.range_extension).setRegistryName(ExSartagineBlocks.range_extension.getRegistryName()).setCreativeTab(pots);
+		range_extension = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
 		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");

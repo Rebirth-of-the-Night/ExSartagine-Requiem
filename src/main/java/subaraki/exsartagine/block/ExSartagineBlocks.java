@@ -11,8 +11,8 @@ public class ExSartagineBlocks {
 	public static Block smelter;
 	public static Block pot;
 	public static Block range;
-	public static Block range_extension;
-	public static Block range_extension_lit;
+	public static Block range_extended;
+	public static Block range_extended_lit;
 	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
@@ -20,8 +20,8 @@ public class ExSartagineBlocks {
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
 		range = new BlockRange();
-		range_extension = new BlockRangeExtension("range_extended");
-		range_extension_lit = new BlockRangeExtension("range_extended_lit");
+		range_extended = new BlockRangeExtension().setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
+		range_extended_lit = new BlockRangeExtension().setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
 		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
 		register(registry);
 	}
@@ -31,8 +31,8 @@ public class ExSartagineBlocks {
 		registry.register(smelter);
 		registry.register(pot);
 		registry.register(range);
-		registry.register(range_extension);
-		registry.register(range_extension_lit);
+		registry.register(range_extended);
+		registry.register(range_extended_lit);
 		registry.register(kettle);
 	}
 }
