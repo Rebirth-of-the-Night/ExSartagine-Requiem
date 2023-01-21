@@ -70,33 +70,39 @@ public class BlockRange extends Block {
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        EnumFacing enumfacing = state.getValue(FACING);
-        BlockPos rangeExPos = pos.offset(enumfacing.rotateYCCW());
 
-        if (world.getBlockState(rangeExPos).getBlock() == BlockRangeExtension.getUsedBlock()) {
 
-            if (world.getTileEntity(pos) instanceof TileEntityRange) {
-                TileEntityRange range = (TileEntityRange) world.getTileEntity(pos);
-                boolean isLit = range.isFueled();
+            EnumFacing dir = state.getValue(FACING);
 
-                Block block = isLit ? ExSartagineBlocks.range_extended_lit :ExSartagineBlocks.range_extended;
+            EnumFacing leftDir = dir.rotateY();
+            EnumFacing rightDir = dir.rotateYCCW();
+            
+            if (world.getBlockState(fromPos).getBlock() == BlockRangeExtension.getUsedBlock()
+                    && (pos.offset(leftDir).equals(fromPos)||pos.offset(rightDir).equals(fromPos))) {
 
-                //determine wether or not the new furnace needs to be lit
-                IBlockState newState = block.getDefaultState().
-                        withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
+                if (world.getTileEntity(pos) instanceof TileEntityRange) {
+                    TileEntityRange range = (TileEntityRange) world.getTileEntity(pos);
+                    boolean isLit = range.isFueled();
 
-                world.setBlockState(rangeExPos, newState, 3);
+                    Block block = isLit ? ExSartagineBlocks.range_extended_lit : ExSartagineBlocks.range_extended;
 
-                if (world.getTileEntity(rangeExPos) instanceof TileEntityRangeExtension) {
-                    TileEntityRangeExtension extensionRange = (TileEntityRangeExtension) world.getTileEntity(rangeExPos);
-                    if (range.canConnect()) {
-                        extensionRange.setParentRange(pos);
-                        range.connect(extensionRange);
-                        extensionRange.setCooking(isLit);
+                    //determine whether the new furnace needs to be lit
+                    IBlockState newState = block.getDefaultState().
+                            withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
+
+                    world.setBlockState(fromPos, newState, 3);
+                    TileEntity te = world.getTileEntity(fromPos);
+
+                    if (te instanceof TileEntityRangeExtension) {
+                        TileEntityRangeExtension extensionRange = (TileEntityRangeExtension) te;
+                        if (range.canConnect()) {
+                            extensionRange.setParentRange(pos);
+                            range.connect(extensionRange);
+                            extensionRange.setCooking(isLit);
+                        }
                     }
                 }
             }
-        }
     }
 
     @Override

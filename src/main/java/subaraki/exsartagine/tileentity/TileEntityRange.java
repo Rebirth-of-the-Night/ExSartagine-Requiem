@@ -24,7 +24,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
 	private final ItemStackHandler inventory = new ItemStackHandler(9);
 
-	private List<BlockPos> connected = new ArrayList<BlockPos>();
+	private List<BlockPos> connected = new ArrayList<>();
 
 	/**wether or not this range is fueling connected entries*/
 	private boolean isCooking;
@@ -148,20 +148,19 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
 	public boolean canConnect(){
 		//if the last one is filled, the rest is too.
-		return connected.isEmpty() || connected.size() < 4;
+		return connected.size() < 4;
 	}
 
 	public void connect(TileEntityRangeExtension tere){
 		if(canConnect())
 			connected.add(tere.getPos());
-
 		markDirty();
 	}
 
 	public void disconnect(BlockPos entry){
 		if(connected.contains(entry))
 		{
-			List<BlockPos> copy = new ArrayList<BlockPos>();
+			List<BlockPos> copy = new ArrayList<>();
 			for(BlockPos saved : connected)
 			{
 				if(saved.equals(entry))
