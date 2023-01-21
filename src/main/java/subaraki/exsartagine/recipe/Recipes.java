@@ -27,8 +27,9 @@ import java.util.*;
 public class Recipes {
 
     private static final Set<IBlockState> heatSources = new HashSet<>();
-
     private static final Set<IBlockState> placeable = new HashSet<>();
+    private static final Set<IBlockState> placeable_legs = new HashSet<>();
+
     protected static final Map<IRecipeType<?>, Map<ResourceLocation,CustomRecipe<?>>> recipes = new HashMap<>();
 
     public static <I extends IItemHandler,T extends CustomRecipe<I>> void addRecipe(T recipe) {

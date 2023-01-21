@@ -78,6 +78,8 @@ public class ExSartagineItems {
 	public static Item curd;
 	public static Item flour;
 
+	public static Item range_extension;
+
 	public static CreativeTabs foods = new CreativeTabs("exsartaginefoods") {
 		@Override
 		public ItemStack createIcon() {
@@ -97,6 +99,7 @@ public class ExSartagineItems {
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
 		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
+		range_extension = new ItemBlock(ExSartagineBlocks.range_extension).setRegistryName(ExSartagineBlocks.range_extension.getRegistryName()).setCreativeTab(pots);
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
 		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");
@@ -156,9 +159,7 @@ public class ExSartagineItems {
 		noodles_fish = new Item().setTranslationKey(MODID+".noodles_fish").setRegistryName("noodles_fish").setCreativeTab(foods);
 		noodles_meat= new Item().setTranslationKey(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
 		noodles_veggie = new Item().setTranslationKey(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
-
 		register(registry);
-
 		Oredict.addToOreDict();
 	}
 
@@ -215,6 +216,7 @@ public class ExSartagineItems {
 		registry.register(spaghetti_bolognaise);
 		registry.register(spaghetti_cheese);
 		registry.register(spaghetti_veggie);
+		registry.register(range_extension);
 	}
 
 	public static void registerRenders(){
@@ -273,6 +275,7 @@ public class ExSartagineItems {
 		registerRender(spaghetti_bolognaise, MODID, "spaghetti_bolognaise");
 		registerRender(spaghetti_cheese, MODID, "spaghetti_cheese");
 		registerRender(spaghetti_veggie, MODID, "spaghetti_veggie");
+		registerRender(range_extension,MODID,"range_extension");
 	}
 
 	public static void registerRender(Item item, String modid, String name) {

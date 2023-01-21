@@ -72,10 +72,10 @@ public class BlockRange extends Block {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
 	{
-		EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+		EnumFacing enumfacing = state.getValue(FACING);
 		BlockPos posOfRangeExtention = pos.offset(enumfacing.rotateYCCW());
 
-		if(world.getBlockState(posOfRangeExtention).getBlock() == Blocks.FURNACE){
+		if(world.getBlockState(posOfRangeExtention).getBlock() == BlockRangeExtension.getUsedBlock()){
 
 			if(world.getTileEntity(pos) instanceof TileEntityRange)
 			{
@@ -85,7 +85,7 @@ public class BlockRange extends Block {
 
 				boolean isLit = range.isFueled(); 
 
-				IBlockState newState = null; //determine wether or not the new furnace needs to be lit
+				IBlockState newState; //determine wether or not the new furnace needs to be lit
 
 				if(isLit)
 					newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
@@ -172,19 +172,19 @@ public class BlockRange extends Block {
 		{
 			if(((TileEntityRange)worldIn.getTileEntity(pos)).isFueled())
 			{
-				EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+				EnumFacing enumfacing = stateIn.getValue(FACING);
 				switch (enumfacing) {
 				case NORTH:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.3, d1, d2+0.3, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.3, d1, d2+0.3, 0.0D, 0.0D, 0.0D);
 					break;
 				case WEST:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.3, d1, d2-0.3, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+0.3, d1, d2-0.3, 0.0D, 0.0D, 0.0D);
 					break;
 				case SOUTH:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.3, d1, d2-0.3, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.3, d1, d2-0.3, 0.0D, 0.0D, 0.0D);
 					break;
 				case EAST:
-					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.3, d1, d2+0.3, 0.0D, 0.0D, 0.0D, new int[0]);
+					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0-0.3, d1, d2+0.3, 0.0D, 0.0D, 0.0D);
 					break;
 				default:
 					break;
@@ -202,7 +202,7 @@ public class BlockRange extends Block {
 
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	public IBlockState getStateFromMeta(int meta)
