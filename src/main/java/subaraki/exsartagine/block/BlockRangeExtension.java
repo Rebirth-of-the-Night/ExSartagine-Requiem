@@ -35,7 +35,6 @@ public class BlockRangeExtension extends Block {
 
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
-    public static final PropertyBool ENDBLOCK = PropertyBool.create("endblock");
 
     public BlockRangeExtension(String name) {
         super(Material.ROCK);
@@ -49,7 +48,7 @@ public class BlockRangeExtension extends Block {
         setRegistryName(name);
         setHardness(3.5f);
         this.setLightOpacity(0);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH).withProperty(ENDBLOCK, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
 
     }
 
@@ -90,7 +89,6 @@ public class BlockRangeExtension extends Block {
                     TileEntityRange parentRange = (TileEntityRange) world.getTileEntity(parentRangePos);
                     if (parentRange.canConnect()) {
                         world.setBlockToAir(nextTo);
-                        world.setBlockState(pos, world.getBlockState(pos).withProperty(ENDBLOCK, false), 3);
 
                         boolean isLit = parentRange.isFueled();
 
@@ -98,13 +96,11 @@ public class BlockRangeExtension extends Block {
 
                         if (isLit)
                             newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
-                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING)).
-                                    withProperty(ENDBLOCK, true);
+                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
 
                         else
                             newState = ExSartagineBlocks.range_extension.getDefaultState().
-                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING)).
-                                    withProperty(ENDBLOCK, true);
+                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
 
                         world.setBlockState(nextTo, newState, 3);
 
@@ -117,10 +113,6 @@ public class BlockRangeExtension extends Block {
                             parentRange.connect(extension);
                         }
                     }
-                }
-                //another extension is removed next to it
-                else if (world.getBlockState(nextTo).getBlock() == Blocks.AIR) {
-                    world.setBlockState(pos, world.getBlockState(pos).withProperty(ENDBLOCK, true), 3);
                 }
             }
         }
@@ -226,14 +218,13 @@ public class BlockRangeExtension extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, ENDBLOCK, FACING);
+        return new BlockStateContainer(this, FACING);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
         int i = 0;
         i = i | state.getValue(FACING).getHorizontalIndex();
-        i = i | ((state.getValue(ENDBLOCK) ? 1 : 0) << 2); //push to third bit
         return i;
     }
 
@@ -245,7 +236,7 @@ public class BlockRangeExtension extends Block {
             enumfacing = EnumFacing.NORTH;
         }
 
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(ENDBLOCK, (meta & 4) > 0); //facing + (saved data after facing = &4
+        return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
     @Override
@@ -260,6 +251,6 @@ public class BlockRangeExtension extends Block {
 
 
 		public static Block getUsedBlock() {
-			return ExSartagineBlocks.range_extension;
+			return Blocks.IRON_BLOCK;//ExSartagineBlocks.range_extension;
 		}
 }

@@ -192,8 +192,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 					if(setCooking)
 					{
 						IBlockState lit = ExSartagineBlocks.range_extension_lit.getDefaultState().
-								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
-								withProperty(BlockRangeExtension.ENDBLOCK, state.getValue(BlockRangeExtension.ENDBLOCK));
+								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
 						// connections get wiped here for some reason :
 						// TODO fix this
@@ -203,8 +202,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 					else
 					{
 						IBlockState unlit = ExSartagineBlocks.range_extension.getDefaultState().
-								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
-								withProperty(BlockRangeExtension.ENDBLOCK, state.getValue(BlockRangeExtension.ENDBLOCK));
+								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
 						world.setBlockState(posTere, unlit);
 						world.notifyBlockUpdate(posTere, state, unlit, 3);

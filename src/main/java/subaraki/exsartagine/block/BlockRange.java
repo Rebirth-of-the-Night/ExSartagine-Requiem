@@ -89,13 +89,11 @@ public class BlockRange extends Block {
 
 				if(isLit)
 					newState = ExSartagineBlocks.range_extension_lit.getDefaultState().
-					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
-					withProperty(BlockRangeExtension.ENDBLOCK, true);
+					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
 				else
 					newState = ExSartagineBlocks.range_extension.getDefaultState().
-					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING)).
-					withProperty(BlockRangeExtension.ENDBLOCK, true);
+					withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
 				world.setBlockState(posOfRangeExtention, newState, 3);
 
