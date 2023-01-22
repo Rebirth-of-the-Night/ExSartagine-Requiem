@@ -12,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +25,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
 
@@ -57,54 +55,28 @@ public class BlockRangeExtension extends Block {
         return false;
     }
 
+    //check to see if this extension should drop itself when a nearby block is broken
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        EnumFacing enumfacing = state.getValue(FACING);
-        BlockPos nextTo = pos.offset(enumfacing.rotateYCCW());
-
-        //the previous extension is broken : break this
-        BlockPos prev = pos.offset(enumfacing.rotateY());
-        if (world.getBlockState(prev).getBlock() == Blocks.AIR) {
-            dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-            return;
-        } else if (world.getTileEntity(pos) instanceof TileEntityRangeExtension) {
-            TileEntityRangeExtension currentRange = (TileEntityRangeExtension) world.getTileEntity(pos);
-
-            //placed (should exclude being broken from the left and having a furnace right, because the code for popping the block is above)
-            if (world.getBlockState(nextTo).getBlock() == Blocks.FURNACE) {
-                BlockPos parentRangePos = currentRange.getParentRange();
-                if (parentRangePos != null && world.getTileEntity(parentRangePos) instanceof TileEntityRange) {
-                    TileEntityRange parentRange = (TileEntityRange) world.getTileEntity(parentRangePos);
-                    if (parentRange.canConnect()) {
-                        world.setBlockToAir(nextTo);
-
-                        boolean isLit = parentRange.isFueled();
-
-                        IBlockState newState = null;
-
-                        if (isLit)
-                            newState = ExSartagineBlocks.range_extended_lit.getDefaultState().
-                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
-
-                        else
-                            newState = ExSartagineBlocks.range_extended.getDefaultState().
-                                    withProperty(FACING, state.getValue(BlockRangeExtension.FACING));
-
-                        world.setBlockState(nextTo, newState, 3);
-
-                        TileEntity newRange = world.getTileEntity(nextTo);
-
-                        if (newRange instanceof TileEntityRangeExtension) {
-                            TileEntityRangeExtension extension = ((TileEntityRangeExtension) newRange);
-                            extension.setParentRange(parentRange.getPos());
-                            extension.setCooking(isLit);
-                            parentRange.connect(extension);
-                        }
-                    }
-                }
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileEntityRangeExtension) {
+            TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
+            BlockPos contPos = rangeExtension.getParentRange();
+            if (contPos == null || !canStay(world, pos)) {
+                world.destroyBlock(pos,true);
             }
         }
+    }
+
+    public static boolean canStay(World level,BlockPos pos) {
+        for (EnumFacing dir : EnumFacing.Plane.HORIZONTAL) {
+            BlockPos offset = pos.offset(dir);
+            Block block = level.getBlockState(offset).getBlock();
+            if (block == ExSartagineBlocks.range || block == ExSartagineBlocks.range_extended || block == ExSartagineBlocks.range_extended_lit) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -126,6 +98,31 @@ public class BlockRangeExtension extends Block {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB;
+    }
+
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        for (EnumFacing dir : EnumFacing.Plane.HORIZONTAL) {
+            BlockPos offset = pos.offset(dir);
+            TileEntity te = worldIn.getTileEntity(offset);
+
+            if (te instanceof TileEntityRangeExtension) {
+                TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
+                BlockPos rangePos = rangeExtension.getParentRange();
+
+                if (rangePos != null) {
+                    TileEntity te1 = worldIn.getTileEntity(rangePos);
+                    if (te1 instanceof TileEntityRange) {
+                        TileEntityRange range = (TileEntityRange) te1;
+                        return range.canConnect() && super.canPlaceBlockAt(worldIn, pos);
+                    }
+                }
+
+            } else if (te instanceof TileEntityRange) {
+                TileEntityRange range = (TileEntityRange) te;
+                return range.canConnect() && super.canPlaceBlockAt(worldIn, pos);
+            }
+        }
+        return false;
     }
 
     //see trough !
@@ -230,7 +227,40 @@ public class BlockRangeExtension extends Block {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof TileEntityRangeExtension && !worldIn.isRemote) {
+
+
+            for (EnumFacing dir : EnumFacing.Plane.HORIZONTAL) {
+                BlockPos offset = pos.offset(dir);
+                TileEntity te = worldIn.getTileEntity(offset);
+
+                if (te instanceof TileEntityRangeExtension) {
+                    TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
+                    BlockPos rangePos = rangeExtension.getParentRange();
+
+                    if (rangePos != null) {
+                        TileEntity te1 = worldIn.getTileEntity(rangePos);
+                        if (te1 instanceof TileEntityRange) {
+                            TileEntityRange range = (TileEntityRange) te1;
+                            if (range.canConnect()) {
+                                range.connect((TileEntityRangeExtension) tile);
+                                return;
+                            }
+                        }
+                    }
+
+                } else if (te instanceof TileEntityRange) {
+                    TileEntityRange range = (TileEntityRange) te;
+                    if (range.canConnect()) {
+                        range.connect((TileEntityRangeExtension) tile);
+                        return;
+                    }
+                }
+            }
+        }
+
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
@@ -240,6 +270,6 @@ public class BlockRangeExtension extends Block {
 
 
 		public static Block getUsedBlock() {
-			return Blocks.IRON_BLOCK;//ExSartagineBlocks.range_extension;
+			return ExSartagineBlocks.range_extended;
 		}
 }

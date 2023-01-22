@@ -55,9 +55,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
 						//shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
 						inventory.getStackInSlot(i).shrink(1);
 						markDirty();
-						//sync to client
-						IBlockState state = world.getBlockState(getPos());
-						world.notifyBlockUpdate(getPos(), state, state, 3);
 						break;
 					}
 				}
@@ -68,10 +65,14 @@ public class TileEntityRange extends TileEntity implements ITickable {
 			{
 				isCooking = false;
 				setRangeConnectionsCooking(false);
-				IBlockState state = world.getBlockState(getPos());
-				world.notifyBlockUpdate(getPos(), state, state, 3);
 				markDirty();
 			}
+		}
+	}
+
+	public void breakConnected() {
+		for (BlockPos pos1 : connected) {
+			world.destroyBlock(pos1,true);
 		}
 	}
 
@@ -137,6 +138,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 		fuelTimer = compound.getInteger("fuel");
 		maxFuelTimer = compound.getInteger("max");
 
+		connected.clear();
 		NBTTagCompound connections = compound.getCompoundTag("connections");
 		for (int i = 0; i < 4; i++)
 			if(connections.hasKey(String.valueOf(i)))
@@ -152,8 +154,14 @@ public class TileEntityRange extends TileEntity implements ITickable {
 	}
 
 	public void connect(TileEntityRangeExtension tere){
-		if(canConnect())
+		if (world.isRemote) {
+			throw new RuntimeException("tried to do logic on client");
+		}
+		if(canConnect()) {
 			connected.add(tere.getPos());
+			tere.setCooking(isCooking);
+			tere.setParentRange(getPos());
+		}
 		markDirty();
 	}
 
@@ -216,6 +224,13 @@ public class TileEntityRange extends TileEntity implements ITickable {
 			//set saved connections back to tile entity
 			connected = backup;
 		}
+	}
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		IBlockState state = world.getBlockState(pos);
+		world.notifyBlockUpdate(pos,state,state,3);
 	}
 
 	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////

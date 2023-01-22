@@ -69,43 +69,6 @@ public class BlockRange extends Block {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-
-
-            EnumFacing dir = state.getValue(FACING);
-
-            EnumFacing leftDir = dir.rotateY();
-            EnumFacing rightDir = dir.rotateYCCW();
-            
-            if (world.getBlockState(fromPos).getBlock() == BlockRangeExtension.getUsedBlock()
-                    && (pos.offset(leftDir).equals(fromPos)||pos.offset(rightDir).equals(fromPos))) {
-
-                if (world.getTileEntity(pos) instanceof TileEntityRange) {
-                    TileEntityRange range = (TileEntityRange) world.getTileEntity(pos);
-                    boolean isLit = range.isFueled();
-
-                    Block block = isLit ? ExSartagineBlocks.range_extended_lit : ExSartagineBlocks.range_extended;
-
-                    //determine whether the new furnace needs to be lit
-                    IBlockState newState = block.getDefaultState().
-                            withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
-
-                    world.setBlockState(fromPos, newState, 3);
-                    TileEntity te = world.getTileEntity(fromPos);
-
-                    if (te instanceof TileEntityRangeExtension) {
-                        TileEntityRangeExtension extensionRange = (TileEntityRangeExtension) te;
-                        if (range.canConnect()) {
-                            extensionRange.setParentRange(pos);
-                            range.connect(extensionRange);
-                            extensionRange.setCooking(isLit);
-                        }
-                    }
-                }
-            }
-    }
-
-    @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
     }
 
@@ -113,7 +76,9 @@ public class BlockRange extends Block {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityRange) {
-            Utils.scatter(worldIn, pos, ((TileEntityRange) tileentity).getInventory());
+            TileEntityRange range = (TileEntityRange) tileentity;
+            Utils.scatter(worldIn, pos, range.getInventory());
+            range.breakConnected();
         }
         super.breakBlock(worldIn, pos, state);
     }

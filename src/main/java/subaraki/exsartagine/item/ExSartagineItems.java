@@ -78,7 +78,7 @@ public class ExSartagineItems {
 	public static Item curd;
 	public static Item flour;
 
-	public static Item range_extension;
+	public static Item range_extended;
 
 	public static CreativeTabs foods = new CreativeTabs("exsartaginefoods") {
 		@Override
@@ -99,7 +99,7 @@ public class ExSartagineItems {
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
 		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
-		range_extension = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
+		range_extended = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
 		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");
@@ -216,7 +216,7 @@ public class ExSartagineItems {
 		registry.register(spaghetti_bolognaise);
 		registry.register(spaghetti_cheese);
 		registry.register(spaghetti_veggie);
-		registry.register(range_extension);
+		registry.register(range_extended);
 	}
 
 	public static void registerRenders(){
@@ -225,6 +225,7 @@ public class ExSartagineItems {
 		registerRender(pot, MODID, "pot");
 		registerRender(range, MODID, "range");
 		registerRender(kettle, MODID, "kettle");
+		registerRender(range_extended,MODID,"range_extended");
 
 		registerRender(boiled_egg, MODID, "egg");
 		registerRender(boiled_beans, MODID, "beans");
@@ -275,7 +276,6 @@ public class ExSartagineItems {
 		registerRender(spaghetti_bolognaise, MODID, "spaghetti_bolognaise");
 		registerRender(spaghetti_cheese, MODID, "spaghetti_cheese");
 		registerRender(spaghetti_veggie, MODID, "spaghetti_veggie");
-		registerRender(range_extension,MODID,"range_extension");
 	}
 
 	public static void registerRender(Item item, String modid, String name) {

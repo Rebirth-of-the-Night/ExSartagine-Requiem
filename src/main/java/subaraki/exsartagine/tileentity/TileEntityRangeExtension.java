@@ -30,6 +30,7 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	
 	public void setParentRange(BlockPos parentRange) {
 		this.parentRange = parentRange;
+		markDirty();
 	}
 
 	public BlockPos getParentRange() {
