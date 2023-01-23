@@ -30,7 +30,7 @@ item.exsartagine.breadFine.name=Fine Bread
 
 item.exsartagine.curd.name=Curd
 item.exsartagine.flour.name=Flour
-item.exsartagine.yeast.name=Yeast
+item.exsartagine.yeast.name=Baker's Yeast
 item.exsartagine.salt.name=Salt
 
 item.exsartagine.pizzaPlain.name=Plain Pizza
@@ -44,6 +44,26 @@ item.exsartagine.pizzaMeat.name=Meat Pizza
 item.exsartagine.pizzaSweet.name=Sweet Pizza
 item.exsartagine.pizzaChicken.name=Chicken Pizza
 item.exsartagine.pizzaFish.name=Fish Pizza
+
+item.exsartagine.dry_noodles.name=Raw Udon
+
+item.exsartagine.noodles_chicken.name=Uncooked Chicken Udon
+item.exsartagine.noodles_meat.name=Uncooked Meat Udon
+item.exsartagine.noodles_fish.name=Uncooked Fish Udon
+item.exsartagine.noodles_veggie.name=Uncooked Veggie Udon
+
+item.exsartagine.noodles_chicken_cooked.name=Chicken Udon
+item.exsartagine.noodles_meat_cooked.name=Meat Udon
+item.exsartagine.noodles_fish_cooked.name=Fish Udon
+item.exsartagine.noodles_veggie_cooked.name=Veggie Udon
+
+item.exsartagine.spaghetti_raw.name=Raw Spaghetti
+
+item.exsartagine.spaghetti_cooked.name=Spaghetti
+item.exsartagine.spaghetti_sauced.name=Spaghetti With Sauce
+item.exsartagine.spaghetti_bolognaise.name=Bolognaise Spaghetti
+item.exsartagine.spaghetti_cheese.name=Bolognaise Spaghetti with cheese
+item.exsartagine.spaghetti_veggie.name=Veggie Spaghetti
 
 itemGroup.potsnpans=Pots 'n Pans
 itemGroup.exsartaginefoods=Ex Sartagine Foods
