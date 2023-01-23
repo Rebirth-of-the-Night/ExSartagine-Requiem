@@ -3,6 +3,7 @@ package subaraki.exsartagine.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,248 +23,210 @@ import subaraki.exsartagine.block.ExSartagineBlocks;
 
 public class TileEntityRange extends TileEntity implements ITickable {
 
-	private final ItemStackHandler inventory = new ItemStackHandler(9);
+    private final ItemStackHandler inventory = new ItemStackHandler(9);
 
-	private List<BlockPos> connected = new ArrayList<>();
+    private final List<BlockPos> connected = new ArrayList<>();
 
-	/**wether or not this range is fueling connected entries*/
-	private boolean isCooking;
-	/**how much 'cooktime' from the item inserted is left*/
-	private int fuelTimer = 0;
-	/**used in gui for image drawing*/
-	private int maxFuelTimer = 0;
+    /**
+     * wether or not this range is fueling connected entries
+     */
+    private boolean isCooking;
+    /**
+     * how much 'cooktime' from the item inserted is left
+     */
+    private int fuelTimer = 0;
+    /**
+     * used in gui for image drawing
+     */
+    private int maxFuelTimer = 0;
 
-	@Override
-	public void update() {
-		//Decrease
-		if(fuelTimer > 0)
-			fuelTimer--;
+    @Override
+    public void update() {
+        //Decrease
+        if (fuelTimer > 0)
+            fuelTimer--;
 
 
-		if(!world.isRemote){
-			//look for fuel if we ran out is present
-			if(fuelTimer == 0)
-			{
-				for(int i = 0 ; i < inventory.getSlots() ; i++)
-				{
-					ItemStack stack = inventory.getStackInSlot(i);
-					if(!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack))
-					{
-						maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
-						isCooking = true;
-						setRangeConnectionsCooking(true);
-						//shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
-						inventory.getStackInSlot(i).shrink(1);
-						markDirty();
-						break;
-					}
-				}
-			}
+        if (!world.isRemote) {
+            //look for fuel if we ran out
+            if (fuelTimer == 0) {
+                for (int i = 0; i < inventory.getSlots(); i++) {
+                    ItemStack stack = inventory.getStackInSlot(i);
+                    if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
+                        maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
+                        isCooking = true;
+                        setRangeConnectionsCooking(true);
+                        //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
+                        inventory.getStackInSlot(i).shrink(1);
+                        markDirty();
+                        break;
+                    }
+                }
+            }
 
-			// if no fuel was set and the tile is cooking
-			if(fuelTimer == 0 && isCooking)
-			{
-				isCooking = false;
-				setRangeConnectionsCooking(false);
-				markDirty();
-			}
-		}
-	}
+            // if no fuel was set and the tile is cooking
+            if (fuelTimer == 0 && isCooking) {
+                isCooking = false;
+                setRangeConnectionsCooking(false);
+                markDirty();
+            }
+        }
+    }
 
-	public void breakConnected() {
-		for (BlockPos pos1 : connected) {
-			world.destroyBlock(pos1,true);
-		}
-	}
+    public boolean isFueled() {
+        return fuelTimer > 0;
+    }
 
-	public boolean isFueled() {
-		return fuelTimer > 0;
-	}
+    public int getFuelTimer() {
+        return fuelTimer;
+    }
 
-	public int getFuelTimer() {
-		return fuelTimer;
-	}
+    public int getMaxFuelTimer() {
+        return maxFuelTimer;
+    }
 
-	public int getMaxFuelTimer() {
-		return maxFuelTimer;
-	}
+    public ItemStackHandler getInventory() {
+        return inventory;
+    }
 
-	public ItemStackHandler getInventory() {
-		return inventory;
-	}
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) inventory;
+        }
+        return super.getCapability(capability, facing);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return (T) inventory;
-		}
-		return super.getCapability(capability, facing);
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-		compound.setTag("inv", inventory.serializeNBT());
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setTag("inv", inventory.serializeNBT());
 
-		compound.setBoolean("cooking", isCooking);
-		compound.setInteger("fuel", fuelTimer);
-		compound.setInteger("max", maxFuelTimer);
+        compound.setBoolean("cooking", isCooking);
+        compound.setInteger("fuel", fuelTimer);
+        compound.setInteger("max", maxFuelTimer);
 
-		NBTTagCompound connections = new NBTTagCompound();
-		int slot = 0;
-		for(BlockPos pos : connected)
-		{
-			connections.setLong(Integer.toString(slot), pos.toLong());
-			slot++;
-		}
-		compound.setTag("connections", connections);
+        NBTTagCompound connections = new NBTTagCompound();
+        int slot = 0;
+        for (BlockPos pos : connected) {
+            connections.setLong(Integer.toString(slot), pos.toLong());
+            slot++;
+        }
+        compound.setTag("connections", connections);
 
-		return compound;
-	}
+        return compound;
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-		inventory.deserializeNBT(compound.getCompoundTag("inv"));
-		isCooking = compound.getBoolean("cooking");
-		fuelTimer = compound.getInteger("fuel");
-		maxFuelTimer = compound.getInteger("max");
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        inventory.deserializeNBT(compound.getCompoundTag("inv"));
+        isCooking = compound.getBoolean("cooking");
+        fuelTimer = compound.getInteger("fuel");
+        maxFuelTimer = compound.getInteger("max");
 
-		connected.clear();
-		NBTTagCompound connections = compound.getCompoundTag("connections");
-		for (int i = 0; i < 4; i++)
-			if(connections.hasKey(String.valueOf(i)))
-			{
-				BlockPos pos = BlockPos.fromLong(connections.getLong(String.valueOf(i)));
-				connected.add(pos);
-			}
-	}
+        connected.clear();
+        NBTTagCompound connections = compound.getCompoundTag("connections");
+        for (int i = 0; i < 4; i++)
+            if (connections.hasKey(String.valueOf(i))) {
+                BlockPos pos = BlockPos.fromLong(connections.getLong(String.valueOf(i)));
+                connected.add(pos);
+            }
+    }
 
-	public boolean canConnect(){
-		//if the last one is filled, the rest is too.
-		return connected.size() < 4;
-	}
+    public boolean canConnect() {
+        //if the last one is filled, the rest is too.
+        return connected.size() < 4;
+    }
 
-	public void connect(TileEntityRangeExtension tere){
-		if (world.isRemote) {
-			throw new RuntimeException("tried to do logic on client");
-		}
-		if(canConnect()) {
-			connected.add(tere.getPos());
-			tere.setCooking(isCooking);
-			tere.setParentRange(getPos());
-		}
-		markDirty();
-	}
+    public void connect(TileEntityRangeExtension tere) {
+        if (canConnect()) {
+            connected.add(tere.getPos());
+            tere.setParentRange(getPos());
+            setRangeConnectionCooking(tere.getPos(),isCooking);
+        }
+        markDirty();
+    }
 
-	public void disconnect(BlockPos entry){
-		if(connected.contains(entry))
-		{
-			List<BlockPos> copy = new ArrayList<>();
-			for(BlockPos saved : connected)
-			{
-				if(saved.equals(entry))
-					break;
-				copy.add(saved);
-			}
-			connected = copy;
-		}
-		markDirty();
-	}
+    public void disconnect(BlockPos entry) {
+        connected.remove(entry);
+        markDirty();
+    }
 
-	public void setRangeConnectionsCooking(boolean setCooking){
-		if(!connected.isEmpty())
-		{
-			//backup of connections. it seems to get wiped when updating the annex furnaces
-			List<BlockPos> backup = connected;
-			
-			for(BlockPos posTere : connected)
-			{
-				TileEntity te = world.getTileEntity(posTere);
-				if(te instanceof TileEntityRangeExtension){
-					TileEntityRangeExtension tere = ((TileEntityRangeExtension)te);
-					tere.setCooking(setCooking);
-					//tere.markDirty();
+    public void setRangeConnectionsCooking(boolean setCooking) {
+        if (!connected.isEmpty()) {
 
-					IBlockState state = world.getBlockState(posTere);
+            for (BlockPos extPos : connected) {
+                setRangeConnectionCooking(extPos,setCooking);
+            }
+        }
+    }
 
-					if(setCooking)
-					{
-						IBlockState lit = ExSartagineBlocks.range_extended_lit.getDefaultState().
-								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
+    public void setRangeConnectionCooking(BlockPos extPos,boolean setCooking) {
+        IBlockState state = world.getBlockState(extPos);
+        if (state.getBlock() instanceof BlockRangeExtension) {
+            Block blockNew = setCooking ? ExSartagineBlocks.range_extended_lit : ExSartagineBlocks.range_extended;
+            IBlockState state1 = blockNew.getDefaultState().
+                    withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
-						// connections get wiped here for some reason :
-						// TODO fix this
-						world.setBlockState(posTere, lit);
-						world.notifyBlockUpdate(posTere, state, lit, 3);
-					}
-					else
-					{
-						IBlockState unlit = ExSartagineBlocks.range_extended.getDefaultState().
-								withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
+            world.setBlockState(extPos,state1);
 
-						world.setBlockState(posTere, unlit);
-						world.notifyBlockUpdate(posTere, state, unlit, 3);
-					}
-					//revalidate te tileentity. furnace does the same after changing block state
-					tere.validate();
-					//make sure a copy gets back to the position
-					world.setTileEntity(posTere, tere);
-				}
-			}
-			
-			//set saved connections back to tile entity
-			connected = backup;
-		}
-	}
+            //setting blockstates generates a new blockentity, make sure it's connected
+            TileEntity te = world.getTileEntity(extPos);
 
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		IBlockState state = world.getBlockState(pos);
-		world.notifyBlockUpdate(pos,state,state,3);
-	}
+            if (te instanceof TileEntityRangeExtension) {
+                TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
+                rangeExtension.setParentRange(pos);
+            }
+        }
+    }
 
-	/////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
+        @Override
+    public void markDirty() {
+        super.markDirty();
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
+    }
 
-		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
-	}
+    /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-	}
+        return new SPacketUpdateTileEntity(getPos(), 0, nbt);
+    }
 
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt =  super.getUpdateTag();
-		writeToNBT(nbt);
-		return nbt;
-	}
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        this.readFromNBT(pkt.getNbtCompound());
+    }
 
-	//calls readFromNbt by default. no need to add anything in here
-	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
-	}
-	////////////////////////////////////////////////////////////////////
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = super.getUpdateTag();
+        writeToNBT(nbt);
+        return nbt;
+    }
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
-	{
-		return oldState.getBlock() != newState.getBlock();
-	}
+    //calls readFromNbt by default. no need to add anything in here
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+    }
+    ////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
 }

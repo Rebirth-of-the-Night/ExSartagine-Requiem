@@ -1,5 +1,5 @@
 {
-    "parent:" : "block/block",
+    "parent:" : "minecraft:block/block",
     "textures": {
         "0": "exsartagine:block/stove_top",
         "1": "blocks/furnace_side",

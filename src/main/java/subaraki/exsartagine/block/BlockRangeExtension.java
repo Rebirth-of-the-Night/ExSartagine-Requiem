@@ -32,9 +32,11 @@ public class BlockRangeExtension extends Block {
 
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
+    private final boolean lit;
 
-    public BlockRangeExtension() {
+    public BlockRangeExtension(boolean lit) {
         super(Material.ROCK);
+        this.lit = lit;
         setHardness(8f);
         setSoundType(SoundType.STONE);
         setCreativeTab(CreativeTabs.TOOLS);
@@ -165,27 +167,24 @@ public class BlockRangeExtension extends Block {
         double d1 = (double) pos.getY() + 0.3D;
         double d2 = (double) pos.getZ() + 0.5D;
 
-        if (worldIn.getTileEntity(pos) instanceof TileEntityRangeExtension) {
-            TileEntityRangeExtension tere = ((TileEntityRangeExtension) worldIn.getTileEntity(pos));
-            if (tere.isCooking()) {
+        if (lit) {
 
-                EnumFacing enumfacing = stateIn.getValue(FACING);
-                switch (enumfacing) {
-                    case NORTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2 - 0.6, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case WEST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.6, d1, d2, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case SOUTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2 + 0.6, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case EAST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.6, d1, d2, 0.0D, 0.0D, 0.0D);
-                        break;
-                    default:
-                        break;
-                }
+            EnumFacing enumfacing = stateIn.getValue(FACING);
+            switch (enumfacing) {
+                case NORTH:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2 - 0.6, 0.0D, 0.0D, 0.0D);
+                    break;
+                case WEST:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.6, d1, d2, 0.0D, 0.0D, 0.0D);
+                    break;
+                case SOUTH:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2 + 0.6, 0.0D, 0.0D, 0.0D);
+                    break;
+                case EAST:
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.6, d1, d2, 0.0D, 0.0D, 0.0D);
+                    break;
+                default:
+                    break;
             }
         }
     }

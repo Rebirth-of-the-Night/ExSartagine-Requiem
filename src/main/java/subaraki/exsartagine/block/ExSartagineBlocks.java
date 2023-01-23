@@ -19,9 +19,9 @@ public class ExSartagineBlocks {
 		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
-		range = new BlockRange();
-		range_extended = new BlockRangeExtension().setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
-		range_extended_lit = new BlockRangeExtension().setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
+		range = new BlockRange().setRegistryName("range");
+		range_extended = new BlockRangeExtension(false).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
+		range_extended_lit = new BlockRangeExtension(true).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
 		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
 		register(registry);
 	}

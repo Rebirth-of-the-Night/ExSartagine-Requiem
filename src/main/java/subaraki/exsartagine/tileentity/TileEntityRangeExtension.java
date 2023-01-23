@@ -11,22 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileEntityRangeExtension extends TileEntity implements ITickable {
+public class TileEntityRangeExtension extends TileEntity{
 
-	private boolean isCooking = false;
 	private BlockPos parentRange;
-
-	@Override
-	public void update() {
-	}
-	
-	public void setCooking(boolean isCooking) {
-		this.isCooking = isCooking;
-	}
-
-	public boolean isCooking() {
-		return isCooking;
-	}
 	
 	public void setParentRange(BlockPos parentRange) {
 		this.parentRange = parentRange;
@@ -76,7 +63,6 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setBoolean("cooking", isCooking);
 		if (parentRange != null)
 			compound.setLong("parent", parentRange.toLong());
 		return compound;
@@ -85,7 +71,6 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		isCooking = compound.getBoolean("cooking");
 		if (compound.hasKey("parent"))
 			parentRange = BlockPos.fromLong(compound.getLong("parent"));
 	}
@@ -111,11 +96,6 @@ public class TileEntityRangeExtension extends TileEntity implements ITickable {
 		return nbt;
 	}
 
-	//calls readFromNbt by default. no need to add anything in here
-	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
-	}
 	////////////////////////////////////////////////////////////////////
 
 	@Override

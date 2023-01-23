@@ -42,14 +42,8 @@ public class BlockRange extends Block {
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
         setTranslationKey(ExSartagine.MODID + ".range");
-        setRegistryName("range");
         setHardness(3.5f);
         this.setLightOpacity(0);
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return true;
     }
 
     @Override
@@ -78,7 +72,6 @@ public class BlockRange extends Block {
         if (tileentity instanceof TileEntityRange) {
             TileEntityRange range = (TileEntityRange) tileentity;
             Utils.scatter(worldIn, pos, range.getInventory());
-            range.breakConnected();
         }
         super.breakBlock(worldIn, pos, state);
     }
