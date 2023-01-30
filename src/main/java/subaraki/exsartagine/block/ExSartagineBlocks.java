@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.item.ExSartagineItems;
 
 public class ExSartagineBlocks {
 
@@ -22,7 +23,7 @@ public class ExSartagineBlocks {
 		range = new BlockRange().setRegistryName("range");
 		range_extended = new BlockRangeExtension(false).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
-		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
+		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setCreativeTab(ExSartagineItems.pots).setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
 		register(registry);
 	}
 	
