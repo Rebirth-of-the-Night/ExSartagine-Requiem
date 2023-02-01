@@ -15,8 +15,8 @@ public class ContainerKettle extends Container {
     public ContainerKettle(InventoryPlayer playerInventory, TileEntityKettle pot) {
         this.pot = pot;
 
-        int x1 = 22;
-        int y1 = 15;
+        int x1 = 5;
+        int y1 = 16;
 
         this.addSlotToContainer(new SlotItemHandler(pot.handler, 0, x1, 18 + y1));
         for (int x = 0; x < 3; x++) {
@@ -27,7 +27,7 @@ public class ContainerKettle extends Container {
 
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.handler, x + 3 * y + 10, 116 + 18 * x, y1 + 18 * y));
+                this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.handler, x + 3 * y + 10, 117 + 18 * x, y1 + 18 * y));
             }
         }
 

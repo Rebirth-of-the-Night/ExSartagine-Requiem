@@ -50,7 +50,7 @@ public class KettleScreen extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 93,guiTop+ 72,20,20,0,0,0,BUTTON_TEXTURE));
+        addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 86,guiTop+ 50,20,20,0,0,0,BUTTON_TEXTURE));
     }
 
     @Override
