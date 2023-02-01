@@ -161,16 +161,4 @@ public class BlockPot extends HeatableGuiBlock {
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-
-	@Override
-	public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
-		if(((TileEntityPot)world.getTileEntity(pos)).getWaterLevel() > 0) {
-			super.setHeating(world, state, pos,hot);
-		}
-	}
-
-	@Override
-	public Class<?> getTileEntity() {
-		return TileEntityPot.class;
-	}
 }

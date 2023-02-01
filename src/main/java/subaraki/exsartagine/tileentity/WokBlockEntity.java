@@ -11,6 +11,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockKettle;
+import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
@@ -30,33 +31,23 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void update() {
 		if (!world.isRemote) {
-			if (isHeated() && canStart()) {
+			if (canStart() && isHeated()) {
 				WokRecipe recipe = getOrCreateRecipe();
-				if (recipe != null) {
-					if (cookTime <= progress && canProcess(recipe)) {
-						process();
-					} else {
-						if (cooking) {
+				if (recipe.getCookTime() <= progress && canProcess(recipe)) {
+					process();
+				} else {
+					if (cooking) {
 
-						} else {
-							start();
-						}
-						progress++;
-						markDirty();
+					} else {
+						start();
 					}
+					progress++;
+					markDirty();
 				}
 			} else {
 				decreaseProgress();
 			}
 		}
-	}
-
-	public boolean isHeated() {
-		return world.getBlockState(pos).getValue(BlockKettle.HEATED);
-	}
-
-	public void setHeated(boolean heated) {
-		world.setBlockState(pos, blockType.getDefaultState().withProperty(BlockKettle.HEATED, heated));
 	}
 
 	public boolean canProcess(WokRecipe recipe) {

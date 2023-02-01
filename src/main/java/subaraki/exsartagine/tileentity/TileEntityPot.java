@@ -39,11 +39,6 @@ public class TileEntityPot extends TileEntityCooker {
                     if (cookTime <= progress) {
                         process();
                     } else {
-                        if (heated) {
-
-                        } else {
-                            start();
-                        }
                         progress++;
                         if (world.rand.nextInt(10) == 0)
                             fluidTank.drain(5, true);
@@ -52,7 +47,6 @@ public class TileEntityPot extends TileEntityCooker {
                 }
             } else {
                 decreaseProgress();
-                heated = false;
                 markDirty();
             }
 
@@ -63,10 +57,6 @@ public class TileEntityPot extends TileEntityCooker {
             if (world.getBlockState(pos).getValue(BlockPot.FULL) && getWaterLevel() == 0)
                 world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockPot.FULL, false), 3);
         }
-    }
-
-    public void start() {
-        heated = true;
     }
 
     public void decreaseProgress() {

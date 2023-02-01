@@ -13,9 +13,9 @@ public class ContainerPot extends Container {
 
     private final TileEntityPot pot;
 
-	public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
-		this.pot = pot;
-		this.addSlotToContainer(new SlotInput<>(pot.getInventory(), 0, 56, 17, RecipeTypes.POT));
+    public ContainerPot(InventoryPlayer playerInventory, TileEntityPot pot) {
+        this.pot = pot;
+        this.addSlotToContainer(new SlotInput<>(pot.getInventory(), 0, 56, 17, RecipeTypes.POT));
         this.addSlotToContainer(new SlotOutput(playerInventory.player, pot.getInventory(), 1, 116, 35));
 
         for (int i = 0; i < 3; ++i)
@@ -24,72 +24,53 @@ public class ContainerPot extends Container {
 
         for (int k = 0; k < 9; ++k)
             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
-	}
+    }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
-		return true;
-	}
-	
-	/**
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return true;
+    }
+
+    /**
      * Take a stack from the specified inventory slot.
      */
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
-    {
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
-        if (slot != null && slot.getHasStack())
-        {
+        if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == 1)
-            {
-                if (!this.mergeItemStack(itemstack1, 2, 38, true))
-                {
+            if (index == 1) {
+                if (!this.mergeItemStack(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
-            }
-            else if (index != 0)
-            {
-                if (!Recipes.getCookingResults(pot.getInventory(),RecipeTypes.POT).isEmpty())
-                {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
-                    {
+            } else if (index != 0) {
+                if (Recipes.hasResult(itemstack, RecipeTypes.POT)) {
+                    if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (index >= 2 && index < 29)
-                {
-                    if (!this.mergeItemStack(itemstack1, 29, 38, false))
-                    {
+                } else if (index < 29) {
+                    if (!this.mergeItemStack(itemstack1, 29, 38, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (index >= 29 && index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
-                {
+                } else if (index < 38 && !this.mergeItemStack(itemstack1, 2, 29, false)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else if (!this.mergeItemStack(itemstack1, 2, 38, false))
-            {
+            } else if (!this.mergeItemStack(itemstack1, 2, 38, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty())
-            {
+            if (itemstack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
+            } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.getCount() == itemstack.getCount())
-            {
+            if (itemstack1.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
 

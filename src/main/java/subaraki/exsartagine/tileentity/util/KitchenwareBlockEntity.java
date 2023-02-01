@@ -8,15 +8,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
+import subaraki.exsartagine.recipe.Recipes;
 
 public abstract class KitchenwareBlockEntity extends TileEntity {
 
     protected int progress = 0;
     protected int cookTime = 0;
 
-    public abstract void setHeated(boolean heated);
-
-    public abstract boolean isHeated();
+    //check if the block below is hot
+    public final boolean isHeated() {
+        return Recipes.isHeatSource(world.getBlockState(pos.down()));
+    }
 
     public abstract IItemHandler getEntireItemInventory();
 
@@ -76,6 +78,8 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
         super.markDirty();
         world.notifyBlockUpdate(pos, blockType.getDefaultState(), blockType.getDefaultState(), 3);
     }
+
+
 
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {

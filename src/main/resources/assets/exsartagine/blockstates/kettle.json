@@ -1,9 +1,6 @@
 {
     "variants": {
-        "heated=false": {
-            "model": "exsartagine:kettle"
-        },
-        "heated=true": {
+        "normal": {
             "model": "exsartagine:kettle"
         }
     }

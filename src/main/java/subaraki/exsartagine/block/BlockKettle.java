@@ -29,14 +29,6 @@ public class BlockKettle extends HeatableGuiBlock {
 
     public BlockKettle(Material materialIn) {
         super(materialIn, Reference.KETTLE);
-        setDefaultState(getDefaultState().withProperty(HEATED,false));
-    }
-
-    public static final PropertyBool HEATED = PropertyBool.create("heated");
-
-    @Override
-    public Class<?> getTileEntity() {
-        return TileEntityKettle.class;
     }
 
     @Nullable
@@ -86,40 +78,8 @@ public class BlockKettle extends HeatableGuiBlock {
                 if (!Recipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
-                } else setHeating(world, state, pos,Recipes.isHeatSource(down));
+                }
             }
         }
     }
-
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(HEATED,Recipes.isHeatSource(world.getBlockState(pos.down())));
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(HEATED, meta == 1);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(HEATED) ? 1 : 0;
-    }
-
-    @Override
-    public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
-        world.setBlockState(pos, state.withProperty(HEATED,hot));
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return super.getRenderLayer();
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, HEATED);
-    }
-
 }

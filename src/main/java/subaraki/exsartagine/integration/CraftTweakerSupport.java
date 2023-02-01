@@ -394,9 +394,9 @@ public class CraftTweakerSupport {
         public void apply() {
             if (this.add) {
                 if (this.isHeatSource)
-                    Recipes.addHeatSources(states);
+                    Recipes.addHeatSource(states);
                 else
-                    Recipes.addPlaceables(states);
+                    Recipes.addPlaceable(states);
             } else {
                 boolean done;
                 if (this.isHeatSource)

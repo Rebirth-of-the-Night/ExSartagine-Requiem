@@ -6,12 +6,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.gui.common.ContainerPot;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
 public class GuiPot extends GuiContainer {
 
-	private static final ResourceLocation GUI_POT = new ResourceLocation("exsartagine","textures/gui/pot.png");
+	private static final ResourceLocation GUI_POT = new ResourceLocation(ExSartagine.MODID,"textures/gui/pot.png");
 
 	private final InventoryPlayer playerInventory;
 	private final TileEntityPot pot;

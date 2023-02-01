@@ -13,7 +13,6 @@ import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public abstract class TileEntityCooker extends KitchenwareBlockEntity implements ITickable {
 
-	protected boolean heated = false;
 	protected static final int RESULT = 1;
 	protected static final int INPUT = 0;
 
@@ -92,21 +91,8 @@ public abstract class TileEntityCooker extends KitchenwareBlockEntity implements
 	}
 
 	@Override
-	public void setHeated(boolean hot){
-		heated = hot;
-		if (!heated) {
-			progress = 0;
-		}
-	}
-
-	public boolean isHeated(){
-		return heated;
-	}
-
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setBoolean("heated", heated);
 		compound.setTag("inv", inventory.serializeNBT());
 		return compound;
 	}
@@ -114,9 +100,6 @@ public abstract class TileEntityCooker extends KitchenwareBlockEntity implements
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		if(compound.hasKey("cooktime") && compound.hasKey("cooking")){
-			this.heated = compound.getBoolean("heated");
-		}
 		if(compound.hasKey("inv"))
 			inventory.deserializeNBT(compound.getCompoundTag("inv"));
 	}

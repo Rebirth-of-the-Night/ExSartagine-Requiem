@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockKettle;
+import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
 import subaraki.exsartagine.recipe.KettleRecipe;
@@ -205,16 +206,6 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
             fluidOutputTank.fillInternal(cached.getOutputFluid(), true);
         }
     }
-
-
-    public boolean isHeated() {
-        return world.getBlockState(pos).getValue(BlockKettle.HEATED);
-    }
-
-    public void setHeated(boolean heated) {
-        world.setBlockState(pos, blockType.getDefaultState().withProperty(BlockKettle.HEATED, heated));
-    }
-
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {

@@ -34,15 +34,12 @@ public class WokBlock extends KitchenwareBlock {
 	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-	public static final PropertyBool HEATED = PropertyBool.create("heated");
-
 	public WokBlock() {
 		super(Material.IRON);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
 		setHardness(3.5f);
-		setDefaultState(getDefaultState().withProperty(HEATED,false));
 	}
 
 	/////////////////rendering//////////////
@@ -129,13 +126,13 @@ public class WokBlock extends KitchenwareBlock {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FACING,HEATED);
+		return new BlockStateContainer(this, FACING);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(FACING).getHorizontalIndex() + (state.getValue(HEATED) ? 8 : 0);
+		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	@Override
@@ -150,10 +147,6 @@ public class WokBlock extends KitchenwareBlock {
 
 		IBlockState state = this.getDefaultState().withProperty(FACING, enumfacing);
 
-		if ((meta & 0b1000)  == 0b1000) {
-			state = state.withProperty(HEATED,true);
-		}
-
 		return state;
 	}
 
@@ -167,10 +160,5 @@ public class WokBlock extends KitchenwareBlock {
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public Class<?> getTileEntity() {
-		return WokBlockEntity.class;
 	}
 }

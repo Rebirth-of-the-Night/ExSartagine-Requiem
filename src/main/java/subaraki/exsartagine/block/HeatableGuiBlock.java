@@ -24,9 +24,4 @@ public class HeatableGuiBlock extends KitchenwareBlock {
         playerIn.openGui(ExSartagine.instance, guiID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
-
-    @Override
-    public Class<?> getTileEntity() {
-        return null;
-    }
 }

@@ -56,7 +56,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
 		}
 
-		if(heated)
+		if(isHeated())
 		{
 			if(getInput().getCount() > 0 &&
 					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))

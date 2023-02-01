@@ -139,10 +139,5 @@ public class BlockSmelter extends HeatableGuiBlock {
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-
-	@Override
-	public Class<?> getTileEntity() {
-		return TileEntitySmelter.class;
-	}
 		
 }

@@ -13,7 +13,7 @@ import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
-public abstract class KitchenwareBlock extends Block implements Heatable {
+public abstract class KitchenwareBlock extends Block {
 
 
     public KitchenwareBlock(Material materialIn) {
@@ -48,29 +48,12 @@ public abstract class KitchenwareBlock extends Block implements Heatable {
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-
-        if (world.getTileEntity(pos).getClass().equals(this.getTileEntity())) {
-            if (fromPos.up().equals(pos)) { //if the block is beneath us
-                IBlockState down = world.getBlockState(fromPos);
-                if (!Recipes.isPlaceable(down)) {
-                    dropBlockAsItem(world, pos, getDefaultState(), 0);
-                    world.setBlockToAir(pos);
-                } else
-                    setHeating(world, state, pos,Recipes.isHeatSource(down));
+        if (fromPos.up().equals(pos)) { //if the block is beneath us
+            IBlockState down = world.getBlockState(fromPos);
+            if (!Recipes.isPlaceable(down)) {
+                dropBlockAsItem(world, pos, getDefaultState(), 0);
+                world.setBlockToAir(pos);
             }
         }
-    }
-
-    @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        if (Recipes.isHeatSource(world.getBlockState(pos.down()))) {
-            setHeating(world, state, pos,true);
-        }
-    }
-
-    @Override
-    public void setHeating(World world, IBlockState state, BlockPos pos,boolean hot) {
-        ((KitchenwareBlockEntity)world.getTileEntity(pos)).setHeated(hot);
-        world.notifyBlockUpdate(pos, state, getDefaultState(), 3);
     }
 }

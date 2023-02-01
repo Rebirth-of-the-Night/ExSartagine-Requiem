@@ -2,6 +2,7 @@ package subaraki.exsartagine.gui.common;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import subaraki.exsartagine.recipe.CustomRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
@@ -22,8 +23,12 @@ public class SlotInput<T extends IItemHandler,U extends CustomRecipe<T>> extends
         return (T)super.getItemHandler();
     }
 
+    private static final ItemStackHandler DUMMY = new ItemStackHandler();
+
     @Override
     public boolean isItemValid(ItemStack input) {
-            return Recipes.hasResult(getItemHandler(),type);
+        DUMMY.setStackInSlot(0,input);
+        return Recipes.hasResult((T)DUMMY,type);
     }
+
 }

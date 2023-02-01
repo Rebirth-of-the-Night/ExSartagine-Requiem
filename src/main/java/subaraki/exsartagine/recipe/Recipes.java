@@ -17,12 +17,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.item.ExSartagineItems;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Recipes {
 
@@ -74,8 +76,12 @@ public class Recipes {
         addRecipe(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime));
     }
 
+    //note, only the pot and smelter should use this method
+
+    private static final ItemStackHandler DUMMY = new ItemStackHandler();
     public static <T extends IItemHandler,U extends CustomRecipe<T>> boolean hasResult(ItemStack stack, IRecipeType<U> type) {
-        return hasResult((T)new ItemStackHandler(NonNullList.from(ItemStack.EMPTY, stack)), type);
+        DUMMY.setStackInSlot(0,stack);
+        return hasResult((T)DUMMY, type);
     }
     
     public static boolean removePotRecipe(ItemStack output) {
@@ -172,30 +178,47 @@ public class Recipes {
         return getRecipes(type).stream().anyMatch(customRecipe -> customRecipe.itemMatch(handler));
     }
 
+    public static void addHeatSource(Block block) {
+        addHeatSource(block,iBlockState -> true);
+    }
+
+    public static void addHeatSource(Block block, Predicate<IBlockState> predicate) {
+        for (IBlockState state : block.getBlockState().getValidStates()) {
+            if (predicate.test(state)) {
+                addHeatSource(state);
+            }
+        }
+    }
+
+    public static void addHeatSource(Collection<IBlockState> states) {
+        for (IBlockState state : states) {
+            addHeatSource(state);
+        }
+    }
+
     public static void addHeatSource(IBlockState state) {
         heatSources.add(state);
         addPlaceable(state);
     }
 
-    public static void addHeatSource(Block block) {
-        addHeatSources(block.getBlockState().getValidStates());
+    public static void addPlaceable(Block block) {
+        addPlaceable(block,iBlockState -> true);
     }
 
-    public static void addHeatSources(Collection<IBlockState> states) {
-        heatSources.addAll(states);
-        addPlaceables(states);
+    public static void addPlaceable(Block block, Predicate<IBlockState> predicate) {
+        for (IBlockState state : block.getBlockState().getValidStates()) {
+            if (predicate.test(state)) {
+                addPlaceable(state);
+            }
+        }
+    }
+
+    public static void addPlaceable(Collection<IBlockState> states) {
+        placeable.addAll(states);
     }
 
     public static void addPlaceable(IBlockState state) {
         placeable.add(state);
-    }
-
-    public static void addPlaceable(Block block) {
-        addPlaceables(block.getBlockState().getValidStates());
-    }
-
-    public static void addPlaceables(Collection<IBlockState> states) {
-        placeable.addAll(states);
     }
 
     public static boolean removeHeatSource(IBlockState state) {
@@ -250,6 +273,9 @@ public class Recipes {
         addPlaceable(ExSartagineBlocks.range_extended);
         addHeatSource(ExSartagineBlocks.range_extended_lit);
         addHeatSource(Blocks.LAVA);
+
+        addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED));
+        addHeatSource(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED));
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);
