@@ -3,19 +3,35 @@
         "normal":{
             "model":"exsartagine:range/range"
         },
-        "facing=east":{
+        "facing=east,heated=true":{
             "model":"exsartagine:range/range",
             "y":270
         },
-        "facing=west":{
+        "facing=east,heated=false":{
+            "model":"exsartagine:range/range",
+            "y":270
+        },
+        "facing=west,heated=true":{
             "model":"exsartagine:range/range",
             "y":90
         },
-        "facing=south":{
+        "facing=west,heated=false":{
+            "model":"exsartagine:range/range",
+            "y":90
+        },
+        "facing=south,heated=true":{
             "model":"exsartagine:range/range",
             "y":0
         },
-        "facing=north":{
+        "facing=south,heated=false":{
+            "model":"exsartagine:range/range",
+            "y":0
+        },
+        "facing=north,heated=true":{
+            "model":"exsartagine:range/range",
+            "y":180
+        },
+        "facing=north,heated=false":{
             "model":"exsartagine:range/range",
             "y":180
         }

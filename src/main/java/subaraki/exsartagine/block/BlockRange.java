@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -33,17 +34,17 @@ public class BlockRange extends Block {
 
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
+    public static final PropertyBool HEATED = PropertyBool.create("heated");
 
     public BlockRange() {
         super(Material.IRON);
-
         setLightLevel(1.0f);
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
         setTranslationKey(ExSartagine.MODID + ".range");
         setHardness(3.5f);
-        this.setLightOpacity(0);
+        setDefaultState(getDefaultState().withProperty(HEATED,false));
     }
 
     @Override
@@ -142,11 +143,11 @@ public class BlockRange extends Block {
     /////// TURNING STUFF ////////////////
 
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
+        return new BlockStateContainer(this, FACING,HEATED);
     }
 
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getHorizontalIndex();
+        return state.getValue(FACING).getHorizontalIndex() | (state.getValue(HEATED) ? 0b100 : 0);
     }
 
     public IBlockState getStateFromMeta(int meta) {
@@ -156,7 +157,9 @@ public class BlockRange extends Block {
             enumfacing = EnumFacing.NORTH;
         }
 
-        return this.getDefaultState().withProperty(FACING, enumfacing);
+        boolean heated = (meta & 0b0100) != 0;
+
+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(HEATED,heated);
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {

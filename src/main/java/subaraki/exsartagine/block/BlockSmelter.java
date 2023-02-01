@@ -34,7 +34,6 @@ public class BlockSmelter extends HeatableGuiBlock {
 
 	public BlockSmelter() {
 		super(Material.ROCK, Reference.SMELTER);
-		setLightLevel(0.0f);
 		setHardness(8f);
 		setSoundType(SoundType.STONE);
 		setCreativeTab(ExSartagineItems.pots);
@@ -42,7 +41,6 @@ public class BlockSmelter extends HeatableGuiBlock {
 		setTranslationKey(ExSartagine.MODID+".smelter");
 		setRegistryName("smelter");
 		setHardness(3.5f);
-		this.setLightOpacity(0);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
 
 	}

@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.BlockRangeExtension;
 import subaraki.exsartagine.block.ExSartagineBlocks;
 
@@ -27,10 +28,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     private final List<BlockPos> connected = new ArrayList<>();
 
-    /**
-     * wether or not this range is fueling connected entries
-     */
-    private boolean isCooking;
     /**
      * how much 'cooktime' from the item inserted is left
      */
@@ -54,8 +51,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
                     ItemStack stack = inventory.getStackInSlot(i);
                     if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
                         maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
-                        isCooking = true;
-                        setRangeConnectionsCooking(true);
+                        setCooking(true);
                         //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
                         inventory.getStackInSlot(i).shrink(1);
                         markDirty();
@@ -65,13 +61,24 @@ public class TileEntityRange extends TileEntity implements ITickable {
             }
 
             // if no fuel was set and the tile is cooking
-            if (fuelTimer == 0 && isCooking) {
-                isCooking = false;
-                setRangeConnectionsCooking(false);
+            if (fuelTimer == 0 && isCooking()) {
+                setCooking(false);
                 markDirty();
             }
         }
     }
+
+    private void setCooking(boolean cooking) {
+        setRangeConnectionsCooking(cooking);
+        IBlockState state = world.getBlockState(pos);
+        IBlockState newState = state.withProperty(BlockRange.HEATED,isCooking());
+        world.setBlockState(pos,newState);
+    }
+
+    public boolean isCooking() {
+        return (getBlockMetadata() & 0b0100) != 0;
+    }
+
 
     public boolean isFueled() {
         return fuelTimer > 0;
@@ -111,7 +118,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
         super.writeToNBT(compound);
         compound.setTag("inv", inventory.serializeNBT());
 
-        compound.setBoolean("cooking", isCooking);
         compound.setInteger("fuel", fuelTimer);
         compound.setInteger("max", maxFuelTimer);
 
@@ -130,7 +136,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         inventory.deserializeNBT(compound.getCompoundTag("inv"));
-        isCooking = compound.getBoolean("cooking");
         fuelTimer = compound.getInteger("fuel");
         maxFuelTimer = compound.getInteger("max");
 
@@ -152,7 +157,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         if (canConnect()) {
             connected.add(tere.getPos());
             tere.setParentRange(getPos());
-            setRangeConnectionCooking(tere.getPos(),isCooking);
+            setRangeConnectionCooking(tere.getPos(),isCooking());
         }
         markDirty();
     }

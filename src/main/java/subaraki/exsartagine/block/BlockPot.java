@@ -43,7 +43,6 @@ public class BlockPot extends HeatableGuiBlock {
 	public BlockPot() {
 		super(Material.ROCK, Reference.POT);
 
-		setLightLevel(0.0f);
 		setHardness(8f);
 		setSoundType(SoundType.STONE);
 		setCreativeTab(ExSartagineItems.pots);
@@ -51,7 +50,6 @@ public class BlockPot extends HeatableGuiBlock {
 		setTranslationKey(ExSartagine.MODID+".pot");
 		setRegistryName("pot");
 		setHardness(3.5f);
-		this.setLightOpacity(0);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
 
 	}

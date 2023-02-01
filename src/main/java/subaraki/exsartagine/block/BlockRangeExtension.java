@@ -42,7 +42,6 @@ public class BlockRangeExtension extends Block {
         setCreativeTab(CreativeTabs.TOOLS);
         setHarvestLevel("pickaxe", 0);
         setHardness(3.5f);
-        this.setLightOpacity(0);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
     }
 

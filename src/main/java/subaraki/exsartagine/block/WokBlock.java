@@ -38,12 +38,10 @@ public class WokBlock extends KitchenwareBlock {
 
 	public WokBlock() {
 		super(Material.IRON);
-		setLightLevel(0.0f);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
 		setHardness(3.5f);
-		this.setLightOpacity(0);
 		setDefaultState(getDefaultState().withProperty(HEATED,false));
 	}
 
