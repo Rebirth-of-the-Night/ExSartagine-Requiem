@@ -76,7 +76,7 @@ public class KettleScreen extends GuiContainer {
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 
-        float progress = 25 * (float) kettle.getProgress() / kettle.getCookTime();
+        float progress = 25 * (float) kettle.getProgress() / kettle.getClientCookTime();
         this.drawTexturedModalRect(i + 91, j + 33, 0, 184, (int) progress, 15); //Arrow
 
         //Draw fluid

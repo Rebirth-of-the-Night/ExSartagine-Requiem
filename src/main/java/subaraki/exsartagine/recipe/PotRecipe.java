@@ -36,6 +36,11 @@ public class PotRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
+    public int getCookTime() {
+        return 125;
+    }
+
+    @Override
     public IRecipeType<?> getType() {
         return RecipeTypes.POT;
     }

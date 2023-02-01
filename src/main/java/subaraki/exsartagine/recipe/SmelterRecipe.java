@@ -41,6 +41,11 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
     }
 
     @Override
+    public int getCookTime() {
+        return 199;
+    }
+
+    @Override
     public IRecipeType<?> getType() {
         return RecipeTypes.SMELTER;
     }

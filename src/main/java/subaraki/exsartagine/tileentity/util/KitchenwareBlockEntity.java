@@ -13,7 +13,7 @@ import subaraki.exsartagine.recipe.Recipes;
 public abstract class KitchenwareBlockEntity extends TileEntity {
 
     protected int progress = 0;
-    protected int cookTime = 0;
+    protected int clientCookTime = 0;
 
     //check if the block below is hot
     public final boolean isHeated() {
@@ -26,15 +26,15 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
         return progress;
     }
 
-    public int getCookTime() {
-        return cookTime;
+    public final int getClientCookTime() {
+        return clientCookTime;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setInteger("progress", progress);
-        compound.setInteger("cooktime", cookTime);
+        compound.setInteger("cooktime", clientCookTime);
         return compound;
     }
 
@@ -42,7 +42,7 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         this.progress = compound.getInteger("progress");
-        this.cookTime = compound.getInteger("cooktime");
+        this.clientCookTime = compound.getInteger("cooktime");
     }
 
     /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////

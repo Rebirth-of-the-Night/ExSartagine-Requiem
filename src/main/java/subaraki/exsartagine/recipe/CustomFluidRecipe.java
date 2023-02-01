@@ -12,7 +12,6 @@ public interface CustomFluidRecipe<T extends IItemHandler,F extends IFluidHandle
         return null;
     }
 
-    int getCookTime();
     default boolean match(T itemhandler,F fluidHandler) {
         return itemMatch(itemhandler) && fluidMatch(fluidHandler);
     }

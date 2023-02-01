@@ -16,13 +16,13 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 	public TileEntitySmelter() {
 		initInventory(3);
-		cookTime = 199;
+		clientCookTime = 199;
 	}
 
 	@Override
 	public void update() {
 
-		if(progress >= cookTime)
+		if(progress >= clientCookTime)
 		{
 			if(!world.isRemote)
 			{
@@ -75,11 +75,6 @@ public class TileEntitySmelter extends TileEntityCooker {
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, false), 3);
 	
 		}
-	}
-
-	@Override
-	public int getCookTime() {
-		return 199;
 	}
 
 	private ItemStack getBonus() {

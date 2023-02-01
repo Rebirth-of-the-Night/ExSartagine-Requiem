@@ -88,7 +88,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
 
     public void start() {
         cooking = true;
-        cookTime = cached.getCookTime();
+        clientCookTime = cached.getCookTime();
     }
 
     public abstract void processItems();

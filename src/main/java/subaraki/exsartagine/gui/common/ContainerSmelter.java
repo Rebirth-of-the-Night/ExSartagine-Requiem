@@ -58,7 +58,7 @@ public class ContainerSmelter extends Container {
                 slot.onSlotChange(slotStack, bufferStack);
             } else if (index != 0)// player inventory
             {
-                if (Recipes.hasResult(slotStack, RecipeTypes.POT)) //if the item clicked can be smolten
+                if (Recipes.hasResult(slotStack, RecipeTypes.SMELTER)) //if the item clicked can be smolten
                 {
                     if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
                     {

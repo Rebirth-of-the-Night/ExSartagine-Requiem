@@ -18,7 +18,6 @@ public class TileEntityPot extends TileEntityCooker {
 
     public TileEntityPot() {
         initInventory(2);
-        cookTime = 125;
     }
 
     public int getWaterLevel() {
@@ -33,17 +32,15 @@ public class TileEntityPot extends TileEntityCooker {
     public void update() {
 
         if (!world.isRemote) {
-            if (canRun()) {
+            if (canRun() && isHeated()) {
                 PotRecipe recipe = getOrCreateRecipe();
-                if (recipe != null) {
-                    if (cookTime <= progress) {
-                        process();
-                    } else {
-                        progress++;
-                        if (world.rand.nextInt(10) == 0)
-                            fluidTank.drain(5, true);
-                        markDirty();
-                    }
+                if (recipe.getCookTime() <= progress) {
+                    process();
+                } else {
+                    progress++;
+                    if (world.rand.nextInt(10) == 0)
+                        fluidTank.drain(5, true);
+                    markDirty();
                 }
             } else {
                 decreaseProgress();

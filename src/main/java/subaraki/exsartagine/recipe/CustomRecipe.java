@@ -30,6 +30,7 @@ public interface CustomRecipe<T extends IItemHandler> extends Comparable<CustomR
     default NonNullList<ItemStack> getRemainingItems(T handler) {
         return Utils.defaultRecipeGetRemainingItems(handler);
     }
+    int getCookTime();
 
     @Override
     default int compareTo(CustomRecipe<T> o) {

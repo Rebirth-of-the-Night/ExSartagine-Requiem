@@ -1,17 +1,11 @@
 package subaraki.exsartagine.tileentity;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,8 +16,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.block.BlockKettle;
-import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
 import subaraki.exsartagine.recipe.KettleRecipe;
@@ -56,7 +48,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
             if (isHeated() && canStart()) {
                 KettleRecipe recipe = getOrCreateRecipe();
                 if (recipe != null) {
-                    if (cookTime == progress) {
+                    if (clientCookTime == progress) {
                         process();
                     } else {
                         if (running) {
@@ -152,7 +144,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
 
     public void start() {
         running = true;
-        cookTime = cached.getCookTime();
+        clientCookTime = cached.getCookTime();
     }
 
     public KettleRecipe getOrCreateRecipe() {
@@ -260,13 +252,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
     public int addFluids(FluidStack fluid) {
         if (fluid != null) {
             return fluidInputTank.fill(fluid, true);
-        }
-        return 0;
-    }
-
-    @Override
-    public int getCookTime() {
-        return cookTime;
+        }return 0;
     }
 
     @Override
