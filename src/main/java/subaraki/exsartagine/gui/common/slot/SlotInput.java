@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.common;
+package subaraki.exsartagine.gui.common.slot;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

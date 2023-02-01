@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
+import subaraki.exsartagine.gui.common.slot.SlotFurnaceFuel;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 
 public class ContainerRange extends Container {

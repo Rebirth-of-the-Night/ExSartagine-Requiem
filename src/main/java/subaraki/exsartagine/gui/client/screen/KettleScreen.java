@@ -64,8 +64,8 @@ public class KettleScreen extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String s = I18n.format("kettle.gui");
-        this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-        this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(s, 1, 0, 0xffffff);
+        this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 10, this.ySize - 93, 0x404040);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package subaraki.exsartagine.gui.common;
+package subaraki.exsartagine.gui.common.slot;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;

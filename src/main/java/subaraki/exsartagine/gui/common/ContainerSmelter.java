@@ -5,10 +5,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.gui.common.slot.SlotInput;
+import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 

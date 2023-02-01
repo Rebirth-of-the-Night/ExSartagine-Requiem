@@ -6,6 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import subaraki.exsartagine.gui.common.slot.IFluidHandlerSlot;
+import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 
 public class ContainerKettle extends Container {
@@ -31,7 +33,7 @@ public class ContainerKettle extends Container {
             }
         }
 
-        this.addSlotToContainer(new SlotItemHandler(pot.handler, 19, 167, 74));
+        this.addSlotToContainer(new IFluidHandlerSlot(pot.handler, 19, 171, 34));
 
         int x2 = 16;
         int y2 = 100;
