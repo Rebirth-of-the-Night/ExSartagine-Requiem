@@ -1,6 +1,8 @@
 package subaraki.exsartagine.block;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -34,10 +36,16 @@ public class BlockRangeExtension extends Block {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     private final boolean lit;
+    private final Supplier<Block> cold;
+    private final Supplier<Block> hot;
+    private final Supplier<Set<Block>> valid;
 
-    public BlockRangeExtension(boolean lit) {
+    public BlockRangeExtension(boolean lit, Supplier<Block> cold, Supplier<Block> hot, Supplier<Set<Block>> valid) {
         super(Material.ROCK);
         this.lit = lit;
+        this.cold = cold;
+        this.hot = hot;
+        this.valid = valid;
         setHardness(8f);
         setSoundType(SoundType.STONE);
         setCreativeTab(CreativeTabs.TOOLS);
@@ -70,11 +78,11 @@ public class BlockRangeExtension extends Block {
         }
     }
 
-    public static boolean canStay(World level,BlockPos pos) {
+    public boolean canStay(World level,BlockPos pos) {
         for (EnumFacing dir : EnumFacing.Plane.HORIZONTAL) {
             BlockPos offset = pos.offset(dir);
             Block block = level.getBlockState(offset).getBlock();
-            if (block == ExSartagineBlocks.range || block == ExSartagineBlocks.range_extended || block == ExSartagineBlocks.range_extended_lit) {
+            if (valid.get().contains(block)) {
                 return true;
             }
         }
@@ -191,12 +199,12 @@ public class BlockRangeExtension extends Block {
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(getUsedBlock());
+        return Item.getItemFromBlock(getColdBlock());
     }
 
 	@Override
 	protected ItemStack getSilkTouchDrop(IBlockState state) {
-		return new ItemStack(getUsedBlock());
+		return new ItemStack(getColdBlock());
 	}
 
     /////// TURNING STUFF ////////////////
@@ -268,7 +276,11 @@ public class BlockRangeExtension extends Block {
     }
 
 
-		public static Block getUsedBlock() {
-			return ExSartagineBlocks.range_extended;
+		public Block getColdBlock() {
+			return cold.get();
 		}
+
+    public Block getHotBlock() {
+        return hot.get();
+    }
 }

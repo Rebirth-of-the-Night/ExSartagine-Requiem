@@ -272,10 +272,15 @@ public class Recipes {
         addHeatSource(Blocks.LIT_FURNACE);
         addPlaceable(ExSartagineBlocks.range_extended);
         addHeatSource(ExSartagineBlocks.range_extended_lit);
+        addPlaceable(ExSartagineBlocks.hearth_extended);
+        addHeatSource(ExSartagineBlocks.hearth_extended_lit);
         addHeatSource(Blocks.LAVA);
 
         addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED));
         addHeatSource(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED));
+
+        addPlaceable(ExSartagineBlocks.hearth,iBlockState -> !iBlockState.getValue(BlockRange.HEATED));
+        addHeatSource(ExSartagineBlocks.hearth,iBlockState -> iBlockState.getValue(BlockRange.HEATED));
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);

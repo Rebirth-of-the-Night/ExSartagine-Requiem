@@ -179,7 +179,10 @@ public class TileEntityRange extends TileEntity implements ITickable {
     public void setRangeConnectionCooking(BlockPos extPos,boolean setCooking) {
         IBlockState state = world.getBlockState(extPos);
         if (state.getBlock() instanceof BlockRangeExtension) {
-            Block blockNew = setCooking ? ExSartagineBlocks.range_extended_lit : ExSartagineBlocks.range_extended;
+
+            BlockRangeExtension blockRangeExtension = (BlockRangeExtension) state.getBlock();
+
+            Block blockNew = setCooking ? blockRangeExtension.getHotBlock() : blockRangeExtension.getColdBlock();
             IBlockState state1 = blockNew.getDefaultState().
                     withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
