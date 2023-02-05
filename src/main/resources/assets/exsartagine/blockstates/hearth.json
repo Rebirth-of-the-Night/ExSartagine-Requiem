@@ -1,0 +1,36 @@
+{
+    "variants":{
+        "facing=east,heated=true":{
+            "model":"exsartagine:hearth",
+            "y":270
+        },
+        "facing=east,heated=false":{
+            "model":"exsartagine:hearth",
+            "y":270
+        },
+        "facing=west,heated=true":{
+            "model":"exsartagine:hearth",
+            "y":90
+        },
+        "facing=west,heated=false":{
+            "model":"exsartagine:hearth",
+            "y":90
+        },
+        "facing=south,heated=true":{
+            "model":"exsartagine:hearth",
+            "y":0
+        },
+        "facing=south,heated=false":{
+            "model":"exsartagine:hearth",
+            "y":0
+        },
+        "facing=north,heated=true":{
+            "model":"exsartagine:hearth",
+            "y":180
+        },
+        "facing=north,heated=false":{
+            "model":"exsartagine:hearth",
+            "y":180
+        }
+    }
+}

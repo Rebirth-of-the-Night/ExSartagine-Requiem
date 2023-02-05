@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "exsartagine:blocks/hearth",
-		"1": "vanilla 1.12:blocks/hardened_clay",
-		"2": "exsartagine:blocks/hearth_annex",
-		"particle": "exsartagine:blocks/hearth"
+		"0": "exsartagine:block/hearth",
+		"1": "minecraft:blocks/hardened_clay",
+		"2": "exsartagine:block/hearth_annex",
+		"particle": "exsartagine:block/hearth"
 	},
 	"elements": [
 		{

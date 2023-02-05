@@ -41,7 +41,6 @@ public class BlockRange extends Block {
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
-        setTranslationKey(ExSartagine.MODID + ".range");
         setHardness(3.5f);
         setDefaultState(getDefaultState().withProperty(HEATED,false));
     }

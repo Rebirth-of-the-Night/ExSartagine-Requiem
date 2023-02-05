@@ -10,6 +10,15 @@ pot.gui=Cooking Pot
 range.gui=Cooking Range
 tile.exsartagine.range.name=Cooking Range
 
+tile.exsartagine.range_extended.name=Cooking Range Extension
+tile.exsartagine.range_extended_lit.name=Lit Cooking Range Extension
+
+hearth.gui=Hearth
+tile.exsartagine.hearth.name=Hearth
+
+tile.exsartagine.hearth_extended.name=Hearth Extension
+tile.exsartagine.hearth_extended_lit.name=Lit Hearth Extension
+
 kettle.gui=Kettle
 tile.exsartagine.kettle.name=Kettle
 

@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "normal": {
+      "model": "exsartagine:hearth_annex"
+    },
+    "facing=east": {
+      "model": "exsartagine:hearth_annex",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "exsartagine:hearth_annex",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "exsartagine:hearth_annex",
+      "y": 0
+    },
+    "facing=north": {
+      "model": "exsartagine:hearth_annex",
+      "y": 180
+    }
+  }
+}

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "exsartagine:blocks/hearth_annex",
-		"particle": "exsartagine:blocks/hearth_annex"
+		"0": "exsartagine:block/hearth_annex",
+		"particle": "exsartagine:block/hearth_annex"
 	},
 	"elements": [
 		{

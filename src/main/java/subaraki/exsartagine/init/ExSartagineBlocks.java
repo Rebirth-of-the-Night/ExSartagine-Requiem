@@ -26,11 +26,11 @@ public class ExSartagineBlocks {
 		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
-		range = new BlockRange().setRegistryName("range");
+		range = new BlockRange().setRegistryName("range").setTranslationKey(ExSartagine.MODID + ".range");
 		range_extended = new BlockRangeExtension(false).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
 
-		hearth = new BlockRange().setRegistryName("hearth");
+		hearth = new BlockRange().setRegistryName("hearth").setTranslationKey(ExSartagine.MODID + ".hearth");
 		hearth_extended = new BlockRangeExtension(false).setRegistryName("hearth_extended").setTranslationKey(ExSartagine.MODID+".hearth_extended");
 		hearth_extended_lit = new BlockRangeExtension(true).setRegistryName("hearth_extended_lit").setTranslationKey(ExSartagine.MODID+".hearth_extended_lit");
 
@@ -45,6 +45,9 @@ public class ExSartagineBlocks {
 		registry.register(range);
 		registry.register(range_extended);
 		registry.register(range_extended_lit);
+		registry.register(hearth);
+		registry.register(hearth_extended);
+		registry.register(hearth_extended_lit);
 		registry.register(kettle);
 	}
 }
