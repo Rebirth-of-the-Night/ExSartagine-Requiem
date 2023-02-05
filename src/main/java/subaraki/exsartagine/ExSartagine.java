@@ -1,10 +1,6 @@
 package subaraki.exsartagine;
 
 import com.google.common.collect.Lists;
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.mc1120.brackets.*;
-import crafttweaker.mc1120.events.ScriptRunEvent;
-import crafttweaker.runtime.ScriptLoader;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -14,7 +10,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -26,15 +21,15 @@ import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.gui.GuiHandler;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.init.ModBlockEntities;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.recipe.WokRecipe;
@@ -94,13 +89,7 @@ public class ExSartagine {
     @SubscribeEvent
     public static void blocks(RegistryEvent.Register<Block> e) {
         ExSartagineBlocks.load(e.getRegistry());
-
-        GameRegistry.registerTileEntity(WokBlockEntity.class, new ResourceLocation(MODID, "pan"));
-        GameRegistry.registerTileEntity(TileEntitySmelter.class, new ResourceLocation(MODID, "smelter"));
-        GameRegistry.registerTileEntity(TileEntityPot.class, new ResourceLocation(MODID, "pot"));
-        GameRegistry.registerTileEntity(TileEntityRange.class, new ResourceLocation(MODID, "range"));
-        GameRegistry.registerTileEntity(TileEntityRangeExtension.class, new ResourceLocation(MODID, "range_extension"));
-        GameRegistry.registerTileEntity(TileEntityKettle.class, new ResourceLocation(MODID, "kettle"));
+        ModBlockEntities.register();
     }
 
     @SubscribeEvent

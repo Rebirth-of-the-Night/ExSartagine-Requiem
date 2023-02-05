@@ -25,9 +25,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Utils;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityRange;
-import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
 import subaraki.exsartagine.util.Reference;
 
 public class BlockRange extends Block {

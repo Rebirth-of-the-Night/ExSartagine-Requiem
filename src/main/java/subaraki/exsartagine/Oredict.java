@@ -1,7 +1,7 @@
 package subaraki.exsartagine;
 
 import net.minecraftforge.oredict.OreDictionary;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.init.ExSartagineItems;
 
 public class Oredict {
 

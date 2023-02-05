@@ -7,7 +7,7 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.ExSartagine;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.gui.client.screen.GuiPot;
 import subaraki.exsartagine.gui.client.screen.GuiSmelter;
 import subaraki.exsartagine.gui.client.screen.KettleScreen;

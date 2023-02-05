@@ -18,9 +18,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.block.BlockRange;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.init.ExSartagineItems;
 
 import javax.annotation.Nullable;
 import java.util.*;

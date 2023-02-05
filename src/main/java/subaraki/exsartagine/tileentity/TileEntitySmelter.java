@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.Recipes;
 import subaraki.exsartagine.util.ConfigHandler;

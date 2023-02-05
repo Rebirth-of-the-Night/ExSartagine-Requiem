@@ -20,7 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.BlockRangeExtension;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 
 public class TileEntityRange extends TileEntity implements ITickable {
 

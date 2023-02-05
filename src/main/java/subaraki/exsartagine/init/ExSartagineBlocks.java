@@ -1,10 +1,11 @@
-package subaraki.exsartagine.block;
+package subaraki.exsartagine.init;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.ExSartagine;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.block.*;
+import subaraki.exsartagine.init.ExSartagineItems;
 
 public class ExSartagineBlocks {
 
@@ -14,6 +15,11 @@ public class ExSartagineBlocks {
 	public static Block range;
 	public static Block range_extended;
 	public static Block range_extended_lit;
+
+	public static Block hearth;
+	public static Block hearth_extended;
+	public static Block hearth_extended_lit;
+
 	public static Block kettle;
 
 	public static void load(IForgeRegistry<Block> registry){
@@ -23,6 +29,11 @@ public class ExSartagineBlocks {
 		range = new BlockRange().setRegistryName("range");
 		range_extended = new BlockRangeExtension(false).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
+
+		hearth = new BlockRange().setRegistryName("hearth");
+		hearth_extended = new BlockRangeExtension(false).setRegistryName("hearth_extended").setTranslationKey(ExSartagine.MODID+".hearth_extended");
+		hearth_extended_lit = new BlockRangeExtension(true).setRegistryName("hearth_extended_lit").setTranslationKey(ExSartagine.MODID+".hearth_extended_lit");
+
 		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setCreativeTab(ExSartagineItems.pots).setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
 		register(registry);
 	}

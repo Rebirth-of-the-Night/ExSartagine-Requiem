@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import subaraki.exsartagine.ExSartagine;
-import subaraki.exsartagine.item.ExSartagineItems;
+import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.Reference;
 

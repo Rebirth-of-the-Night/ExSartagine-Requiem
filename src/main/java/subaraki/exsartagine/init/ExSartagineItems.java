@@ -1,4 +1,4 @@
-package subaraki.exsartagine.item;
+package subaraki.exsartagine.init;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.Oredict;
-import subaraki.exsartagine.block.ExSartagineBlocks;
+import subaraki.exsartagine.item.ItemNoodle;
 
 import static subaraki.exsartagine.ExSartagine.MODID;
 
@@ -26,6 +26,10 @@ public class ExSartagineItems {
 	public static Item smelter;
 	public static Item pot;
 	public static Item range;
+	public static Item range_extended;
+	public static Item hearth;
+	public static Item hearth_extended;
+
 	public static Item kettle;
 
 	public static ItemFood boiled_egg;
@@ -78,8 +82,6 @@ public class ExSartagineItems {
 	public static Item curd;
 	public static Item flour;
 
-	public static Item range_extended;
-
 	public static CreativeTabs foods = new CreativeTabs("exsartaginefoods") {
 		@Override
 		public ItemStack createIcon() {
@@ -98,8 +100,13 @@ public class ExSartagineItems {
 		smelter = new ItemBlock(ExSartagineBlocks.smelter).setRegistryName(ExSartagineBlocks.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
-		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
 		range_extended = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
+
+		hearth = new ItemBlock(ExSartagineBlocks.hearth).setRegistryName(ExSartagineBlocks.hearth.getRegistryName()).setCreativeTab(pots);
+		hearth_extended = new ItemBlock(ExSartagineBlocks.hearth_extended).setRegistryName(ExSartagineBlocks.hearth_extended.getRegistryName()).setCreativeTab(pots);
+
+		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
+
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".egg.boiled").setRegistryName("egg.boiled");
 		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setTranslationKey(MODID+".beans.boiled").setRegistryName("beans.boiled");
@@ -168,6 +175,11 @@ public class ExSartagineItems {
 		registry.register(smelter);
 		registry.register(pot);
 		registry.register(range);
+		registry.register(range_extended);
+
+		registry.register(hearth);
+		registry.register(hearth_extended);
+
 		registry.register(kettle);
 
 		registry.register(boiled_egg);
@@ -216,7 +228,6 @@ public class ExSartagineItems {
 		registry.register(spaghetti_bolognaise);
 		registry.register(spaghetti_cheese);
 		registry.register(spaghetti_veggie);
-		registry.register(range_extended);
 	}
 
 	public static void registerRenders(){
@@ -224,8 +235,10 @@ public class ExSartagineItems {
 		registerRender(smelter, MODID, "smelter");
 		registerRender(pot, MODID, "pot");
 		registerRender(range, MODID, "range");
-		registerRender(kettle, MODID, "kettle");
 		registerRender(range_extended,MODID,"range_extended");
+		registerRender(hearth, MODID, "hearth");
+		registerRender(hearth_extended,MODID,"hearth_extended");
+		registerRender(kettle, MODID, "kettle");
 
 		registerRender(boiled_egg, MODID, "egg");
 		registerRender(boiled_beans, MODID, "beans");
