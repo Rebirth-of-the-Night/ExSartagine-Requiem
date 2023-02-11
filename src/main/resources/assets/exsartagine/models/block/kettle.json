@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "blocks/cauldron_inner",
-		"1": "blocks/cauldron_inner",
-		"2": "blocks/cauldron_side"
+		"1": "Desktop:blocks/cauldron_inner",
+		"2": "Desktop:blocks/cauldron_side",
+		"particle": "Desktop:blocks/cauldron_inner"
 	},
 	"elements": [
 		{
@@ -399,20 +399,53 @@
 			}
 		}
 	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [70, 0, 0],
+			"translation": [-5.5, 7.25, 2.75]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [70, 0, 0],
+			"translation": [-5.5, 7.25, 2.75]
+		},
+		"firstperson_righthand": {
+			"translation": [-9, 2, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [-9, 2, 0]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"head": {
+			"translation": [0, 14, 0]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
 	"groups": [
 		{
 			"name": "main body",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6]
 		},
 		{
 			"name": "bottom",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 		},
 		{
 			"name": "top",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
 		}
 	]
