@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
+import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 
@@ -64,7 +65,7 @@ public class WokBlock extends KitchenwareBlock {
 			if (!worldIn.isRemote) {
 
 				if (!stack.isEmpty()) {
-					if (OreDictionary.containsMatch(false, OreDictionary.getOres("ore:spatula"),stack)) {
+					if (OreDictionary.containsMatch(false, OreDictionary.getOres(Oredict.SPATULA),stack)) {
 						wokBlockEntity.flip(playerIn, stack);
 					} else {
 

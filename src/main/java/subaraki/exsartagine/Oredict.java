@@ -1,10 +1,15 @@
 package subaraki.exsartagine;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.init.ExSartagineItems;
 
+import java.util.List;
+
 public class Oredict {
 
+    public static final String SPATULA = "ore:spatula";
+    public static final String IGNITER = "ore:igniter";
 
     public static void addToOreDict() {
         OreDictionary.registerOre("egg", ExSartagineItems.boiled_egg);
@@ -23,5 +28,17 @@ public class Oredict {
         OreDictionary.registerOre("foodDoughBread", ExSartagineItems.bread_dough); //food registry for pan slot
 
         OreDictionary.registerOre("itemNoodles", ExSartagineItems.dry_strings);
+    }
+
+    public static boolean checkMatch(String name, ItemStack stack) {
+
+        List<ItemStack> ores = OreDictionary.getOres(name);
+
+        for (ItemStack stack1 : ores) {
+            if (OreDictionary.itemMatches(stack1,stack,false)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

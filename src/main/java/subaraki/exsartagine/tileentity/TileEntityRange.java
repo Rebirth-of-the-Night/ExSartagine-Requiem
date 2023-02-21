@@ -20,7 +20,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.BlockRangeExtension;
-import subaraki.exsartagine.init.ExSartagineBlocks;
 
 public class TileEntityRange extends TileEntity implements ITickable {
 
@@ -37,33 +36,47 @@ public class TileEntityRange extends TileEntity implements ITickable {
      */
     private int maxFuelTimer = 0;
 
+    private int sparks;
+
     @Override
     public void update() {
         //Decrease
         if (fuelTimer > 0)
             fuelTimer--;
 
+        if (sparks > 0)
+            sparks--;
 
         if (!world.isRemote) {
             //look for fuel if we ran out
             if (fuelTimer == 0) {
-                for (int i = 0; i < inventory.getSlots(); i++) {
-                    ItemStack stack = inventory.getStackInSlot(i);
-                    if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
-                        maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
-                        setCooking(true);
-                        //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
-                        inventory.getStackInSlot(i).shrink(1);
-                        markDirty();
-                        break;
-                    }
-                }
+                lookForFuel();
             }
 
             // if no fuel was set and the tile is cooking
             if (fuelTimer == 0 && isCooking()) {
                 setCooking(false);
                 markDirty();
+            }
+        }
+    }
+
+
+    public void lookForFuel() {
+
+        if (manualIgnition()) {
+            if (sparks <= 0) return;
+        }
+
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
+                maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
+                setCooking(true);
+                //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
+                inventory.getStackInSlot(i).shrink(1);
+                markDirty();
+                break;
             }
         }
     }
@@ -148,9 +161,21 @@ public class TileEntityRange extends TileEntity implements ITickable {
             }
     }
 
+    public int getMaxExtensions() {
+        return ((BlockRange)getBlockType()).getMaxExtensions();
+    }
+
+    public boolean manualIgnition() {
+        return ((BlockRange)getBlockType()).isManualIgnition();
+    }
+
+    public void createSparks() {
+        sparks += 5;
+    }
+
     public boolean canConnect() {
         //if the last one is filled, the rest is too.
-        return connected.size() < 4;
+        return connected.size() < getMaxExtensions();
     }
 
     public void connect(TileEntityRangeExtension tere) {

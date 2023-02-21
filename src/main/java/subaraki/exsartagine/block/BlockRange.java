@@ -23,7 +23,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityRange;
@@ -34,9 +36,13 @@ public class BlockRange extends Block {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool HEATED = PropertyBool.create("heated");
+    private final boolean manualIgnition;
+    private final int maxExtensions;
 
-    public BlockRange() {
+    public BlockRange(boolean manualIgnition,int maxExtensions) {
         super(Material.IRON);
+        this.manualIgnition = manualIgnition;
+        this.maxExtensions = maxExtensions;
         setLightLevel(1.0f);
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
@@ -54,8 +60,21 @@ public class BlockRange extends Block {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
                                     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        if (!(worldIn.getTileEntity(pos) instanceof TileEntityRange) || hand == EnumHand.OFF_HAND)
+        if (!(worldIn.getTileEntity(pos) instanceof TileEntityRange))
             return false;
+
+
+        if (manualIgnition) {
+            ItemStack stack = playerIn.getHeldItem(hand);
+            boolean matches = Oredict.checkMatch(Oredict.IGNITER,stack);
+            if (matches) {
+                if (!worldIn.isRemote) {
+                    ((TileEntityRange) worldIn.getTileEntity(pos)).createSparks();
+                    stack.damageItem(1, playerIn);
+                }
+                return true;
+            }
+        }
 
         playerIn.openGui(ExSartagine.instance, Reference.RANGE, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
@@ -166,5 +185,13 @@ public class BlockRange extends Block {
 
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
+
+    public int getMaxExtensions() {
+        return maxExtensions;
+    }
+
+    public boolean isManualIgnition() {
+        return manualIgnition;
     }
 }

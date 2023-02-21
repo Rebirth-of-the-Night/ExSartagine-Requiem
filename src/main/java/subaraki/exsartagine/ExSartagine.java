@@ -110,6 +110,7 @@ public class ExSartagine {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
-        OreDictionary.registerOre("ore:spatula", Items.WOODEN_SHOVEL);
+        OreDictionary.registerOre(Oredict.SPATULA, Items.WOODEN_SHOVEL);
+        OreDictionary.registerOre(Oredict.IGNITER,new ItemStack(Items.FLINT_AND_STEEL,1,OreDictionary.WILDCARD_VALUE));
     }
 }

@@ -89,15 +89,20 @@ public class BlockRangeExtension extends Block {
         return false;
     }
 
+    //this also gets called when setting extensions to cooking/not cooking
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TileEntityRangeExtension) {
-            BlockPos parentRange = ((TileEntityRangeExtension) tile).getParentRange();
-            if (parentRange != null) {
-                TileEntity range = worldIn.getTileEntity(parentRange);
-                if (range instanceof TileEntityRange)
-                    ((TileEntityRange) range).disconnect(pos);
+        IBlockState newState = worldIn.getBlockState(pos);
+
+        if (!(newState.getBlock() instanceof BlockRangeExtension)) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof TileEntityRangeExtension) {
+                BlockPos parentRange = ((TileEntityRangeExtension) tile).getParentRange();
+                if (parentRange != null) {
+                    TileEntity range = worldIn.getTileEntity(parentRange);
+                    if (range instanceof TileEntityRange)
+                        ((TileEntityRange) range).disconnect(pos);
+                }
             }
         }
 
