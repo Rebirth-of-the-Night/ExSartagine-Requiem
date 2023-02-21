@@ -1,9 +1,9 @@
 {
-	"parent": "block/block",
 	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
-		"1": "exsartagine:block/wok",
-		"particle": "exsartagine:block/wok"
+		"1": "Desktop:block/wok",
+		"particle": "Desktop:block/wok"
 	},
 	"elements": [
 		{
@@ -118,5 +118,40 @@
 				"down": {"uv": [9, 9, 20.4, 11], "rotation": 90, "texture": "#1"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-69.28, -1.25, -180],
+			"translation": [0, 7.25, 8.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-69.28, -1.25, -180],
+			"translation": [0, 7.25, 8.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [-173.5, 0.75, 180],
+			"translation": [1.75, 2.25, -6]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-173.5, 0.75, 180],
+			"translation": [1.75, 2.25, -6]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"head": {
+			"rotation": [-23.75, -65.27, 154.16],
+			"translation": [-0.25, 0, -0.5],
+			"scale": [1.5, 1.5, 1.5]
+		},
+		"fixed": {
+			"rotation": [-180, 90, -180],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

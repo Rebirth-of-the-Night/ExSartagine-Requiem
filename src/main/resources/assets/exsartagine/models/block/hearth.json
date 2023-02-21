@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "exsartagine:block/hearth",
-		"1": "minecraft:blocks/hardened_clay",
-		"4": "exsartagine:block/hearth_off",
-		"particle": "exsartagine:block/hearth"
+		"0": "Desktop:block/hearth",
+		"1": "Desktop:blocks/hardened_clay",
+		"4": "Desktop:block/hearth_off",
+		"particle": "Desktop:block/hearth"
 	},
 	"elements": [
 		{
@@ -29,7 +29,6 @@
 				"east": {"uv": [0, 4, 14, 15], "texture": "#0"},
 				"south": {"uv": [0, 3, 16, 14], "texture": "#0"},
 				"west": {"uv": [1, 4, 15, 15], "texture": "#0"},
-				"up": {"uv": [0, 0, 14, 14], "texture": "#missing"},
 				"down": {"uv": [0, 0, 14, 14], "texture": "#missing"}
 			}
 		},
@@ -46,5 +45,36 @@
 				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }
