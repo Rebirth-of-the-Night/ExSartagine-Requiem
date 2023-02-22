@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.gui.common.ContainerKettle;
+import subaraki.exsartagine.network.ClearTankPacket;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
@@ -51,6 +52,10 @@ public class KettleScreen extends GuiContainer {
     public void initGui() {
         super.initGui();
         addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 86,guiTop+ 50,20,20,0,0,0,BUTTON_TEXTURE));
+        addButton(new GuiButton(1,guiLeft + 68,guiTop + 69,18,18,""));
+        addButton(new GuiButton(2,guiLeft + 105,guiTop + 69,18,18,""));
+
+
     }
 
     @Override
@@ -58,6 +63,10 @@ public class KettleScreen extends GuiContainer {
         super.actionPerformed(button);
         if (button.id == BUTTON_ID) {
             PacketHandler.INSTANCE.sendToServer(new SwapTanksPacket());
+        } else if (button.id == 1) {
+            PacketHandler.INSTANCE.sendToServer(new ClearTankPacket(true));
+        } else if (button.id == 2) {
+            PacketHandler.INSTANCE.sendToServer(new ClearTankPacket(false));
         }
     }
 
@@ -80,8 +89,8 @@ public class KettleScreen extends GuiContainer {
         this.drawTexturedModalRect(i + 91, j + 33, 0, 184, (int) progress, 15); //Arrow
 
         //Draw fluid
-            renderFluid(mc, i + 9, j + 15, kettle.fluidInputTank);
-            renderFluid(mc, i + 176, j + 15, kettle.fluidOutputTank);
+            renderFluid(mc, i + 77, j + 16, kettle.fluidInputTank);
+            renderFluid(mc, i + 101, j + 16, kettle.fluidOutputTank);
     }
 
     public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {

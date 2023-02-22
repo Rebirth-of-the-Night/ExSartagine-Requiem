@@ -71,7 +71,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
-                maxFuelTimer = fuelTimer = TileEntityFurnace.getItemBurnTime(stack);
+                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * (manualIgnition() ? 1 : .5));
                 setCooking(true);
                 //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
                 inventory.getStackInSlot(i).shrink(1);

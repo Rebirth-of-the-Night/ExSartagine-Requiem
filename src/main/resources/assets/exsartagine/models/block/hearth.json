@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "Desktop:block/hearth",
-		"1": "Desktop:blocks/hardened_clay",
-		"4": "Desktop:block/hearth_off",
-		"particle": "Desktop:block/hearth"
+		"0": "exsartagine:block/hearth",
+		"1": "blocks/hardened_clay",
+		"4": "exsartagine:block/hearth_off",
+		"particle": "exsartagine:block/hearth"
 	},
 	"elements": [
 		{

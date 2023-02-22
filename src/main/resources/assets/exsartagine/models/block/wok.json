@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "Desktop:block/wok",
-		"particle": "Desktop:block/wok"
+		"1": "exsartagine:block/wok",
+		"particle": "exsartagine:block/wok"
 	},
 	"elements": [
 		{

@@ -18,5 +18,6 @@ public class PacketHandler {
   public static void registerMessages() {
     // Register messages which are sent from the client to the server here:
     INSTANCE.registerMessage(SwapTanksPacket.Handler.class, SwapTanksPacket.class, 0, Side.SERVER);
+    INSTANCE.registerMessage(ClearTankPacket.Handler.class, ClearTankPacket.class, 1, Side.SERVER);
   }
 }

@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "Desktop:blocks/cauldron_inner",
-		"2": "Desktop:blocks/cauldron_side",
-		"particle": "Desktop:blocks/cauldron_inner"
+		"1": "blocks/cauldron_inner",
+		"2": "blocks/cauldron_side",
+		"particle": "blocks/cauldron_inner"
 	},
 	"elements": [
 		{

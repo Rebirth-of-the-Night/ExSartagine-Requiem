@@ -96,4 +96,13 @@ public class ContainerKettle extends Container {
 
         return itemstack;
     }
+
+    public void emptyTank(boolean left) {
+        if (left) {
+            pot.fluidInputTank.setFluid(null);
+        } else {
+            pot.fluidOutputTank.setFluid(null);
+        }
+        pot.markDirty();
+    }
 }
