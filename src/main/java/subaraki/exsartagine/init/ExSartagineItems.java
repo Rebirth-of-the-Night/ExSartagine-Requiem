@@ -64,6 +64,10 @@ public class ExSartagineItems {
 	public static ItemNoodle spaghetti_cheese;
 	public static ItemNoodle spaghetti_veggie;
 
+	public static Item noodles_chicken;
+	public static Item noodles_fish;
+	public static Item noodles_meat;
+	public static Item noodles_veggie;
 	public static ItemNoodle noodles_chicken_cooked;
 	public static ItemNoodle noodles_fish_cooked;
 	public static ItemNoodle noodles_meat_cooked;
@@ -158,6 +162,10 @@ public class ExSartagineItems {
 		noodles_meat_cooked = (ItemNoodle)new ItemNoodle(5, 0.8f, false).setTranslationKey(MODID+".noodles_meat_cooked").setRegistryName("noodles_meat_cooked").setCreativeTab(foods);
 		noodles_veggie_cooked = (ItemNoodle)new ItemNoodle(7, 0.7f, false).setTranslationKey(MODID+".noodles_veggie_cooked").setRegistryName("noodles_veggie_cooked").setCreativeTab(foods);
 
+		noodles_chicken = new Item().setTranslationKey(MODID+".noodles_chicken").setRegistryName("noodles_chicken").setCreativeTab(foods);
+		noodles_fish = new Item().setTranslationKey(MODID+".noodles_fish").setRegistryName("noodles_fish").setCreativeTab(foods);
+		noodles_meat= new Item().setTranslationKey(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
+		noodles_veggie = new Item().setTranslationKey(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
 		register(registry);
 		Oredict.addToOreDict();
 	}
@@ -203,6 +211,11 @@ public class ExSartagineItems {
 		registry.register(bread_veggie_raw);
 
 		registry.register(dry_strings);
+
+		registry.register(noodles_chicken);
+		registry.register(noodles_meat);
+		registry.register(noodles_fish);
+		registry.register(noodles_veggie);
 
 		registry.register(noodles_chicken_cooked);
 		registry.register(noodles_meat_cooked);
@@ -259,6 +272,11 @@ public class ExSartagineItems {
 		registerRender(curd, MODID, "curd");
 
 		registerRender(dry_strings, MODID, "dry_strings");
+
+		registerRender(noodles_chicken, MODID, "noodles_chicken");
+		registerRender(noodles_fish, MODID, "noodles_fish");
+		registerRender(noodles_meat, MODID, "noodles_meat");
+		registerRender(noodles_veggie, MODID, "noodles_veggie");
 
 		registerRender(noodles_chicken_cooked, MODID, "noodles_chicken_cooked");
 		registerRender(noodles_fish_cooked, MODID, "noodles_fish_cooked");
