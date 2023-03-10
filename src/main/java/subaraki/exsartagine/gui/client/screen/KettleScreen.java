@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.gui.client.SmallButton;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.ClearTankPacket;
 import subaraki.exsartagine.network.PacketHandler;
@@ -52,8 +53,8 @@ public class KettleScreen extends GuiContainer {
     public void initGui() {
         super.initGui();
         addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 86,guiTop+ 50,20,20,0,0,0,BUTTON_TEXTURE));
-        addButton(new GuiButton(1,guiLeft + 68,guiTop + 69,18,18,""));
-        addButton(new GuiButton(2,guiLeft + 105,guiTop + 69,18,18,""));
+        addButton(new SmallButton(1,guiLeft + 76,guiTop + 69,10,10,""));
+        addButton(new SmallButton(2,guiLeft + 107,guiTop + 69,10,10,""));
 
 
     }
