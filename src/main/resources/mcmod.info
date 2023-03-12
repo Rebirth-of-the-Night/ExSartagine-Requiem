@@ -2,13 +2,13 @@
 {
   "modid": "exsartagine",
   "name": "ExSartagine Requiem",
-  "description": "Simple cooking mod",
+  "description": "Thermo Efficient Pots and Pans",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/ArtixAllMighty/ExSartagine/wiki",
   "updateUrl": "",
-  "authorList": ["ArtixAllMighty", "Foreck", "Tfarcenim"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Subaraki", "Isaac","ArtixAllMighty", "Foreck", "Tfarcenim"],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
