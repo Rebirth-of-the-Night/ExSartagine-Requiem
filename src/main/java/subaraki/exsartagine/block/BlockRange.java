@@ -1,6 +1,7 @@
 package subaraki.exsartagine.block;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -23,7 +24,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
@@ -36,10 +36,10 @@ public class BlockRange extends Block {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool HEATED = PropertyBool.create("heated");
-    private final boolean manualIgnition;
+    private final Supplier<Boolean> manualIgnition;
     private final int maxExtensions;
 
-    public BlockRange(boolean manualIgnition,int maxExtensions) {
+    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions) {
         super(Material.IRON);
         this.manualIgnition = manualIgnition;
         this.maxExtensions = maxExtensions;
@@ -64,7 +64,7 @@ public class BlockRange extends Block {
             return false;
 
 
-        if (manualIgnition) {
+        if (manualIgnition.get()) {
             ItemStack stack = playerIn.getHeldItem(hand);
             boolean matches = Oredict.checkMatch(Oredict.IGNITER,stack);
             if (matches) {
@@ -191,7 +191,7 @@ public class BlockRange extends Block {
         return maxExtensions;
     }
 
-    public boolean isManualIgnition() {
+    public Supplier<Boolean> isManualIgnition() {
         return manualIgnition;
     }
 }

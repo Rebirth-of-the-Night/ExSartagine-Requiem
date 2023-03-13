@@ -7,6 +7,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.block.*;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.util.ConfigHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,11 +36,11 @@ public class ExSartagineBlocks {
 		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot();
-		range = new BlockRange(true,3).setRegistryName("range").setTranslationKey(ExSartagine.MODID + ".range");
+		range = new BlockRange(() -> ConfigHandler.range_requires_ignition,3).setRegistryName("range").setTranslationKey(ExSartagine.MODID + ".range");
 		range_extended = new BlockRangeExtension(false,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
 
-		hearth = new BlockRange(false,1).setRegistryName("hearth").setTranslationKey(ExSartagine.MODID + ".hearth");
+		hearth = new BlockRange(() -> ConfigHandler.hearth_requires_ignition,1).setRegistryName("hearth").setTranslationKey(ExSartagine.MODID + ".hearth");
 		hearth_extended = new BlockRangeExtension(false,() -> hearth_extended,() -> hearth_extended_lit,hearths).setRegistryName("hearth_extended").setTranslationKey(ExSartagine.MODID+".hearth_extended");
 		hearth_extended_lit = new BlockRangeExtension(true,() -> hearth_extended,() -> hearth_extended_lit,hearths).setRegistryName("hearth_extended_lit").setTranslationKey(ExSartagine.MODID+".hearth_extended_lit");
 

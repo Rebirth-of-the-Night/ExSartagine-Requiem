@@ -2,6 +2,7 @@ package subaraki.exsartagine.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -64,14 +65,14 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void lookForFuel() {
 
-        if (manualIgnition()) {
+        if (manualIgnition().get()) {
             if (sparks <= 0) return;
         }
 
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
-                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * (manualIgnition() ? 1 : .5));
+                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * (manualIgnition().get() ? 1 : .5));
                 setCooking(true);
                 //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
                 inventory.getStackInSlot(i).shrink(1);
@@ -165,7 +166,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         return ((BlockRange)getBlockType()).getMaxExtensions();
     }
 
-    public boolean manualIgnition() {
+    public Supplier<Boolean> manualIgnition() {
         return ((BlockRange)getBlockType()).isManualIgnition();
     }
 
