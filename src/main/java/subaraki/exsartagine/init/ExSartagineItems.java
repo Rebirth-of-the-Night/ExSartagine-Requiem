@@ -167,7 +167,6 @@ public class ExSartagineItems {
 		noodles_meat= new Item().setTranslationKey(MODID+".noodles_meat").setRegistryName("noodles_meat").setCreativeTab(foods);
 		noodles_veggie = new Item().setTranslationKey(MODID+".noodles_veggie").setRegistryName("noodles_veggie").setCreativeTab(foods);
 		register(registry);
-		Oredict.addToOreDict();
 	}
 
 	private static void register(IForgeRegistry<Item> registry) {

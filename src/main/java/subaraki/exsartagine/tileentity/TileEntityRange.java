@@ -25,6 +25,7 @@ import subaraki.exsartagine.block.BlockRangeExtension;
 public class TileEntityRange extends TileEntity implements ITickable {
 
     private final ItemStackHandler inventory = new ItemStackHandler(9);
+    private boolean self_ignite_upgrade;
 
     private final List<BlockPos> connected = new ArrayList<>();
 
@@ -55,7 +56,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
             }
 
             // if no fuel was set and the tile is cooking
-            if (fuelTimer == 0 && isCooking()) {
+            if (fuelTimer == 0 && isHeated()) {
                 setCooking(false);
                 markDirty();
             }
@@ -65,7 +66,8 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void lookForFuel() {
 
-        if (manualIgnition().get()) {
+        //do not look for fuel if manual ignition is required AND it's not currently hot
+        if (manualIgnition().get() && isHeated()) {
             if (sparks <= 0) return;
         }
 
@@ -89,7 +91,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         world.setBlockState(pos,newState);
     }
 
-    public boolean isCooking() {
+    public boolean isHeated() {
         return world.getBlockState(pos).getValue(BlockRange.HEATED);
     }
 
@@ -183,7 +185,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         if (canConnect()) {
             connected.add(tere.getPos());
             tere.setParentRange(getPos());
-            setRangeConnectionCooking(tere.getPos(),isCooking());
+            setRangeConnectionCooking(tere.getPos(), isHeated());
         }
         markDirty();
     }
@@ -262,5 +264,13 @@ public class TileEntityRange extends TileEntity implements ITickable {
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
         return oldState.getBlock() != newState.getBlock();
+    }
+
+    public boolean isSelf_ignite_upgrade() {
+        return self_ignite_upgrade;
+    }
+
+    public void setSelf_ignite_upgrade(boolean self_ignite_upgrade) {
+        this.self_ignite_upgrade = self_ignite_upgrade;
     }
 }

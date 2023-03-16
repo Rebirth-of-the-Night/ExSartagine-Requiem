@@ -18,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.recipe.IIngredientWrapper;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            Recipes.addPotRecipe(input, output);
+            ModRecipes.addPotRecipe(input, output);
         }
     }
 
@@ -94,9 +94,9 @@ public class CraftTweakerSupport {
         public void apply() {
             boolean done;
             if (this.input == null)
-                done = Recipes.removePotRecipe(output);
+                done = ModRecipes.removePotRecipe(output);
             else
-                done = Recipes.removePotRecipe(input, output);
+                done = ModRecipes.removePotRecipe(input, output);
             
             if (!done)
                 CraftTweakerAPI.logWarning("No pot recipes removed for input " + input + " and output " + output);
@@ -145,7 +145,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            Recipes.addWokRecipe(inputs,fluid, output,flips);
+            ModRecipes.addWokRecipe(inputs,fluid, output,flips);
         }
     }
 
@@ -164,7 +164,7 @@ public class CraftTweakerSupport {
         @Override
         public void apply() {
             boolean done;
-                done = Recipes.removeWokRecipeByName(name);
+                done = ModRecipes.removeWokRecipeByName(name);
 
             if (!done) {
                     CraftTweakerAPI.logWarning("No pot recipes removed for name " + name);
@@ -203,7 +203,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            Recipes.addSmelterRecipe(input, output);
+            ModRecipes.addSmelterRecipe(input, output);
         }
     }
 
@@ -233,9 +233,9 @@ public class CraftTweakerSupport {
         public void apply() {
             boolean done;
             if (this.input == null)
-                done = Recipes.removeSmelterRecipe(output);
+                done = ModRecipes.removeSmelterRecipe(output);
             else
-                done = Recipes.removeSmelterRecipe(input, output);
+                done = ModRecipes.removeSmelterRecipe(input, output);
 
             if (!done) {
                 if (this.input == null)
@@ -296,7 +296,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            Recipes.addKettleRecipe(inputs, catalyst, fluidInput, fluidOutput, outputs, time);
+            ModRecipes.addKettleRecipe(inputs, catalyst, fluidInput, fluidOutput, outputs, time);
         }
     }
     
@@ -319,7 +319,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            boolean done = Recipes.removeKettleRecipeByName(name);
+            boolean done = ModRecipes.removeKettleRecipeByName(name);
 
             if (!done)
                 CraftTweakerAPI.logWarning("No kettle recipes removed for name " + name);
@@ -394,15 +394,15 @@ public class CraftTweakerSupport {
         public void apply() {
             if (this.add) {
                 if (this.isHeatSource)
-                    Recipes.addHeatSource(states);
+                    ModRecipes.addHeatSource(states);
                 else
-                    Recipes.addPlaceable(states);
+                    ModRecipes.addPlaceable(states);
             } else {
                 boolean done;
                 if (this.isHeatSource)
-                    done = Recipes.removeHeatSources(states);
+                    done = ModRecipes.removeHeatSources(states);
                 else
-                    done = Recipes.removePlaceables(states);
+                    done = ModRecipes.removePlaceables(states);
                 
                 if (!done)
                     CraftTweakerAPI.logWarning("No " + 

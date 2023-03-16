@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 public abstract class KitchenwareBlockEntity extends TileEntity {
 
@@ -16,8 +16,8 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
     protected int clientCookTime = 0;
 
     //check if the block below is hot
-    public final boolean isHeated() {
-        return Recipes.isHeatSource(world.getBlockState(pos.down()));
+    public final boolean activeHeatSourceBelow() {
+        return ModRecipes.isHeatSource(world.getBlockState(pos.down()));
     }
 
     public abstract IItemHandler getEntireItemInventory();

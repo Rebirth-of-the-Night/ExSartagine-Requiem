@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class Recipes {
+public class ModRecipes {
 
     private static final Set<IBlockState> heatSources = new HashSet<>();
     private static final Set<IBlockState> placeable = new HashSet<>();
@@ -255,7 +255,7 @@ public class Recipes {
 
     @SuppressWarnings("unchecked")
     public static <I extends IItemHandler, R extends CustomRecipe<I>,S extends Map<ResourceLocation,R>> S getRecipeMap(IRecipeType<R> type) {
-        return (S) Recipes.recipes.get(type);
+        return (S) ModRecipes.recipes.get(type);
     }
 
 

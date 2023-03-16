@@ -10,8 +10,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.block.BlockKettle;
-import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
@@ -31,7 +29,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void update() {
 		if (!world.isRemote) {
-			if (canStart() && isHeated()) {
+			if (canStart() && activeHeatSourceBelow()) {
 				WokRecipe recipe = getOrCreateRecipe();
 				if (recipe.getCookTime() <= progress && canProcess(recipe)) {
 					process();
@@ -119,6 +117,16 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		fluidInventoryInput = new WokTank(10000);
 		fluidInventoryInput.setTileEntity(this);
 		recipeType = RecipeTypes.WOK;
+	}
+
+	public void clearInput() {
+		for (int i = 0; i < inventoryInput.getSlots();i++) {
+			inventoryInput.setStackInSlot(i,ItemStack.EMPTY);
+		}
+		isCooking = false;
+		cached = null;
+		progress = 0;
+		markDirty();
 	}
 
 	@Override

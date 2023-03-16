@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.gui.common.slot.SlotInput;
 import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
 public class ContainerSmelter extends Container {
@@ -57,7 +57,7 @@ public class ContainerSmelter extends Container {
                 slot.onSlotChange(slotStack, bufferStack);
             } else if (index != 0)// player inventory
             {
-                if (Recipes.hasResult(slotStack, RecipeTypes.SMELTER)) //if the item clicked can be smolten
+                if (ModRecipes.hasResult(slotStack, RecipeTypes.SMELTER)) //if the item clicked can be smolten
                 {
                     if (!this.mergeItemStack(slotStack, 0, 1, false)) //mergo to input slot
                     {

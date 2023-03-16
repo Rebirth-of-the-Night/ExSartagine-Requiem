@@ -23,13 +23,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModBlockEntities;
 import subaraki.exsartagine.network.PacketHandler;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
@@ -51,8 +50,8 @@ public class ExSartagine {
 
     public static class DebugStuff {
         public static void run() {
-            Recipes.addRecipe(new ResourceLocation("test:recipe"),new WokRecipe(Lists.newArrayList(Ingredient.fromItem(Items.IRON_INGOT)),
-                    new FluidStack(FluidRegistry.LAVA,Fluid.BUCKET_VOLUME),Lists.newArrayList(new ItemStack(Items.GOLD_INGOT)),4));
+            ModRecipes.addRecipe(new ResourceLocation("test:recipe"),new WokRecipe(Lists.newArrayList(Ingredient.fromItem(Items.IRON_INGOT)),
+                    new FluidStack(FluidRegistry.LAVA,100),Lists.newArrayList(new ItemStack(Items.GOLD_INGOT)),3));
         }
     }
 
@@ -87,7 +86,7 @@ public class ExSartagine {
     //the recipes must be loaded before CraftTweaker handles them!
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> ev) {
-        Recipes.init();
+        ModRecipes.init();
     }
 
     @EventHandler
@@ -97,7 +96,6 @@ public class ExSartagine {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
-        OreDictionary.registerOre(Oredict.SPATULA, Items.WOODEN_SHOVEL);
-        OreDictionary.registerOre(Oredict.IGNITER,new ItemStack(Items.FLINT_AND_STEEL,1,OreDictionary.WILDCARD_VALUE));
+        Oredict.addToOreDict();
     }
 }

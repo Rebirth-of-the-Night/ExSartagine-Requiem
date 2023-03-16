@@ -14,10 +14,9 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.KettleRecipeWrapper;
 import subaraki.exsartagine.recipe.KettleRecipe;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRecipeWrapper> {
 
@@ -45,7 +44,7 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
     @Override
     public void setupRecipes(IModRegistry registry) {
 
-        Collection<KettleRecipe> recs = Recipes.getKettleRecipes();
+        Collection<KettleRecipe> recs = ModRecipes.getKettleRecipes();
         if (recs == null) return;
 
         List<KettleRecipeWrapper> recipes = recs.stream()

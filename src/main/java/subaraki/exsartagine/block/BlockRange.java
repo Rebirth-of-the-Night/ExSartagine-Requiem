@@ -60,19 +60,25 @@ public class BlockRange extends Block {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
                                     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        if (!(worldIn.getTileEntity(pos) instanceof TileEntityRange))
+        TileEntity tile = worldIn.getTileEntity(pos);
+
+        if (!(tile instanceof TileEntityRange))
             return false;
 
 
         if (manualIgnition.get()) {
-            ItemStack stack = playerIn.getHeldItem(hand);
-            boolean matches = Oredict.checkMatch(Oredict.IGNITER,stack);
-            if (matches) {
-                if (!worldIn.isRemote) {
-                    ((TileEntityRange) worldIn.getTileEntity(pos)).createSparks();
-                    stack.damageItem(1, playerIn);
+
+            if (!((TileEntityRange) tile).isSelf_ignite_upgrade()) {
+
+                ItemStack stack = playerIn.getHeldItem(hand);
+                boolean matches = Oredict.checkMatch(Oredict.IGNITER, stack);
+                if (matches) {
+                    if (!worldIn.isRemote) {
+                        ((TileEntityRange) tile).createSparks();
+                        stack.damageItem(1, playerIn);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
 

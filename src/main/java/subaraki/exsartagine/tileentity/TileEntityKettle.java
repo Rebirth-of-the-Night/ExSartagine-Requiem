@@ -19,7 +19,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
 import subaraki.exsartagine.recipe.KettleRecipe;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (isHeated() && canStart()) {
+            if (activeHeatSourceBelow() && canStart()) {
                 KettleRecipe recipe = getOrCreateRecipe();
                 if (recipe != null) {
                     if (clientCookTime == progress) {
@@ -151,7 +151,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
         if (cached != null && cached.match(handler,fluidInputTank)) {
             return cached;
         }
-        return cached = Recipes.findKettleRecipe(handler, fluidInputTank);
+        return cached = ModRecipes.findKettleRecipe(handler, fluidInputTank);
     }
 
     public void process() {

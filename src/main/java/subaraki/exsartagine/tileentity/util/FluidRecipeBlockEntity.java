@@ -7,7 +7,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import subaraki.exsartagine.recipe.CustomFluidRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
         if (cached != null && cached.match(inventoryInput, fluidInventoryInput)) {
             return cached;
         }
-        return cached = Recipes.findFluidRecipe(inventoryInput, fluidInventoryInput,recipeType);
+        return cached = ModRecipes.findFluidRecipe(inventoryInput, fluidInventoryInput,recipeType);
     }
 
     public boolean canStart() {

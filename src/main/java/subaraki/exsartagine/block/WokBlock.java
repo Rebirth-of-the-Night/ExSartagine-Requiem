@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -26,8 +28,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.Oredict;
+import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
+import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public class WokBlock extends KitchenwareBlock {
 
@@ -65,7 +69,7 @@ public class WokBlock extends KitchenwareBlock {
 			if (!worldIn.isRemote) {
 
 				if (!stack.isEmpty()) {
-					if (OreDictionary.containsMatch(false, OreDictionary.getOres(Oredict.SPATULA),stack)) {
+					if (Oredict.checkMatch(Oredict.SPATULA,stack)) {
 						wokBlockEntity.flip(playerIn, stack);
 					} else {
 
@@ -90,7 +94,19 @@ public class WokBlock extends KitchenwareBlock {
 		return true;
 	}
 
-	/////////////// MISC //////////////////////
+	//this is called when attempting to break the block on both sides
+	@Override
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+		if (!worldIn.isRemote && playerIn.isSneaking()) {
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+			if (tileentity instanceof KitchenwareBlockEntity) {
+				KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
+				Utils.scatter(worldIn, pos, te.getEntireItemInventory());
+			}
+		}
+	}
+
+/////////////// MISC //////////////////////
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {

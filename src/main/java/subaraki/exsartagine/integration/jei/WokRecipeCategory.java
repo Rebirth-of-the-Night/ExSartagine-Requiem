@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.WokRecipeWrapper;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +44,7 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<WokRecipeWrapper> recipes = Recipes.getRecipeMap(RecipeTypes.WOK).entrySet().stream()
+        List<WokRecipeWrapper> recipes = ModRecipes.getRecipeMap(RecipeTypes.WOK).entrySet().stream()
                 .map(resourceLocationCustomRecipeEntry ->
                         new WokRecipeWrapper(resourceLocationCustomRecipeEntry.getValue(), registry.getJeiHelpers(), resourceLocationCustomRecipeEntry.getKey())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());

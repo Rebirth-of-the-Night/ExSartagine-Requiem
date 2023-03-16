@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.gui.common.slot.SlotInput;
 import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
 public class ContainerPot extends Container {
@@ -51,7 +51,7 @@ public class ContainerPot extends Container {
 
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (index != 0) {
-                if (Recipes.hasResult(itemstack, RecipeTypes.POT)) {
+                if (ModRecipes.hasResult(itemstack, RecipeTypes.POT)) {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

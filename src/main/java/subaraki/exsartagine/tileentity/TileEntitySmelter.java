@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.util.ConfigHandler;
 
 public class TileEntitySmelter extends TileEntityCooker {
@@ -56,7 +56,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
 		}
 
-		if(isHeated())
+		if(activeHeatSourceBelow())
 		{
 			if(getInput().getCount() > 0 &&
 					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))
@@ -83,7 +83,7 @@ public class TileEntitySmelter extends TileEntityCooker {
 
 	@Override
 	public boolean isValid(ItemStack stack) {
-		return Recipes.hasResult(stack, RecipeTypes.SMELTER);
+		return ModRecipes.hasResult(stack, RecipeTypes.SMELTER);
 	}
 	
 	@Override

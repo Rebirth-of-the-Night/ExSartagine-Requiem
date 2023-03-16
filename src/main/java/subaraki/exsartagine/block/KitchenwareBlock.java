@@ -8,9 +8,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.Utils;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
+import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public abstract class KitchenwareBlock extends Block {
@@ -22,16 +22,17 @@ public abstract class KitchenwareBlock extends Block {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return Recipes.isPlaceable(world.getBlockState(pos.down()));
+        return ModRecipes.isPlaceable(world.getBlockState(pos.down()));
     }
 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof KitchenwareBlockEntity) {
-            KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
+        if (tileentity instanceof WokBlockEntity) {
+            WokBlockEntity te = (WokBlockEntity) tileentity;
             Utils.scatter(worldIn, pos, te.getEntireItemInventory());
+            te.clearInput();
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -50,7 +51,7 @@ public abstract class KitchenwareBlock extends Block {
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (fromPos.up().equals(pos)) { //if the block is beneath us
             IBlockState down = world.getBlockState(fromPos);
-            if (!Recipes.isPlaceable(down)) {
+            if (!ModRecipes.isPlaceable(down)) {
                 dropBlockAsItem(world, pos, getDefaultState(), 0);
                 world.setBlockToAir(pos);
             }

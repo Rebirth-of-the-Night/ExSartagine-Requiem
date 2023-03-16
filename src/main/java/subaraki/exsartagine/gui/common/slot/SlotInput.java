@@ -6,7 +6,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import subaraki.exsartagine.recipe.CustomRecipe;
 import subaraki.exsartagine.recipe.IRecipeType;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 public class SlotInput<T extends IItemHandler,U extends CustomRecipe<T>> extends SlotItemHandler {
 
@@ -28,7 +28,7 @@ public class SlotInput<T extends IItemHandler,U extends CustomRecipe<T>> extends
     @Override
     public boolean isItemValid(ItemStack input) {
         DUMMY.setStackInSlot(0,input);
-        return Recipes.hasResult((T)DUMMY,type);
+        return ModRecipes.hasResult((T)DUMMY,type);
     }
 
 }

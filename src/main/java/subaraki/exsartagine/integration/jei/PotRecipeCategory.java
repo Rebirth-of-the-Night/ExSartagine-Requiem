@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.PotRecipeWrapper;
 import subaraki.exsartagine.recipe.PotRecipe;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +45,7 @@ public class PotRecipeCategory extends AbstractCookingRecipeCategory<PotRecipeWr
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<PotRecipeWrapper> recipes = Recipes.getRecipes(RecipeTypes.POT).stream()
+        List<PotRecipeWrapper> recipes = ModRecipes.getRecipes(RecipeTypes.POT).stream()
                 .map(potRecipe -> new PotRecipeWrapper((PotRecipe) potRecipe, registry.getJeiHelpers())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());
     }

@@ -2,14 +2,10 @@ package subaraki.exsartagine.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -19,7 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import subaraki.exsartagine.recipe.Recipes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.util.Reference;
 
@@ -75,7 +71,7 @@ public class BlockKettle extends HeatableGuiBlock {
         if (world.getTileEntity(pos) instanceof TileEntityKettle) {
             if (fromPos.up().equals(pos)) { //if the block is beneath us
                 IBlockState down = world.getBlockState(fromPos);
-                if (!Recipes.isPlaceable(down)) {
+                if (!ModRecipes.isPlaceable(down)) {
                     dropBlockAsItem(world, pos, getDefaultState(), 0);
                     world.setBlockToAir(pos);
                 }

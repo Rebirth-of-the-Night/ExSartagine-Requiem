@@ -112,7 +112,7 @@ public class BlockPot extends HeatableGuiBlock {
 
 		if(worldIn.getTileEntity(pos) instanceof TileEntityPot)
 		{
-			if(((TileEntityPot)worldIn.getTileEntity(pos)).isHeated() && !((TileEntityPot)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty() && ((TileEntityPot)worldIn.getTileEntity(pos)).getWaterLevel() > 0)
+			if(((TileEntityPot)worldIn.getTileEntity(pos)).activeHeatSourceBelow() && !((TileEntityPot)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty() && ((TileEntityPot)worldIn.getTileEntity(pos)).getWaterLevel() > 0)
 			{
 				for(int i = 0 ; i < 10 ; i++)
 					worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, -0.02D, 0.0D, new int[1]);
