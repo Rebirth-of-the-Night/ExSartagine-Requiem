@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "exsartagine:item/no_texture"
+        "layer0": "exsartagine:item/spaghetti_veggie"
     }
 }
