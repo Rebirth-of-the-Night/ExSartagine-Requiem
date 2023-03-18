@@ -13,7 +13,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -68,7 +70,7 @@ public class BlockRange extends Block {
 
         if (manualIgnition.get()) {
 
-            if (!((TileEntityRange) tile).isSelf_ignite_upgrade()) {
+            if (!((TileEntityRange) tile).isSelfIgnitingUpgrade()) {
 
                 ItemStack stack = playerIn.getHeldItem(hand);
                 boolean matches = Oredict.checkMatch(Oredict.IGNITER, stack);
@@ -76,6 +78,14 @@ public class BlockRange extends Block {
                     if (!worldIn.isRemote) {
                         ((TileEntityRange) tile).createSparks();
                         stack.damageItem(1, playerIn);
+                    }
+                    return true;
+                }
+                matches = Oredict.checkMatch(Oredict.SELF_IGNITER,stack);
+                if (matches) {
+                    if (!worldIn.isRemote) {
+                        ((TileEntityRange) tile).setSelfIgnitingUpgrade(true);
+                        stack.shrink(1);
                     }
                     return true;
                 }
@@ -94,10 +104,34 @@ public class BlockRange extends Block {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityRange) {
+                {
+                    TileEntityRange entityRange = (TileEntityRange) tileentity;
+
+                    ItemStack itemstack = new ItemStack(Item.getItemFromBlock(this));
+                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                    nbttagcompound.setTag("BlockEntityTag", entityRange.saveToItemNbt(nbttagcompound1));
+                    itemstack.setTagCompound(nbttagcompound);
+
+                      /*  if (entityRange.hasCustomName())
+                        {
+                            itemstack.setStackDisplayName(entityRange.getName());
+                            entityRange.setCustomName("");
+                        }*/
+
+                    spawnAsEntity(worldIn, pos, itemstack);
+
+                    worldIn.updateComparatorOutputLevel(pos, state.getBlock());
+                }
+
             TileEntityRange range = (TileEntityRange) tileentity;
             Utils.scatter(worldIn, pos, range.getInventory());
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
+    {
     }
 
     /////////////////rendering//////////////

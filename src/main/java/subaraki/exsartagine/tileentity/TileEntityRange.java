@@ -2,10 +2,10 @@ package subaraki.exsartagine.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -25,7 +25,7 @@ import subaraki.exsartagine.block.BlockRangeExtension;
 public class TileEntityRange extends TileEntity implements ITickable {
 
     private final ItemStackHandler inventory = new ItemStackHandler(9);
-    private boolean self_ignite_upgrade;
+    private boolean selfIgnitingUpgrade;
 
     private final List<BlockPos> connected = new ArrayList<>();
 
@@ -66,15 +66,15 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void lookForFuel() {
 
-        //do not look for fuel if manual ignition is required AND it's not currently hot
-        if (manualIgnition().get() && isHeated()) {
+        //do not look for fuel if manual ignition is required AND it's NOT currently hot
+        if (manualIgnition() && !isHeated()) {
             if (sparks <= 0) return;
         }
 
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
-                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * (manualIgnition().get() ? 1 : .5));
+                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * (manualIgnition() ? 1 : .5));
                 setCooking(true);
                 //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
                 inventory.getStackInSlot(i).shrink(1);
@@ -144,7 +144,16 @@ public class TileEntityRange extends TileEntity implements ITickable {
             slot++;
         }
         compound.setTag("connections", connections);
+        saveCommon(compound);
+        return compound;
+    }
 
+    public void saveCommon(NBTTagCompound compound) {
+        compound.setBoolean("self_igniting_upgrade", selfIgnitingUpgrade);
+    }
+
+    public NBTTagCompound saveToItemNbt(NBTTagCompound compound) {
+        saveCommon(compound);
         return compound;
     }
 
@@ -162,14 +171,16 @@ public class TileEntityRange extends TileEntity implements ITickable {
                 BlockPos pos = BlockPos.fromLong(connections.getLong(String.valueOf(i)));
                 connected.add(pos);
             }
+        selfIgnitingUpgrade = compound.getBoolean("self_igniting_upgrade");
     }
 
     public int getMaxExtensions() {
         return ((BlockRange)getBlockType()).getMaxExtensions();
     }
 
-    public Supplier<Boolean> manualIgnition() {
-        return ((BlockRange)getBlockType()).isManualIgnition();
+    //only return true if the block is manual ignition AND the self igniting upgrade is NOT installed
+    public boolean manualIgnition() {
+        return ((BlockRange)getBlockType()).isManualIgnition().get() && !selfIgnitingUpgrade;
     }
 
     public void createSparks() {
@@ -266,11 +277,12 @@ public class TileEntityRange extends TileEntity implements ITickable {
         return oldState.getBlock() != newState.getBlock();
     }
 
-    public boolean isSelf_ignite_upgrade() {
-        return self_ignite_upgrade;
+    public boolean isSelfIgnitingUpgrade() {
+        return selfIgnitingUpgrade;
     }
 
-    public void setSelf_ignite_upgrade(boolean self_ignite_upgrade) {
-        this.self_ignite_upgrade = self_ignite_upgrade;
+    public void setSelfIgnitingUpgrade(boolean selfIgnitingUpgrade) {
+        this.selfIgnitingUpgrade = selfIgnitingUpgrade;
+        markDirty();
     }
 }
