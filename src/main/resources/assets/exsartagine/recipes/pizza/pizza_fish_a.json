@@ -3,7 +3,7 @@
     "group": "pizzafish",
     "ingredients": [
         {
-           "item": "exsartagine:pizzaPlain"
+           "item": "exsartagine:pizza_plain"
         },
         {
             "ore": "foodFishRaw",
@@ -11,6 +11,6 @@
         }
     ],
     "result": {
-        "item": "exsartagine:pizzaFishRaw"
+        "item": "exsartagine:pizza_fish_raw"
     }
 }

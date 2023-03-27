@@ -1,6 +1,6 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "group": "pizzaplain",
+    "group": "pizza_plain",
     "ingredients": [
         {
            "ore": "foodDoughFlat",
@@ -21,6 +21,6 @@
         }
     ],
     "result": {
-        "item": "exsartagine:pizzaPlain"
+        "item": "exsartagine:pizza_plain"
     }
 }

@@ -3,7 +3,7 @@
     "group": "pizzameat",
     "ingredients": [
         {
-           "item": "exsartagine:pizzaPlain"
+           "item": "exsartagine:pizza_plain"
         },
         {
             "ore": "portionMeat", 
@@ -15,6 +15,6 @@
         }
     ],
     "result": {
-        "item": "exsartagine:pizzaMeatRaw"
+        "item": "exsartagine:pizza_meat_raw"
     }
 }

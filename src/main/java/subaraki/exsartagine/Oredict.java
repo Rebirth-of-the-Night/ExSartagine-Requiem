@@ -29,7 +29,7 @@ public class Oredict {
         OreDictionary.registerOre("foodDoughFlat", ExSartagineItems.pizza_dough);
         OreDictionary.registerOre("foodDoughBread", ExSartagineItems.bread_dough); //food registry for pan slot
 
-        OreDictionary.registerOre("itemNoodles", ExSartagineItems.dry_strings);
+        OreDictionary.registerOre("itemNoodles", ExSartagineItems.dry_noodles);
 
         OreDictionary.registerOre(SPATULA, new ItemStack(Items.WOODEN_SHOVEL,1,OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre(IGNITER,new ItemStack(Items.FLINT_AND_STEEL,1,OreDictionary.WILDCARD_VALUE));

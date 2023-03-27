@@ -3,13 +3,13 @@
     "group": "pizzachicken",
     "ingredients": [
         {
-           "item": "exsartagine:pizzaPlain"
+           "item": "exsartagine:pizza_plain"
         },
         {
             "item": "minecraft:chicken" 
         }
     ],
     "result": {
-        "item": "exsartagine:pizzaChickenRaw"
+        "item": "exsartagine:pizza_chicken_raw"
     }
 }

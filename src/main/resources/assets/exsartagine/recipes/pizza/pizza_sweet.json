@@ -3,7 +3,7 @@
     "group": "pizzasweet",
     "ingredients": [
         {
-           "item": "exsartagine:pizzaPlain"
+           "item": "exsartagine:pizza_plain"
         },
         {
             "ore": "cropFruit",
@@ -11,6 +11,6 @@
         }
     ],
     "result": {
-        "item": "exsartagine:pizzaSweetRaw"
+        "item": "exsartagine:pizza_sweet_raw"
     }
 }

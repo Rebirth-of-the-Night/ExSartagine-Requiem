@@ -15,32 +15,32 @@ item.exsartagine.beans.boiled.name=水煮豆子
 item.exsartagine.potato.boiled.name=水煮马铃薯
 
 item.exsartagine.dough.name=面团
-item.exsartagine.doughPizza.name=披萨面饼
-item.exsartagine.doughBread.name=面包面团
+item.exsartagine.dough_pizza.name=披萨面饼
+item.exsartagine.dough_bread.name=面包面团
 
-item.exsartagine.breadMeatRaw.name=生肉卷
-item.exsartagine.breadVeggieRaw.name=生菜蔬面包
+item.exsartagine.bread_meat_raw.name=生肉卷
+item.exsartagine.bread_veggie_raw.name=生菜蔬面包
 
-item.exsartagine.breadMeat.name=肉卷
-item.exsartagine.breadVeggie.name=菜蔬面包
-item.exsartagine.breadFine.name=美味面包
+item.exsartagine.bread_meat.name=肉卷
+item.exsartagine.bread_veggie.name=菜蔬面包
+item.exsartagine.bread_fine.name=美味面包
 
 item.exsartagine.curd.name=凝乳
 item.exsartagine.flour.name=面粉
 item.exsartagine.yeast.name=酵母
 item.exsartagine.salt.name=盐
 
-item.exsartagine.pizzaPlain.name=披萨
+item.exsartagine.pizza_plain.name=披萨
 
-item.exsartagine.pizzaFishRaw.name=未烤制的鱼披萨
-item.exsartagine.pizzaMeatRaw.name=未烤制的绞肉披萨
-item.exsartagine.pizzaSweetRaw.name=未烤制的甜品披萨
-item.exsartagine.pizzaChickenRaw.name=未烤制的鸡肉披萨
+item.exsartagine.pizza_fish_raw.name=未烤制的鱼披萨
+item.exsartagine.pizza_meat_raw.name=未烤制的绞肉披萨
+item.exsartagine.pizza_sweet_raw.name=未烤制的甜品披萨
+item.exsartagine.pizza_chicken_raw.name=未烤制的鸡肉披萨
 
-item.exsartagine.pizzaMeat.name=绞肉披萨
-item.exsartagine.pizzaSweet.name=甜品披萨
-item.exsartagine.pizzaChicken.name=鸡肉披萨
-item.exsartagine.pizzaFish.name=鱼肉披萨
+item.exsartagine.pizza_meat.name=绞肉披萨
+item.exsartagine.pizza_sweet.name=甜品披萨
+item.exsartagine.pizza_chicken.name=鸡肉披萨
+item.exsartagine.pizza_fish.name=鱼肉披萨
 
 itemGroup.potsnpans=炉灶厨具
 itemGroup.exsartaginefoods=Ex Sartagine—食物
