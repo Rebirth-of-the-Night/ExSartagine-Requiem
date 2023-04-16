@@ -1,38 +1,35 @@
 {
     "variants":{
-        "normal":{
-            "model":"exsartagine:range/range"
-        },
         "facing=east,heated=true":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":270
         },
         "facing=east,heated=false":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":270
         },
         "facing=west,heated=true":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":90
         },
         "facing=west,heated=false":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":90
         },
         "facing=south,heated=true":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":0
         },
         "facing=south,heated=false":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":0
         },
         "facing=north,heated=true":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":180
         },
         "facing=north,heated=false":{
-            "model":"exsartagine:range/range",
+            "model":"exsartagine:stove",
             "y":180
         }
     }

@@ -1,22 +1,22 @@
 {
   "variants": {
     "normal": {
-      "model": "exsartagine:range/range_annex"
+      "model": "exsartagine:stove_annex"
     },
     "facing=east": {
-      "model": "exsartagine:range/range_annex",
+      "model": "exsartagine:stove_annex",
       "y": 270
     },
     "facing=west": {
-      "model": "exsartagine:range/range_annex",
+      "model": "exsartagine:stove_annex",
       "y": 90
     },
     "facing=south": {
-      "model": "exsartagine:range/range_annex",
+      "model": "exsartagine:stove_annex",
       "y": 0
     },
     "facing=north": {
-      "model": "exsartagine:range/range_annex",
+      "model": "exsartagine:stove_annex",
       "y": 180
     }
   }
