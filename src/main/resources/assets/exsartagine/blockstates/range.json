@@ -2,35 +2,35 @@
     "variants":{
         "facing=east,heated=true":{
             "model":"exsartagine:stove",
-            "y":270
+            "y":90
         },
         "facing=east,heated=false":{
             "model":"exsartagine:stove",
-            "y":270
+            "y":90
         },
         "facing=west,heated=true":{
             "model":"exsartagine:stove",
-            "y":90
+            "y":270
         },
         "facing=west,heated=false":{
             "model":"exsartagine:stove",
-            "y":90
+            "y":270
         },
         "facing=south,heated=true":{
             "model":"exsartagine:stove",
-            "y":0
+            "y":180
         },
         "facing=south,heated=false":{
             "model":"exsartagine:stove",
-            "y":0
+            "y":180
         },
         "facing=north,heated=true":{
             "model":"exsartagine:stove",
-            "y":180
+            "y":0
         },
         "facing=north,heated=false":{
             "model":"exsartagine:stove",
-            "y":180
+            "y":0
         }
     }
 }

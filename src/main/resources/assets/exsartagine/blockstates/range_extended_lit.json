@@ -5,19 +5,19 @@
     },
     "facing=east": {
       "model": "exsartagine:stove_annex",
-      "y": 270
+      "y": 90
     },
     "facing=west": {
       "model": "exsartagine:stove_annex",
-      "y": 90
+      "y": 270
     },
     "facing=south": {
       "model": "exsartagine:stove_annex",
-      "y": 0
+      "y": 180
     },
     "facing=north": {
       "model": "exsartagine:stove_annex",
-      "y": 180
+      "y": 0
     }
   }
 }

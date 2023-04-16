@@ -1,10 +1,11 @@
 {
 	"credit": "Made by Foreck with Blockbench",
+	"parent" : "block/block",
 	"textures": {
-		"0": "exsartagine:blocks/stove",
-		"3": "exsartagine:blocks/stove_annex",
-		"4": "exsartagine:blocks/stove_top",
-		"particle": "exsartagine:blocks/stove"
+		"0": "exsartagine:block/stove",
+		"3": "exsartagine:block/stove_annex",
+		"4": "exsartagine:block/stove_top",
+		"particle": "exsartagine:block/stove"
 	},
 	"elements": [
 		{
