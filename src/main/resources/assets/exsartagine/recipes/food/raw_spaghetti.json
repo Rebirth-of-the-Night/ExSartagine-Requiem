@@ -1,0 +1,22 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "dough",
+    "pattern": [
+        "DED",
+        "DED",
+        "DED"
+    ],
+    "key": {
+        "D": {
+            "ore": "foodDough",
+            "type": "forge:ore_dict"
+        },
+        "E": {
+            "item" : "minecraft:egg"
+        }
+    },
+    "result": {
+        "item": "exsartagine:spaghetti_raw",
+        "count": 6
+    }
+}

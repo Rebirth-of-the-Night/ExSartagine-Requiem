@@ -12,6 +12,7 @@ public class Oredict {
     public static final String SPATULA = "ore:spatula";
     public static final String IGNITER = "ore:igniter";
     public static final String SELF_IGNITER = ExSartagine.MODID+":self_igniter_upgrade";
+    public static final String CHEESE = "itemCheese";
 
     public static void addToOreDict() {
         OreDictionary.registerOre("egg", ExSartagineItems.boiled_egg);
@@ -22,7 +23,7 @@ public class Oredict {
         OreDictionary.registerOre("foodFlour", ExSartagineItems.flour);
         OreDictionary.registerOre("dustFlour", ExSartagineItems.flour);
         OreDictionary.registerOre("dustSalt", ExSartagineItems.salt);
-        OreDictionary.registerOre("itemCheese", ExSartagineItems.curd);
+        OreDictionary.registerOre(CHEESE, ExSartagineItems.curd);
         OreDictionary.registerOre("ingredientCheese", ExSartagineItems.curd);
         OreDictionary.registerOre("itemYeast", ExSartagineItems.yeast);
         OreDictionary.registerOre("foodDough", ExSartagineItems.dough);

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "pizzafish",
+    "ingredients": [
+        {
+           "item": "exsartagine:pizza_plain"
+        },
+        [
+            {
+            "item" : "minecraft:fish",
+            "data" : 0
+            },
+            {
+                "item" : "minecraft:fish",
+                "data" : 1
+            }
+        ]
+    ],
+    "result": {
+        "item": "exsartagine:pizza_fish_raw"
+    }
+}

@@ -1,5 +1,6 @@
 package subaraki.exsartagine.recipe;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -12,11 +13,15 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreIngredient;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
@@ -321,6 +326,50 @@ public class ModRecipes {
                     String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
                     addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
                 });
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),Ingredient.fromItem(Items.CHICKEN))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.noodles_chicken_cooked)),200);
+
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),Ingredient.fromItems(Items.BEEF,Items.PORKCHOP))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.noodles_meat_cooked)),200);
+
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),
+                        Ingredient.fromStacks(new ItemStack(Items.FISH,1,0),new ItemStack(Items.FISH,1,1)))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.noodles_fish_cooked)),200);
+
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),Ingredient.fromItem(Items.CARROT))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.noodles_veggie_cooked)),200);
+
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.spaghetti_raw))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_cooked)),200);
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.spaghetti_raw),Ingredient.fromItem(Items.BEETROOT))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_sauced)),200);
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.spaghetti_raw),Ingredient.fromItem(Items.BEETROOT),
+                        Ingredient.fromItems(Items.BEEF,Items.PORKCHOP,Items.MUTTON))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_bolognaise)),200);
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.spaghetti_raw),Ingredient.fromItem(Items.BEETROOT),new OreIngredient(Oredict.CHEESE))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_cheese)),200);
+
+        addKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.spaghetti_raw),Ingredient.fromItem(Items.BEETROOT), Ingredient.fromItem(Items.CARROT))
+                ,Ingredient.fromItem(Items.BOWL),new FluidStack(FluidRegistry.WATER,100),
+                null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_veggie)),200);
+
+
         if (ExSartagine.DEBUG) {
             ExSartagine.DebugStuff.run();
         }

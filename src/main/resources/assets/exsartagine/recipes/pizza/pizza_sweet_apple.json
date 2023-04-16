@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "pizzasweet",
+    "ingredients": [
+        {
+           "item": "exsartagine:pizza_plain"
+        },
+        {
+            "item": "minecraft:apple"
+        }
+    ],
+    "result": {
+        "item": "exsartagine:pizza_sweet_raw"
+    }
+}

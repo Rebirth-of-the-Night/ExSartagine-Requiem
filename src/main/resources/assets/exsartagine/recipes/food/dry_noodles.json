@@ -1,0 +1,22 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "dough",
+    "pattern": [
+        "DDD",
+        "EEE",
+        "DDD"
+    ],
+    "key": {
+        "D": {
+            "ore": "foodDough",
+            "type": "forge:ore_dict"
+        },
+        "E": {
+            "item" : "minecraft:egg"
+        }
+    },
+    "result": {
+        "item": "exsartagine:dry_noodles",
+        "count": 6
+    }
+}
