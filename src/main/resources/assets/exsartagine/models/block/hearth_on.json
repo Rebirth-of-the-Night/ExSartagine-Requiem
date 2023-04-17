@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "exsartagine:block/hearth",
 		"1": "blocks/hardened_clay",
-		"4": "exsartagine:block/hearth_off",
+		"4": "exsartagine:block/hearth_on",
 		"particle": "exsartagine:block/hearth"
 	},
 	"elements": [
