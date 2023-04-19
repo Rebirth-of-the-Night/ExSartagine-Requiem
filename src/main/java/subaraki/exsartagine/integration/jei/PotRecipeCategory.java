@@ -28,7 +28,7 @@ public class PotRecipeCategory extends AbstractCookingRecipeCategory<PotRecipeWr
 
 
     public PotRecipeCategory(ItemStack catalyst, IGuiHelper help) {
-        super(catalyst, help);
+        super(RecipeTypes.POT,catalyst, help);
     }
 
     @Override

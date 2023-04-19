@@ -29,23 +29,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
+import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.util.Reference;
 
 public class BlockRange extends Block {
 
-    protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool HEATED = PropertyBool.create("heated");
     private final Supplier<Boolean> manualIgnition;
     private final int maxExtensions;
+    private final boolean hearth;
 
-    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions) {
+    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions,boolean hearth) {
         super(Material.IRON);
         this.manualIgnition = manualIgnition;
         this.maxExtensions = maxExtensions;
-        setLightLevel(1.0f);
+        this.hearth = hearth;
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
@@ -101,6 +102,12 @@ public class BlockRange extends Block {
     }
 
     @Override
+    public int getLightValue(IBlockState state) {
+        if (hearth && state.getValue(HEATED)) return 14;
+        return super.getLightValue(state);
+    }
+
+    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityRange) {
@@ -134,12 +141,6 @@ public class BlockRange extends Block {
     {
     }
 
-    /////////////////rendering//////////////
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return AABB;
-    }
-
     ///////////////TE Stuff//////////////////////
     @Override
     public boolean hasTileEntity(IBlockState state) {
@@ -170,6 +171,7 @@ public class BlockRange extends Block {
 
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if (hearth)return;
         double d0 = (double) pos.getX() + 0.5D;
         double d1 = (double) pos.getY() + 1.5D;
         double d2 = (double) pos.getZ() + 0.5D;

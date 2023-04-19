@@ -181,7 +181,7 @@ public class BlockRangeExtension extends Block {
         double d1 = (double) pos.getY() + 0.3D;
         double d2 = (double) pos.getZ() + 0.5D;
 
-        if (lit) {
+        if (this == ExSartagineBlocks.range_extended_lit) {
 
             EnumFacing enumfacing = stateIn.getValue(FACING);
             switch (enumfacing) {

@@ -41,8 +41,8 @@ public class JeiPlugin implements IModPlugin {
             category.setup(registry);
 
         //xpos, ypos,width,height
-        registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, ExSartagine.MODID+"."+ RecipeTypes.POT);
-        registry.addRecipeClickArea(GuiSmelter.class, 78, 20, 28, 23, ExSartagine.MODID+"."+RecipeTypes.SMELTER);
-        registry.addRecipeClickArea(KettleScreen.class, 85, 34, 21, 17, ExSartagine.MODID+"."+RecipeTypes.KETTLE);
+        registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, ExSartagine.MODID+"."+ RecipeTypes.POT.name());
+        registry.addRecipeClickArea(GuiSmelter.class, 78, 20, 28, 23, ExSartagine.MODID+"."+RecipeTypes.SMELTER.name());
+        registry.addRecipeClickArea(KettleScreen.class, 85, 34, 21, 17, ExSartagine.MODID+"."+RecipeTypes.KETTLE.name());
     }
 }

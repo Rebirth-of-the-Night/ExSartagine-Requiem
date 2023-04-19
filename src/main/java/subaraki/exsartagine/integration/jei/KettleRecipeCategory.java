@@ -14,6 +14,7 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.wrappers.KettleRecipeWrapper;
 import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
@@ -26,7 +27,7 @@ public class KettleRecipeCategory extends AbstractCookingRecipeCategory<KettleRe
 
 
     public KettleRecipeCategory(ItemStack catalyst, IGuiHelper help) {
-        super(catalyst, help);
+        super(RecipeTypes.KETTLE,catalyst, help);
     }
 
     @Override

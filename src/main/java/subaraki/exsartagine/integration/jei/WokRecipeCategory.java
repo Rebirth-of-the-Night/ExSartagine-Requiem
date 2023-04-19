@@ -27,7 +27,7 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
 
 
     public WokRecipeCategory(ItemStack catalyst, IGuiHelper help) {
-        super(catalyst, help);
+        super(RecipeTypes.WOK,catalyst, help);
     }
 
     @Override

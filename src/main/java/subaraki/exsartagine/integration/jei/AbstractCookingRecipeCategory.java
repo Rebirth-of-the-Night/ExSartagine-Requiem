@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.util.Reference;
 
 public abstract class AbstractCookingRecipeCategory<T extends IRecipeWrapper> implements IRecipeCategory<T> {
@@ -22,8 +23,8 @@ public abstract class AbstractCookingRecipeCategory<T extends IRecipeWrapper> im
     public static final String BACKGROUND = "textures/gui/jei/backgrounds.png";
     public static final ResourceLocation BACKGROUNDS = new ResourceLocation(ExSartagine.MODID, BACKGROUND);
 
-    public AbstractCookingRecipeCategory(ItemStack catalyst, IGuiHelper helper) {
-        this.uid = ExSartagine.MODID+"."+catalyst.getItem().getRegistryName().getPath();
+    public AbstractCookingRecipeCategory(IRecipeType<?> type, ItemStack catalyst, IGuiHelper helper) {
+        this.uid = ExSartagine.MODID+"."+type.name();
         this.catalyst = catalyst;
         this.guiHelper = helper;
         setupGui();

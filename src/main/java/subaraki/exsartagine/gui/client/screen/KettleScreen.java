@@ -91,7 +91,7 @@ public class KettleScreen extends GuiContainer {
 
         //Draw fluid
             renderFluid(mc, i + 77, j + 16, kettle.fluidInputTank);
-            renderFluid(mc, i + 101, j + 16, kettle.fluidOutputTank);
+            renderFluid(mc, i + 108, j + 16, kettle.fluidOutputTank);
     }
 
     public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {

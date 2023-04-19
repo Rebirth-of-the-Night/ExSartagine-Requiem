@@ -27,7 +27,7 @@ public class SmelterSmeltingRecipeCategory extends AbstractCookingRecipeCategory
     protected IDrawableStatic staticFlame;
 
     public SmelterSmeltingRecipeCategory(ItemStack catalyst, IGuiHelper help) {
-        super( catalyst, help);
+        super(RecipeTypes.SMELTER, catalyst, help);
     }
 
     @Override
