@@ -50,8 +50,6 @@ public class ContainerKettle extends Container {
         for (int k = 0; k < 9; ++k)
             this.addSlotToContainer(new Slot(playerInventory, k, x2 + k * 18, y2 + 58));
 
-        BlockPos pos = pot.getPos();
-
         if (!playerInventory.player.world.isRemote)
             playLidSound(playerInventory.player);
     }
