@@ -2,12 +2,17 @@ package subaraki.exsartagine.gui.common;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
+import subaraki.exsartagine.block.BlockPot;
 import subaraki.exsartagine.gui.common.slot.IFluidHandlerSlot;
 import subaraki.exsartagine.gui.common.slot.SlotOutput;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 
 public class ContainerKettle extends Container {
@@ -44,6 +49,12 @@ public class ContainerKettle extends Container {
 
         for (int k = 0; k < 9; ++k)
             this.addSlotToContainer(new Slot(playerInventory, k, x2 + k * 18, y2 + 58));
+
+        BlockPos pos = pot.getPos();
+
+        if (!playerInventory.player.world.isRemote)
+            playerInventory.player.world.playSound(null, pos.getX(), pos.getY(),pos.getZ(),
+                    ModSounds.METAL_SLIDE, SoundCategory.BLOCKS, 1, .5f);
     }
 
     public void swapTanks() {

@@ -9,6 +9,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
@@ -27,6 +28,7 @@ import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModBlockEntities;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
@@ -76,6 +78,11 @@ public class ExSartagine {
     public static void blocks(RegistryEvent.Register<Block> e) {
         ExSartagineBlocks.load(e.getRegistry());
         ModBlockEntities.register();
+    }
+
+    @SubscribeEvent
+    public static void sounds(RegistryEvent.Register<SoundEvent> e) {
+        e.getRegistry().registerAll(ModSounds.BUBBLING,ModSounds.FRYING,ModSounds.METAL_SLIDE);
     }
 
     @SubscribeEvent

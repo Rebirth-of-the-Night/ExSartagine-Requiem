@@ -48,6 +48,7 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
             if (activeHeatSourceBelow() && canStart()) {
                 KettleRecipe recipe = getOrCreateRecipe();
                 if (recipe != null) {
+                    clientCookTime = recipe.getCookTime();
                     if (clientCookTime == progress) {
                         process();
                     } else {

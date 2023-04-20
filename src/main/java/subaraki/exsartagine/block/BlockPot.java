@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.Reference;
 
@@ -119,6 +121,7 @@ public class BlockPot extends HeatableGuiBlock {
 
 				worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, 0.5D, 0.0D);
 				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
+				worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1, false);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "${mc_version}-0.3.1"
+version = "$mc_version-$mod_version"
 group = "exsartagine" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "exsartagine"
 

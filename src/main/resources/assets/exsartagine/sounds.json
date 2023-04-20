@@ -1,0 +1,23 @@
+{
+  "bubbling": {
+    "sounds": [
+      {
+        "name": "exsartagine:bubbling"
+      }
+    ]
+  },
+  "frying": {
+    "sounds": [
+      {
+        "name": "exsartagine:frying"
+      }
+    ]
+  },
+  "metal_slide": {
+    "sounds": [
+      {
+        "name": "exsartagine:metal_slide"
+      }
+    ]
+  }
+}

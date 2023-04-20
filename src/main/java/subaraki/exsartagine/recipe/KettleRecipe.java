@@ -48,7 +48,7 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(IItemHandler handler) {
-        return kettleRecipeGetRemainingItems(this,handler);
+        return kettleRecipeGetRemainingItems(handler);
     }
 
     /**
@@ -58,20 +58,25 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
      * @param inv Crafting inventory
      * @return Crafting inventory contents after the recipe.
      */
-    public static NonNullList<ItemStack> kettleRecipeGetRemainingItems(KettleRecipe recipe,IItemHandler inv) {
+    public NonNullList<ItemStack> kettleRecipeGetRemainingItems(IItemHandler inv) {
         NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSlots(), ItemStack.EMPTY);
 
-        IIngredient iIngredient = ((IIngredientWrapper)recipe.catalyst).getiIngredient();
+        if (catalyst instanceof IIngredientWrapper) {
 
-        if (iIngredient != null && iIngredient.hasNewTransformers()) {
+            IIngredient iIngredient = ((IIngredientWrapper) catalyst).getiIngredient();
 
-            try {
-                IItemStack remainingItem = iIngredient.applyNewTransform(CraftTweakerMC.getIItemStack(inv.getStackInSlot(0)));
-                ret.set(0, CraftTweakerMC.getItemStack(remainingItem));
+            if (iIngredient != null && iIngredient.hasNewTransformers()) {
 
-            } catch (Throwable e) {
-                CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + iIngredient.toCommandString(), e);
+                try {
+                    IItemStack remainingItem = iIngredient.applyNewTransform(CraftTweakerMC.getIItemStack(inv.getStackInSlot(0)));
+                    ret.set(0, CraftTweakerMC.getItemStack(remainingItem));
+
+                } catch (Throwable e) {
+                    CraftTweakerAPI.logError("Could not execute NewRecipeTransformer on " + iIngredient.toCommandString(), e);
+                }
             }
+        } else {
+            ret.set(0, inv.getStackInSlot(0));
         }
 
         for (int i = 1; i < 10; i++) {

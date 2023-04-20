@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -30,151 +31,152 @@ import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.init.ModSounds;
+import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public class WokBlock extends KitchenwareBlock {
 
-	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+    protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D);
+    public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-	public WokBlock() {
-		super(Material.IRON);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(ExSartagineItems.pots);
-		setHarvestLevel("pickaxe", 1);
-		setHardness(3.5f);
-	}
+    public WokBlock() {
+        super(Material.IRON);
+        setSoundType(SoundType.METAL);
+        setCreativeTab(ExSartagineItems.pots);
+        setHarvestLevel("pickaxe", 1);
+        setHardness(3.5f);
+    }
 
-	/////////////////rendering//////////////
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return AABB;
-	}
+    /////////////////rendering//////////////
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB;
+    }
 
-	///////////////TE Stuff//////////////////////
+    ///////////////TE Stuff//////////////////////
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new WokBlockEntity();
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new WokBlockEntity();
+    }
 
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		ItemStack stack = playerIn.getHeldItem(hand);
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack stack = playerIn.getHeldItem(hand);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-		if (tileEntity instanceof WokBlockEntity) {
-			WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
-			if (!worldIn.isRemote) {
+        if (tileEntity instanceof WokBlockEntity) {
+            WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
+            if (!worldIn.isRemote) {
 
-				if (!stack.isEmpty()) {
-					if (Oredict.checkMatch(Oredict.SPATULA,stack)) {
-						wokBlockEntity.flip(playerIn, stack);
-					} else {
+                if (!stack.isEmpty()) {
+                    if (Oredict.checkMatch(Oredict.SPATULA, stack)) {
+                        wokBlockEntity.flip(playerIn, stack);
+                    } else {
 
-						FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, wokBlockEntity.getFluidInventoryInput(),
-								new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
-						if (fluidActionResult.isSuccess()) {
-							playerIn.setHeldItem(hand, fluidActionResult.getResult());
-						} else {
-							ItemStack single = stack.copy();
-							single.setCount(1);
-							ItemStack returns = wokBlockEntity.addSingleItem(single);
-							if (returns.isEmpty() && !playerIn.capabilities.isCreativeMode) {
-								stack.shrink(1);
-							}
-						}
-					}
-				} else {
-					wokBlockEntity.giveItems(playerIn);
-				}
-			}
-		}
-		return true;
-	}
+                        FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, wokBlockEntity.getFluidInventoryInput(),
+                                new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
+                        if (fluidActionResult.isSuccess()) {
+                            playerIn.setHeldItem(hand, fluidActionResult.getResult());
+                        } else {
+                            ItemStack single = stack.copy();
+                            single.setCount(1);
+                            ItemStack returns = wokBlockEntity.addSingleItem(single);
+                            if (returns.isEmpty() && !playerIn.capabilities.isCreativeMode) {
+                                stack.shrink(1);
+                            }
+                        }
+                    }
+                } else {
+                    wokBlockEntity.giveItems(playerIn);
+                }
+            }
+        }
+        return true;
+    }
 
-	//this is called when attempting to break the block on both sides
-	@Override
-	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
-		if (!worldIn.isRemote && playerIn.isSneaking()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
-			if (tileentity instanceof KitchenwareBlockEntity) {
-				KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
-				Utils.scatter(worldIn, pos, te.getEntireItemInventory());
-			}
-		}
-	}
+    //this is called when attempting to break the block on both sides
+    @Override
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+        if (!worldIn.isRemote && playerIn.isSneaking()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof KitchenwareBlockEntity) {
+                KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
+                Utils.scatter(worldIn, pos, te.getEntireItemInventory());
+            }
+        }
+    }
 
 /////////////// MISC //////////////////////
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-	@Override
-	public boolean isFullBlock(IBlockState state) {
-		return false;
-	}
-	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-	{
-		double d0 = (double)pos.getX() + 0.5D;
-		double d1 = (double)pos.getY() + 0.15D;
-		double d2 = (double)pos.getZ() + 0.5D;
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-		if(worldIn.getTileEntity(pos) instanceof WokBlockEntity)
-		{
-			if(((WokBlockEntity)worldIn.getTileEntity(pos)).isCooking())
-			{
-				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
-				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/1.5 - 0.35), d1, d2+(RANDOM.nextDouble()/1.5 - 0.35), 0.0D, 0.0D, 0.0D);
-			}
-		}
-	}
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
-	/////// TURNING STUFF ////////////////
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, FACING);
-	}
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        double d0 = (double) pos.getX() + 0.5D;
+        double d1 = (double) pos.getY() + 0.15D;
+        double d2 = (double) pos.getZ() + 0.5D;
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(FACING).getHorizontalIndex();
-	}
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
+        if (tileEntity instanceof WokBlockEntity) {
+			WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
 
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		{
-			enumfacing = EnumFacing.NORTH;
-		}
+            if (wokBlockEntity.isCooking()) {
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
+                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1, false);
+            }
+        }
+    }
 
-		IBlockState state = this.getDefaultState().withProperty(FACING, enumfacing);
+    /////// TURNING STUFF ////////////////
 
-		return state;
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getHorizontalIndex();
+    }
 
-	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
+            enumfacing = EnumFacing.NORTH;
+        }
+
+        IBlockState state = this.getDefaultState().withProperty(FACING, enumfacing);
+
+        return state;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
 }
