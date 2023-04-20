@@ -53,8 +53,20 @@ public class ContainerKettle extends Container {
         BlockPos pos = pot.getPos();
 
         if (!playerInventory.player.world.isRemote)
-            playerInventory.player.world.playSound(null, pos.getX(), pos.getY(),pos.getZ(),
-                    ModSounds.METAL_SLIDE, SoundCategory.BLOCKS, 1, .5f);
+            playLidSound(playerInventory.player);
+    }
+
+    private void playLidSound(EntityPlayer player) {
+        BlockPos pos = pot.getPos();
+        player.world.playSound(null, pos.getX(), pos.getY(),pos.getZ(),
+                ModSounds.METAL_SLIDE, SoundCategory.BLOCKS, 1, .5f);
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer playerIn) {
+        super.onContainerClosed(playerIn);
+        if (!playerIn.world.isRemote)
+            playLidSound(playerIn);
     }
 
     public void swapTanks() {
