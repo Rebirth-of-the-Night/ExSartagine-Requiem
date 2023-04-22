@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,6 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
@@ -53,7 +55,8 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
                         process();
                     } else {
                         if (running) {
-
+                            if (world.getTotalWorldTime() %40 == 0)
+                                world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1);
                         } else {
                             start();
                         }

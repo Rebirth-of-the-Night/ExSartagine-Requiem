@@ -5,11 +5,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
@@ -35,7 +37,8 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 					process();
 				} else {
 					if (cooking) {
-
+						if (world.getTotalWorldTime() % 20 == 0)
+							world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1);
 					} else {
 						start();
 					}
@@ -108,8 +111,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		return true;
 	}
 
-	protected boolean isCooking = false;
-
 	/**inits inventory with 9 slots. input and output*/
 	protected void initInventory(){
 		inventoryInput = new WokStackHandler();
@@ -123,7 +124,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		for (int i = 0; i < inventoryInput.getSlots();i++) {
 			inventoryInput.setStackInSlot(i,ItemStack.EMPTY);
 		}
-		isCooking = false;
+		cooking = false;
 		cached = null;
 		progress = 0;
 		markDirty();
@@ -131,10 +132,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@Override
@@ -147,13 +145,12 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	}
 
 	public boolean isCooking(){
-		return isCooking;
+		return cooking;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setBoolean("cooking", isCooking);
 		compound.setTag("inv", inventoryInput.serializeNBT());
 		compound.setTag("invO", inventoryOutput.serializeNBT());
 		compound.setTag("fluidinv",fluidInventoryInput.writeToNBT(new NBTTagCompound()));
@@ -165,9 +162,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		if(compound.hasKey("cooking")){
-			this.isCooking = compound.getBoolean("cooking");
-		}
 		inventoryInput.deserializeNBT(compound.getCompoundTag("inv"));
 		inventoryOutput.deserializeNBT(compound.getCompoundTag("invO"));
 		fluidInventoryInput.readFromNBT(compound.getCompoundTag("fluidinv"));

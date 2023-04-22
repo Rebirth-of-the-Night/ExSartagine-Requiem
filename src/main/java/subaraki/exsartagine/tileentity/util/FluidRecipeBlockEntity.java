@@ -1,6 +1,7 @@
 package subaraki.exsartagine.tileentity.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -100,6 +101,19 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
         if (cached.getOutputFluid() != null) {
             fluidInventoryOutput.fill(cached.getOutputFluid(), true);
         }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setBoolean("cooking", cooking);
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        this.cooking = compound.getBoolean("cooking");
     }
 
     public boolean checkFluids(R recipe) {

@@ -90,9 +90,6 @@ public class BlockKettle extends HeatableGuiBlock {
 
         if (tileEntity instanceof TileEntityKettle) {
             TileEntityKettle tileEntityKettle = (TileEntityKettle) tileEntity;
-            if (tileEntityKettle.running) {
-                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1, false);
-            }
         }
     }
 }
