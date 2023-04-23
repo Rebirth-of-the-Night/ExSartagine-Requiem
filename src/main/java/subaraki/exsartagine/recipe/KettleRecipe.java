@@ -13,19 +13,21 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import subaraki.exsartagine.init.RecipeTypes;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandler> {
+public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler> {
 
     private final List<Ingredient> inputs;
+    @Nullable
     private final Ingredient catalyst;
     private final FluidStack inputFluid;
     private final FluidStack outputFluid;
     private final List<ItemStack> outputs;
     private final int time;
 
-    public KettleRecipe(List<Ingredient> inputs, Ingredient catalyst, FluidStack inputFluid,FluidStack outputFluid, List<ItemStack> outputs,int time) {
+    public KettleRecipe(List<Ingredient> inputs, @Nullable Ingredient catalyst, FluidStack inputFluid, FluidStack outputFluid, List<ItemStack> outputs, int time) {
         this.inputs = inputs;
         this.catalyst = catalyst;
         this.inputFluid = inputFluid;
@@ -59,7 +61,7 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
      * @return Crafting inventory contents after the recipe.
      */
     public NonNullList<ItemStack> kettleRecipeGetRemainingItems(IItemHandler inv) {
-        NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSlots(), ItemStack.EMPTY);
+        NonNullList<ItemStack> ret = NonNullList.withSize(10, ItemStack.EMPTY);
 
         if (catalyst instanceof IIngredientWrapper) {
 
@@ -76,11 +78,11 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
                 }
             }
         } else {
-            ret.set(0, inv.getStackInSlot(0));
+            ret.set(0, inv.getStackInSlot(0).copy());
         }
 
         for (int i = 1; i < 10; i++) {
-            ret.set(i, ForgeHooks.getContainerItem(inv.getStackInSlot(i)));
+            ret.set(i, inv.getStackInSlot(i).copy());
         }
         return ret;
     }
@@ -88,24 +90,19 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
     @Override
     public boolean itemMatch(IItemHandler handler) {
 
-        if (!catalyst.test(handler.getStackInSlot(0))) {
+        if (catalyst != null && !catalyst.test(handler.getStackInSlot(0))) {
             return false;
         }
 
         int ingredientCount = 0;
         IItemHandlerRecipeItemHelper recipeItemHelper = new IItemHandlerRecipeItemHelper();
 
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 3; ++j)
-            {
-                ItemStack itemstack = handler.getStackInSlot(j + 3 * i + 1);
+        for (int i = 1; i < 10; ++i) {
+            ItemStack itemstack = handler.getStackInSlot(i);
 
-                if (!itemstack.isEmpty())
-                {
-                    ++ingredientCount;
-                    recipeItemHelper.accountStack(itemstack, 1);
-                }
+            if (!itemstack.isEmpty()) {
+                ++ingredientCount;
+                recipeItemHelper.accountStack(itemstack, 1);
             }
         }
 
@@ -150,7 +147,7 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler,IFluidHandle
             return 0;
         }
         boolean thisFluidRequirement = getInputFluid() != null;
-        boolean otherFluidRequirement = ((KettleRecipe)o).getInputFluid() != null;
+        boolean otherFluidRequirement = ((KettleRecipe) o).getInputFluid() != null;
 
         if (thisFluidRequirement && otherFluidRequirement) {
             return 0;

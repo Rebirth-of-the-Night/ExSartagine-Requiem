@@ -90,8 +90,8 @@ public class KettleScreen extends GuiContainer {
         this.drawTexturedModalRect(i + 85, j + 34, 0, 182, (int) progress, 15); //Arrow
 
         //Draw fluid
-            renderFluid(mc, i + 77, j + 16, kettle.fluidInputTank);
-            renderFluid(mc, i + 108, j + 16, kettle.fluidOutputTank);
+            renderFluid(mc, i + FL_INPUT_X, j + FL_Y - 2, kettle.fluidInputTank);
+            renderFluid(mc, i + FL_OUTPUT_X, j + FL_Y - 2, kettle.fluidOutputTank);
     }
 
     public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {
@@ -110,6 +110,12 @@ public class KettleScreen extends GuiContainer {
     private static final int TEX_HEIGHT = 16;
     private static final int MIN_FLUID_HEIGHT = 1; // ensure tiny amounts of fluid are still visible
 
+    private static final int FL_WIDTH = 7;
+    private static final int FL_HEIGHT = 52;
+    private static final int FL_Y = 18;
+    private static final int FL_INPUT_X = 77;
+    private static final int FL_OUTPUT_X = 108;
+
     private void drawFluid(Minecraft minecraft, final int xPosition, final int yPosition, FluidTank fluidTank) {
         FluidStack fluidStack = fluidTank.getFluid();
         if (fluidStack == null) {
@@ -124,7 +130,7 @@ public class KettleScreen extends GuiContainer {
 
         int fluidColor = fluid.getColor(fluidStack);
 
-        int scaledAmount = (fluidStack.amount * 52) / fluidTank.getCapacity();
+        int scaledAmount = (fluidStack.amount * FL_HEIGHT) / fluidTank.getCapacity();
         if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
             scaledAmount = MIN_FLUID_HEIGHT;
         }
@@ -132,7 +138,7 @@ public class KettleScreen extends GuiContainer {
             scaledAmount = height;
         }
 
-        drawTiledSprite(minecraft, xPosition, yPosition, 7, 52, fluidColor, scaledAmount, fluidStillSprite);
+        drawTiledSprite(minecraft, xPosition, yPosition, FL_WIDTH, FL_HEIGHT, fluidColor, scaledAmount, fluidStillSprite);
     }
 
     private void drawTiledSprite(Minecraft minecraft, final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
@@ -222,13 +228,16 @@ public class KettleScreen extends GuiContainer {
         this.renderHoveredToolTip(mouseX, mouseY);
     }
 
+    //77,18
+
+
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         super.renderHoveredToolTip(x, y);
-        if (isPointInRegion(8, 14, 7, 52, x, y) && kettle.fluidInputTank.getFluid() != null) {
+        if (isPointInRegion(FL_INPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, x, y) && kettle.fluidInputTank.getFluid() != null) {
             this.drawHoveringText(getFluidTooltip(kettle.fluidInputTank), x, y, fontRenderer);
         }
-        if (isPointInRegion(176, 14, 7, 52, x, y) && kettle.fluidOutputTank.getFluid() != null) {
+        if (isPointInRegion(FL_OUTPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, x, y) && kettle.fluidOutputTank.getFluid() != null) {
             this.drawHoveringText(getFluidTooltip(kettle.fluidOutputTank), x, y, fontRenderer);
         }
     }

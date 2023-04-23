@@ -55,8 +55,8 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
                         process();
                     } else {
                         if (running) {
-                            if (world.getTotalWorldTime() %40 == 0)
-                                world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1);
+                          //  if (world.getTotalWorldTime() %40 == 0)
+                               // world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1);
                         } else {
                             start();
                         }
@@ -160,26 +160,10 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
 
     public void process() {
         progress = 0;
-        NonNullList<ItemStack> nonnulllist = cached.getRemainingItems(this.handler);
         List<ItemStack> results = cached.getResults(handler);
 
-        for (int i = 0; i < OUTPUT_START; ++i) {
-            ItemStack itemstack = this.handler.getStackInSlot(i);
-            ItemStack remainderItem = nonnulllist.get(i);
-
-            if (!itemstack.isEmpty()) {
+        for (int i = 1; i < OUTPUT_START; ++i) {
                 this.handler.extractItem(i, 1, false);
-                itemstack = this.handler.getStackInSlot(i);
-            }
-
-            if (!remainderItem.isEmpty()) {
-                if (itemstack.isEmpty()) {
-                    this.handler.setStackInSlot(i, remainderItem);
-                } else if (ItemStack.areItemsEqual(itemstack, remainderItem) && ItemStack.areItemStackTagsEqual(itemstack, remainderItem)) {
-                    remainderItem.grow(itemstack.getCount());
-                    this.handler.setStackInSlot(i, remainderItem);
-                }
-            }
         }
 
         for (ItemStack stack : results) {
