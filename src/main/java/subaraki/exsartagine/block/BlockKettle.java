@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -17,6 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
@@ -84,12 +87,8 @@ public class BlockKettle extends HeatableGuiBlock {
     }
 
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        super.randomDisplayTick(stateIn, worldIn, pos, rand);
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-
-        if (tileEntity instanceof TileEntityKettle) {
-            TileEntityKettle tileEntityKettle = (TileEntityKettle) tileEntity;
-        }
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 }
