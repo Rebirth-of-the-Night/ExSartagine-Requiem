@@ -2,7 +2,7 @@
 	"credit": "Made by Foreck with Blockbench",
 	"textures": {
 		"0": "blocks/iron_block",
-		"1": "Desktop:block/smelter_top"
+		"1": "exsartagine:block/smelter_top"
 	},
 	"elements": [
 		{

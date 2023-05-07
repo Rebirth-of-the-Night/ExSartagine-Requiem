@@ -1,10 +1,10 @@
 {
     "multipart": [
         {
-            "apply": { "model": "exsartagine:kettle", "uvlock": true,"y": 0 }
+            "apply": { "model": "exsartagine:kettle","y": 0 }
         },
         {   "when": { "legs": "true" },
-            "apply": { "model": "exsartagine:legs", "uvlock": true }
+            "apply": { "model": "exsartagine:legs" }
         }
     ]
 }

@@ -1,22 +1,22 @@
 {
   "multipart": [
     {   "when": { "facing": "north" },
-      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 0 }
+      "apply": { "model": "exsartagine:smelter","y": 0 }
     },
     {   "when": { "facing": "east" },
-      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 90 }
+      "apply": { "model": "exsartagine:smelter","y": 90 }
     },
     {   "when": { "facing": "south" },
-      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 180 }
+      "apply": { "model": "exsartagine:smelter","y": 180 }
     },
     {   "when": { "facing": "west" },
-      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 270 }
+      "apply": { "model": "exsartagine:smelter","y": 270 }
     },
     {   "when": { "legs": "true" },
-      "apply": { "model": "exsartagine:legs", "uvlock": true }
+      "apply": { "model": "exsartagine:legs"}
     },
     {   "when": { "full": "true" },
-      "apply": { "model": "exsartagine:lava", "uvlock": true }
+      "apply": { "model": "exsartagine:lava"}
     }
   ]
 }
