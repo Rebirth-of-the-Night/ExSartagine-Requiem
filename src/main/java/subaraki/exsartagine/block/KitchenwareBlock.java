@@ -21,6 +21,7 @@ public abstract class KitchenwareBlock extends Block {
 
     public KitchenwareBlock(Material materialIn) {
         super(materialIn);
+        setDefaultState(this.getDefaultState().withProperty(LEGS,false));
     }
 
     @Override

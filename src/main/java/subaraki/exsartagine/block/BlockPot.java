@@ -52,7 +52,7 @@ public class BlockPot extends HeatableGuiBlock {
 		setTranslationKey(ExSartagine.MODID+".pot");
 		setRegistryName("pot");
 		setHardness(3.5f);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
+		this.setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
 
 	}
 

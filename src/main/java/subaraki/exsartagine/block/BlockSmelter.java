@@ -41,7 +41,7 @@ public class BlockSmelter extends HeatableGuiBlock {
 		setTranslationKey(ExSartagine.MODID+".smelter");
 		setRegistryName("smelter");
 		setHardness(3.5f);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
+		this.setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
 
 	}
 

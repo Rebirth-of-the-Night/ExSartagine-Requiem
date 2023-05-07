@@ -49,8 +49,8 @@ public class CraftTweakerSupport {
     }
 
     private static class AddPotAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
+        private final Ingredient input;
+        private final ItemStack output;
 
         public AddPotAction(Ingredient input, ItemStack output) {
             this.input = input;
@@ -69,8 +69,8 @@ public class CraftTweakerSupport {
     }
 
     private static class RemovePotAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
+        private final Ingredient input;
+        private final ItemStack output;
 
         public RemovePotAction(ItemStack output) {
             this.input = null;
@@ -188,8 +188,8 @@ public class CraftTweakerSupport {
     }
 
     private static class AddSmelterAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
+        private final Ingredient input;
+        private final ItemStack output;
 
         public AddSmelterAction(Ingredient input, ItemStack output) {
             this.input = input;
@@ -208,8 +208,8 @@ public class CraftTweakerSupport {
     }
 
     private static class RemoveSmelterAction implements IAction {
-        private Ingredient input;
-        private ItemStack output;
+        private final Ingredient input;
+        private final ItemStack output;
 
         public RemoveSmelterAction(ItemStack output) {
             this.input = null;
@@ -267,12 +267,12 @@ public class CraftTweakerSupport {
     }
 
     private static class AddKettleAction implements IAction {
-        private List<Ingredient> inputs;
-        private Ingredient catalyst;
-        private FluidStack fluidInput;
-        private FluidStack fluidOutput;
-        private List<ItemStack> outputs;
-        private int time;
+        private final List<Ingredient> inputs;
+        private final Ingredient catalyst;
+        private final FluidStack fluidInput;
+        private final FluidStack fluidOutput;
+        private final List<ItemStack> outputs;
+        private final int time;
 
         public AddKettleAction(List<Ingredient> inputs, Ingredient catalyst, @Nullable FluidStack fluidInput, @Nullable FluidStack fluidOutput, List<ItemStack> outputs, int time) {
             this.inputs = inputs;
@@ -306,7 +306,7 @@ public class CraftTweakerSupport {
     }
 
     private static class RemoveKettleAction implements IAction {
-        private ResourceLocation name;
+        private final ResourceLocation name;
 
         public RemoveKettleAction(ResourceLocation name) {
             this.name = name;
@@ -327,58 +327,60 @@ public class CraftTweakerSupport {
     }
 
     @ZenMethod
-    public static void addHeatSource(IBlockState source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), true, true));
+    public static void addHeatSource(IBlockState source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), true, true,legs));
     }
 
     @ZenMethod
-    public static void addHeatSource(IBlock source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, true));
+    public static void addHeatSource(IBlock source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, true,legs));
     }
     
     @ZenMethod
-    public static void removeHeatSource(IBlockState source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), true, false));
+    public static void removeHeatSource(IBlockState source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), true, false,legs));
     }
 
     @ZenMethod
-    public static void removeHeatSource(IBlock source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, false));
+    public static void removeHeatSource(IBlock source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), true, false,legs));
     }
 
     @ZenMethod
-    public static void addPlaceable(IBlockState source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, true));
+    public static void addPlaceable(IBlockState source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, true,legs));
     }
 
     @ZenMethod
-    public static void addPlaceable(IBlock source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, true));
+    public static void addPlaceable(IBlock source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, true,legs));
     }
     
     @ZenMethod
-    public static void removePlaceable(IBlockState source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, false));
+    public static void removePlaceable(IBlockState source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlockState(source), false, false,legs));
     }
 
     @ZenMethod
-    public static void removePlaceable(IBlock source) {
-        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, false));
+    public static void removePlaceable(IBlock source,@Optional boolean legs) {
+        CraftTweakerAPI.apply(new BlockStateAction(CraftTweakerMC.getBlock(source).getBlockState().getValidStates(), false, false,legs));
     }
 
     private static class BlockStateAction implements IAction {
-        private Collection<net.minecraft.block.state.IBlockState> states;
-        private boolean isHeatSource;
-        private boolean add;
+        private final Collection<net.minecraft.block.state.IBlockState> states;
+        private final boolean isHeatSource;
+        private final boolean legs;
+        private final boolean add;
 
-        public BlockStateAction(net.minecraft.block.state.IBlockState state, boolean isHeatSource, boolean add) {
-            this(Sets.newHashSet(state), isHeatSource, add);
+        public BlockStateAction(net.minecraft.block.state.IBlockState state, boolean isHeatSource, boolean add,boolean legs) {
+            this(Sets.newHashSet(state), isHeatSource, add,legs);
         }
 
-        public BlockStateAction(Collection<net.minecraft.block.state.IBlockState> states, boolean isHeatSource, boolean add) {
+        public BlockStateAction(Collection<net.minecraft.block.state.IBlockState> states, boolean isHeatSource, boolean add,boolean legs) {
             this.states = states;
             this.isHeatSource = isHeatSource;
             this.add = add;
+            this.legs = legs;
         }
 
         @Override
@@ -387,7 +389,7 @@ public class CraftTweakerSupport {
                    (this.isHeatSource ? "heat source " : "placeable ") +
                    "with block states " + this.states.stream()
                             .map(net.minecraft.block.state.IBlockState::toString)
-                            .collect(Collectors.joining(","));
+                            .collect(Collectors.joining(",")) + " legs:"+legs;
         }
 
         @Override
