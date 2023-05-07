@@ -91,4 +91,14 @@ public class BlockKettle extends HeatableGuiBlock {
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(LEGS) ? 1 : 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(LEGS,meta > 0);
+    }
 }

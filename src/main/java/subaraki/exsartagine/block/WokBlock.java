@@ -149,7 +149,7 @@ public class WokBlock extends KitchenwareBlock {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
+        return new BlockStateContainer(this, FACING,LEGS);
     }
 
     @Override

@@ -1,23 +1,19 @@
 {
-    "variants": {
-        "normal": {
-             "model": "exsartagine:wok" 
-         },
-        "facing=east": {
-            "model": "exsartagine:wok",
-            "y": 90
+    "multipart": [
+        {   "when": { "facing": "north" },
+            "apply": { "model": "exsartagine:wok", "uvlock": true,"y": 0 }
         },
-        "facing=west": {
-            "model": "exsartagine:wok",
-            "y": 270
+        {   "when": { "facing": "east" },
+            "apply": { "model": "exsartagine:wok", "uvlock": true,"y": 90 }
         },
-        "facing=south": {
-            "model": "exsartagine:wok",
-            "y": 180
+        {   "when": { "facing": "south" },
+            "apply": { "model": "exsartagine:wok", "uvlock": true,"y": 180 }
         },
-        "facing=north": {
-            "model": "exsartagine:wok",
-            "y": 0
+        {   "when": { "facing": "west" },
+            "apply": { "model": "exsartagine:wok", "uvlock": true,"y": 270 }
+        },
+        {   "when": { "legs": "true" },
+            "apply": { "model": "exsartagine:legs", "uvlock": true }
         }
-    }
+    ]
 }

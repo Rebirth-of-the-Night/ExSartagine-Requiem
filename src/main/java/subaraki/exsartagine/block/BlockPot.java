@@ -131,7 +131,7 @@ public class BlockPot extends HeatableGuiBlock {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FULL, FACING);
+		return new BlockStateContainer(this, FULL, FACING,LEGS);
 	}
 	@Override
 	public int getMetaFromState(IBlockState state)

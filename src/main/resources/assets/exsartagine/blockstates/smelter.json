@@ -1,29 +1,22 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-      "model": "exsartagine:smelter"
+  "multipart": [
+    {   "when": { "facing": "north" },
+      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 0 }
     },
-    "variants": {
-      "facing": {
-        "east": {
-          "y": 270
-        },
-        "west": {
-          "y": 90
-        },
-        "south": {
-          "y": 0
-        },
-        "north": {
-          "y": 180
-        }
-      },
-      "full": {
-        "true": {
-          "submodel": "exsartagine:lava"
-        },
-        "false": {
-        }
-      }
+    {   "when": { "facing": "east" },
+      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 90 }
+    },
+    {   "when": { "facing": "south" },
+      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 180 }
+    },
+    {   "when": { "facing": "west" },
+      "apply": { "model": "exsartagine:smelter", "uvlock": true,"y": 270 }
+    },
+    {   "when": { "legs": "true" },
+      "apply": { "model": "exsartagine:legs", "uvlock": true }
+    },
+    {   "when": { "full": "true" },
+      "apply": { "model": "exsartagine:lava", "uvlock": true }
     }
-  }
+  ]
+}

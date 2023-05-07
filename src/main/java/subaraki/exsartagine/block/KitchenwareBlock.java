@@ -2,6 +2,8 @@ package subaraki.exsartagine.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +17,7 @@ import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public abstract class KitchenwareBlock extends Block {
 
+    public static final PropertyBool LEGS = PropertyBool.create("legs");
 
     public KitchenwareBlock(Material materialIn) {
         super(materialIn);
@@ -35,6 +38,11 @@ public abstract class KitchenwareBlock extends Block {
             te.clearInput();
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this,LEGS);
     }
 
     @Override

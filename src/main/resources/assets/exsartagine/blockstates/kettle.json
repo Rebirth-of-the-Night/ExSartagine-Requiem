@@ -1,7 +1,10 @@
 {
-    "variants": {
-        "normal": {
-            "model": "exsartagine:kettle"
+    "multipart": [
+        {
+            "apply": { "model": "exsartagine:kettle", "uvlock": true,"y": 0 }
+        },
+        {   "when": { "legs": "true" },
+            "apply": { "model": "exsartagine:legs", "uvlock": true }
         }
-    }
+    ]
 }
