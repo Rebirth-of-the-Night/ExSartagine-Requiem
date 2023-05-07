@@ -20,7 +20,7 @@ tile.exsartagine.hearth_extended.name=Hearth Cooking Range
 tile.exsartagine.hearth_extended_lit.name=Lit Hearth Cooking Range
 
 kettle.gui=Kettle
-tile.exsartagine.kettle.name=Baking Kettle
+tile.exsartagine.kettle.name=Bake Kettle
 
 item.exsartagine.boiled_egg.name=Boiled Egg
 item.exsartagine.boiled_beans.name=Cooked "Beans"
