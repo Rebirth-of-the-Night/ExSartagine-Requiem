@@ -174,35 +174,66 @@ public class BlockRange extends Block {
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (worldIn.getTileEntity(pos) instanceof TileEntityRange) {
             if (((TileEntityRange) worldIn.getTileEntity(pos)).isFueled()) {
-                EnumFacing enumfacing = stateIn.getValue(FACING);
-                double x0 = (double) pos.getX() + 0.5D;
-                double y0 = (double) pos.getY() + rand.nextDouble() * 6 / 16d + 1/16d;
-                double z0 = (double) pos.getZ() + 0.5D;
-                double d3 = 0.52D;
-                double d4 = rand.nextDouble() * 0.6D - 0.3D;
-
-                if (rand.nextDouble() < 0.1D) {
-                    worldIn.playSound((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-                }
-
-                switch (enumfacing) {
-                    case WEST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 - d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
-                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 - d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case EAST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
-                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case NORTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 - d3, 0.0D, 0.0D, 0.0D);
-                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 - d3, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case SOUTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 + d3, 0.0D, 0.0D, 0.0D);
-                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 + d3, 0.0D, 0.0D, 0.0D);
+                if (hearth) {
+                    vanillaFurnaceParticles(stateIn, worldIn, pos, rand);
+                } else {
+                    smokeParticles(stateIn, worldIn, pos, rand);
                 }
             }
+        }
+    }
+
+    public static void vanillaFurnaceParticles(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        EnumFacing enumfacing = stateIn.getValue(FACING);
+        double x0 = pos.getX() + 0.5D;
+        double y0 = pos.getY() + rand.nextDouble() * 6 / 16d + 1/16d;
+        double z0 = pos.getZ() + 0.5D;
+        double d3 = 0.52D;
+        double d4 = rand.nextDouble() * 0.6D - 0.3D;
+
+        if (rand.nextDouble() < 0.1D) {
+            worldIn.playSound(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+        }
+
+        switch (enumfacing) {
+            case WEST:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 - d3, y0, z0 + d4, 0, 0, 0);
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 - d3, y0, z0 + d4, 0, 0, 0);
+                break;
+            case EAST:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d3, y0, z0 + d4, 0, 0, 0);
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d3, y0, z0 + d4, 0, 0, 0);
+                break;
+            case NORTH:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 - d3, 0, 0, 0);
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 - d3, 0, 0, 0);
+                break;
+            case SOUTH:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 + d3, 0, 0, 0);
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 + d3, 0, 0, 0);
+        }
+    }
+
+    public static void smokeParticles(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        EnumFacing enumfacing = stateIn.getValue(FACING);
+        double x0 = pos.getX() + 0.5D;
+        double y0 = pos.getY() + rand.nextDouble() * 2/16d + 10/16d;
+        double z0 = pos.getZ() + 0.5D;
+        double d3 = 0.52D;
+        double d4 = rand.nextDouble() * 4/16d - 2/16d;
+
+        switch (enumfacing) {
+            case WEST:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d3, y0, z0 + d4, 0, 0, 0);
+                break;
+            case EAST:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 - d3, y0, z0 + d4, 0, 0, 0);
+                break;
+            case NORTH:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 + d3, 0, 0, 0);
+                break;
+            case SOUTH:
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 - d3, 0, 0, 0);
         }
     }
 
