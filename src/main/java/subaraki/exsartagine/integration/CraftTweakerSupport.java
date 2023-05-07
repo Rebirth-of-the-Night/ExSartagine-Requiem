@@ -395,17 +395,9 @@ public class CraftTweakerSupport {
         @Override
         public void apply() {
             if (this.add) {
-                if (this.isHeatSource)
-                    ModRecipes.addHeatSource(states);
-                else
-                    ModRecipes.addPlaceable(states);
+                    ModRecipes.addPlaceable(states,isHeatSource,legs);
             } else {
-                boolean done;
-                if (this.isHeatSource)
-                    done = ModRecipes.removeHeatSources(states);
-                else
-                    done = ModRecipes.removePlaceables(states);
-                
+                boolean done = ModRecipes.removePlaceables(states);
                 if (!done)
                     CraftTweakerAPI.logWarning("No " + 
                             (this.isHeatSource ? "heat sources " : "placeables ") +

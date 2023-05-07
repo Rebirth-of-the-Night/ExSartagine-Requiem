@@ -139,6 +139,7 @@ public class BlockPot extends HeatableGuiBlock {
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 		i = i | ((state.getValue(FULL) ? 1 : 0) << 2);
+		i += super.getMetaFromState(state);
 		return i;
 	}
 	@Override
@@ -151,7 +152,8 @@ public class BlockPot extends HeatableGuiBlock {
 			enumfacing = EnumFacing.NORTH;
 		}
 
-		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(FULL, (meta & 4) > 0);
+		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(FULL, (meta & 0b100) > 0)
+				.withProperty(LEGS,(meta & LEGS_BIT) != 0);
 	}
 
 	@Override
@@ -162,6 +164,6 @@ public class BlockPot extends HeatableGuiBlock {
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 }

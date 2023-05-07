@@ -32,6 +32,7 @@ import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModSounds;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
@@ -154,7 +155,7 @@ public class WokBlock extends KitchenwareBlock {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getHorizontalIndex();
+        return state.getValue(FACING).getHorizontalIndex() + super.getMetaFromState(state);
     }
 
     @Override
@@ -165,9 +166,9 @@ public class WokBlock extends KitchenwareBlock {
             enumfacing = EnumFacing.NORTH;
         }
 
-        IBlockState state = this.getDefaultState().withProperty(FACING, enumfacing);
+        boolean legs = (meta & LEGS_BIT) != 0;
 
-        return state;
+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(LEGS,legs);
     }
 
     @Override
@@ -177,6 +178,6 @@ public class WokBlock extends KitchenwareBlock {
 
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+        return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 }

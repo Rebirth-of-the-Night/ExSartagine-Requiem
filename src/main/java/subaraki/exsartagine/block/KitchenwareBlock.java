@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -54,6 +55,20 @@ public abstract class KitchenwareBlock extends Block {
     @Override
     public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return false;
+    }
+
+    public static final int LEGS_BIT = 0b1000;
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(LEGS) ? LEGS_BIT : 0;
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        IBlockState state = worldIn.getBlockState(pos.down());
+        boolean legs = ModRecipes.hasLegs(state);
+        return this.getDefaultState().withProperty(LEGS,legs);
     }
 
     @Override

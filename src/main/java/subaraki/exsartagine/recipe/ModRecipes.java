@@ -26,6 +26,7 @@ import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.tileentity.util.BlockInfo;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -33,10 +34,7 @@ import java.util.function.Predicate;
 
 public class ModRecipes {
 
-    private static final Set<IBlockState> heatSources = new HashSet<>();
-    private static final Set<IBlockState> placeable = new HashSet<>();
-    private static final Set<IBlockState> placeable_legs = new HashSet<>();
-
+    private static final Map<IBlockState, BlockInfo> placeable = new HashMap<>();
     protected static final Map<IRecipeType<?>, Map<ResourceLocation,CustomRecipe<?>>> recipes = new HashMap<>();
 
     public static <I extends IItemHandler,T extends CustomRecipe<I>> void addRecipe(T recipe) {
@@ -190,63 +188,30 @@ public class ModRecipes {
         return getRecipes(type).stream().anyMatch(customRecipe -> customRecipe.itemMatch(handler));
     }
 
-    public static void addHeatSource(Block block) {
-        addHeatSource(block,iBlockState -> true);
+    public static void addPlaceable(Block block,boolean hot,boolean legs) {
+        addPlaceable(block,iBlockState -> true,hot,legs);
     }
 
-    public static void addHeatSource(Block block, Predicate<IBlockState> predicate) {
+    public static void addPlaceable(Block block, Predicate<IBlockState> predicate,boolean hot,boolean legs) {
         for (IBlockState state : block.getBlockState().getValidStates()) {
             if (predicate.test(state)) {
-                addHeatSource(state);
+                addPlaceable(state,hot,legs);
             }
         }
     }
 
-    public static void addHeatSource(Collection<IBlockState> states) {
+    public static void addPlaceable(Collection<IBlockState> states,boolean hot,boolean legs) {
         for (IBlockState state : states) {
-            addHeatSource(state);
+            addPlaceable(state,hot,legs);
         }
     }
 
-    public static void addHeatSource(IBlockState state) {
-        heatSources.add(state);
-        addPlaceable(state);
-    }
-
-    public static void addPlaceable(Block block) {
-        addPlaceable(block,iBlockState -> true);
-    }
-
-    public static void addPlaceable(Block block, Predicate<IBlockState> predicate) {
-        for (IBlockState state : block.getBlockState().getValidStates()) {
-            if (predicate.test(state)) {
-                addPlaceable(state);
-            }
-        }
-    }
-
-    public static void addPlaceable(Collection<IBlockState> states) {
-        placeable.addAll(states);
-    }
-
-    public static void addPlaceable(IBlockState state) {
-        placeable.add(state);
-    }
-
-    public static boolean removeHeatSource(IBlockState state) {
-        return heatSources.removeIf(b -> b == state);
-    }
-
-    public static void removeHeatSource(Block block) {
-        removeHeatSources(block.getBlockState().getValidStates());
-    }
-
-    public static boolean removeHeatSources(Collection<IBlockState> states) {
-        return heatSources.removeAll(states);
+    public static void addPlaceable(IBlockState state,boolean hot,boolean legs) {
+        placeable.put(state,new BlockInfo(hot,legs));
     }
 
     public static boolean removePlaceable(IBlockState state) {
-        return placeable.removeIf(b -> b == state);
+        return placeable.remove(state) != null;
     }
 
     public static void removePlaceable(Block block) {
@@ -254,7 +219,8 @@ public class ModRecipes {
     }
 
     public static boolean removePlaceables(Collection<IBlockState> states) {
-        return placeable.removeAll(states);
+        states.forEach(ModRecipes::removePlaceable);
+        return true;
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> Collection<R> getRecipes(IRecipeType<R> type) {
@@ -270,29 +236,32 @@ public class ModRecipes {
         return (S) ModRecipes.recipes.get(type);
     }
 
-
     public static boolean isHeatSource(IBlockState state) {
-        return heatSources.contains(state);
+        return placeable.getOrDefault(state,BlockInfo.INVALID).hot;
     }
 
     public static boolean isPlaceable(IBlockState state) {
-        return placeable.contains(state);
+        return placeable.containsKey(state);
+    }
+
+    public static boolean hasLegs(IBlockState state) {
+        return placeable.getOrDefault(state,BlockInfo.INVALID).legs;
     }
 
     public static void init() {
-        addPlaceable(Blocks.FURNACE);
-        addHeatSource(Blocks.LIT_FURNACE);
-        addPlaceable(ExSartagineBlocks.range_extended);
-        addHeatSource(ExSartagineBlocks.range_extended_lit);
-        addPlaceable(ExSartagineBlocks.hearth_extended);
-        addHeatSource(ExSartagineBlocks.hearth_extended_lit);
-        addHeatSource(Blocks.LAVA);
+        addPlaceable(Blocks.FURNACE,false,false);
+        addPlaceable(Blocks.LIT_FURNACE,true,false);
+        addPlaceable(ExSartagineBlocks.range_extended,false,false);
+        addPlaceable(ExSartagineBlocks.range_extended_lit,true,false);
+        addPlaceable(ExSartagineBlocks.hearth_extended,false,false);
+        addPlaceable(ExSartagineBlocks.hearth_extended_lit,true,false);
+        addPlaceable(Blocks.LAVA,true,true);
 
-        addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED));
-        addHeatSource(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED));
+        addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED),false,false);
+        addPlaceable(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED),true,false);
 
-        addPlaceable(ExSartagineBlocks.hearth,iBlockState -> !iBlockState.getValue(BlockRange.HEATED));
-        addHeatSource(ExSartagineBlocks.hearth,iBlockState -> iBlockState.getValue(BlockRange.HEATED));
+        addPlaceable(ExSartagineBlocks.hearth,iBlockState -> !iBlockState.getValue(BlockRange.HEATED),false,false);
+        addPlaceable(ExSartagineBlocks.hearth,iBlockState -> iBlockState.getValue(BlockRange.HEATED),true,false);
 
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_chicken_raw, new ItemStack(ExSartagineItems.pizza_chicken), 0.6f);
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.pizza_meat_raw, new ItemStack(ExSartagineItems.pizza_meat), 0.6f);

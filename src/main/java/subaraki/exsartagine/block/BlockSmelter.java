@@ -115,6 +115,7 @@ public class BlockSmelter extends HeatableGuiBlock {
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 		i = i | ((state.getValue(FULL) ? 1 : 0) << 2); //push to third bit
+		i+= super.getMetaFromState(state);
 		return i;
 	}
 	@Override
@@ -137,7 +138,7 @@ public class BlockSmelter extends HeatableGuiBlock {
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 		
 }
