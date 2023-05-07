@@ -80,6 +80,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	@Override
 	public void processItems() {
 		List<ItemStack> results = cached.getResults(inventoryInput);
+		int count = 0;
 
 		for (int i = 0; i < inventoryInput.getSlots(); ++i) {
 			ItemStack itemstack = this.inventoryInput.getStackInSlot(i);

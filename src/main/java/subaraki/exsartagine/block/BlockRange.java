@@ -13,6 +13,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -42,7 +44,7 @@ public class BlockRange extends Block {
     private final int maxExtensions;
     private final boolean hearth;
 
-    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions,boolean hearth) {
+    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions, boolean hearth) {
         super(Material.IRON);
         this.manualIgnition = manualIgnition;
         this.maxExtensions = maxExtensions;
@@ -51,7 +53,7 @@ public class BlockRange extends Block {
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
         setHardness(3.5f);
-        setDefaultState(getDefaultState().withProperty(HEATED,false));
+        setDefaultState(getDefaultState().withProperty(HEATED, false));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class BlockRange extends Block {
                     }
                     return true;
                 }
-                matches = Oredict.checkMatch(Oredict.SELF_IGNITER,stack);
+                matches = Oredict.checkMatch(Oredict.SELF_IGNITER, stack);
                 if (matches) {
                     if (!worldIn.isRemote) {
                         ((TileEntityRange) tile).setSelfIgnitingUpgrade(true);
@@ -111,14 +113,14 @@ public class BlockRange extends Block {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityRange) {
-                {
-                    TileEntityRange entityRange = (TileEntityRange) tileentity;
+            {
+                TileEntityRange entityRange = (TileEntityRange) tileentity;
 
-                    ItemStack itemstack = new ItemStack(Item.getItemFromBlock(this));
-                    NBTTagCompound nbttagcompound = new NBTTagCompound();
-                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                    nbttagcompound.setTag("BlockEntityTag", entityRange.saveToItemNbt(nbttagcompound1));
-                    itemstack.setTagCompound(nbttagcompound);
+                ItemStack itemstack = new ItemStack(Item.getItemFromBlock(this));
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                nbttagcompound.setTag("BlockEntityTag", entityRange.saveToItemNbt(nbttagcompound1));
+                itemstack.setTagCompound(nbttagcompound);
 
                       /*  if (entityRange.hasCustomName())
                         {
@@ -126,10 +128,10 @@ public class BlockRange extends Block {
                             entityRange.setCustomName("");
                         }*/
 
-                    spawnAsEntity(worldIn, pos, itemstack);
+                spawnAsEntity(worldIn, pos, itemstack);
 
-                    worldIn.updateComparatorOutputLevel(pos, state.getBlock());
-                }
+                worldIn.updateComparatorOutputLevel(pos, state.getBlock());
+            }
 
             TileEntityRange range = (TileEntityRange) tileentity;
             Utils.scatter(worldIn, pos, range.getInventory());
@@ -137,8 +139,7 @@ public class BlockRange extends Block {
         super.breakBlock(worldIn, pos, state);
     }
 
-    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
-    {
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     }
 
     ///////////////TE Stuff//////////////////////
@@ -171,29 +172,35 @@ public class BlockRange extends Block {
 
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (hearth)return;
-        double d0 = (double) pos.getX() + 0.5D;
-        double d1 = (double) pos.getY() + 1.5D;
-        double d2 = (double) pos.getZ() + 0.5D;
-
         if (worldIn.getTileEntity(pos) instanceof TileEntityRange) {
             if (((TileEntityRange) worldIn.getTileEntity(pos)).isFueled()) {
                 EnumFacing enumfacing = stateIn.getValue(FACING);
+                double x0 = (double) pos.getX() + 0.5D;
+                double y0 = (double) pos.getY() + rand.nextDouble() * 6 / 16d + 1/16d;
+                double z0 = (double) pos.getZ() + 0.5D;
+                double d3 = 0.52D;
+                double d4 = rand.nextDouble() * 0.6D - 0.3D;
+
+                if (rand.nextDouble() < 0.1D) {
+                    worldIn.playSound((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                }
+
                 switch (enumfacing) {
-                    case NORTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.3, d1, d2 + 0.3, 0.0D, 0.0D, 0.0D);
-                        break;
                     case WEST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.3, d1, d2 - 0.3, 0.0D, 0.0D, 0.0D);
-                        break;
-                    case SOUTH:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.3, d1, d2 - 0.3, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 - d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 - d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
                         break;
                     case EAST:
-                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.3, d1, d2 + 0.3, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d3, y0, z0 + d4, 0.0D, 0.0D, 0.0D);
                         break;
-                    default:
+                    case NORTH:
+                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 - d3, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 - d3, 0.0D, 0.0D, 0.0D);
                         break;
+                    case SOUTH:
+                        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x0 + d4, y0, z0 + d3, 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, x0 + d4, y0, z0 + d3, 0.0D, 0.0D, 0.0D);
                 }
             }
         }
@@ -202,7 +209,7 @@ public class BlockRange extends Block {
     /////// TURNING STUFF ////////////////
 
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING,HEATED);
+        return new BlockStateContainer(this, FACING, HEATED);
     }
 
     public int getMetaFromState(IBlockState state) {
@@ -218,7 +225,7 @@ public class BlockRange extends Block {
 
         boolean heated = (meta & 0b0100) != 0;
 
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(HEATED,heated);
+        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(HEATED, heated);
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
