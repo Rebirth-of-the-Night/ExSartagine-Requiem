@@ -114,14 +114,13 @@ public class BlockRange extends Block {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityRange) {
-            {
-                TileEntityRange entityRange = (TileEntityRange) tileentity;
+            TileEntityRange entityRange = (TileEntityRange) tileentity;
 
-                ItemStack itemstack = new ItemStack(Item.getItemFromBlock(this));
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound.setTag("BlockEntityTag", entityRange.saveToItemNbt(nbttagcompound1));
-                itemstack.setTagCompound(nbttagcompound);
+            ItemStack itemstack = new ItemStack(Item.getItemFromBlock(this));
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
+            NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+            nbttagcompound.setTag("BlockEntityTag", entityRange.saveToItemNbt(nbttagcompound1));
+            itemstack.setTagCompound(nbttagcompound);
 
                       /*  if (entityRange.hasCustomName())
                         {
@@ -129,11 +128,8 @@ public class BlockRange extends Block {
                             entityRange.setCustomName("");
                         }*/
 
-                spawnAsEntity(worldIn, pos, itemstack);
-
-                worldIn.updateComparatorOutputLevel(pos, state.getBlock());
-            }
-
+            spawnAsEntity(worldIn, pos, itemstack);
+            worldIn.updateComparatorOutputLevel(pos, state.getBlock());
             TileEntityRange range = (TileEntityRange) tileentity;
             Utils.scatter(worldIn, pos, range.getInventory());
         }

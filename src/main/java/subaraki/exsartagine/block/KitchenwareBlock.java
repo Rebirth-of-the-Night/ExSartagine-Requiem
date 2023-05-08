@@ -34,10 +34,9 @@ public abstract class KitchenwareBlock extends Block {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof WokBlockEntity) {
-            WokBlockEntity te = (WokBlockEntity) tileentity;
+        if (tileentity instanceof KitchenwareBlockEntity) {
+            KitchenwareBlockEntity te = (KitchenwareBlockEntity) tileentity;
             Utils.scatter(worldIn, pos, te.getEntireItemInventory());
-            te.clearInput();
         }
         super.breakBlock(worldIn, pos, state);
     }
