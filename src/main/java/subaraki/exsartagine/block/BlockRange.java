@@ -1,8 +1,5 @@
 package subaraki.exsartagine.block;
 
-import java.util.Random;
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -22,7 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,10 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
-import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.util.Reference;
+
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class BlockRange extends Block {
 
@@ -43,12 +41,14 @@ public class BlockRange extends Block {
     private final Supplier<Boolean> manualIgnition;
     private final int maxExtensions;
     private final boolean hearth;
+    private final double fuelEfficiency;
 
-    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions, boolean hearth) {
+    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions, boolean hearth,double fuelEfficiency) {
         super(Material.IRON);
         this.manualIgnition = manualIgnition;
         this.maxExtensions = maxExtensions;
         this.hearth = hearth;
+        this.fuelEfficiency = fuelEfficiency;
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
@@ -62,7 +62,7 @@ public class BlockRange extends Block {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
                                     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
         TileEntity tile = worldIn.getTileEntity(pos);
@@ -75,12 +75,13 @@ public class BlockRange extends Block {
 
             if (!((TileEntityRange) tile).isSelfIgnitingUpgrade()) {
 
-                ItemStack stack = playerIn.getHeldItem(hand);
+                ItemStack stack = player.getHeldItem(hand);
                 boolean matches = Oredict.checkMatch(Oredict.IGNITER, stack);
                 if (matches) {
                     if (!worldIn.isRemote) {
                         ((TileEntityRange) tile).createSparks();
-                        stack.damageItem(1, playerIn);
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1, player.getRNG().nextFloat() * 0.4F + 0.8F);
+                        stack.damageItem(1, player);
                     }
                     return true;
                 }
@@ -95,7 +96,7 @@ public class BlockRange extends Block {
             }
         }
 
-        playerIn.openGui(ExSartagine.instance, Reference.RANGE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        player.openGui(ExSartagine.instance, Reference.RANGE, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
@@ -273,5 +274,9 @@ public class BlockRange extends Block {
 
     public Supplier<Boolean> isManualIgnition() {
         return manualIgnition;
+    }
+
+    public double getFuelEfficiency() {
+        return fuelEfficiency;
     }
 }

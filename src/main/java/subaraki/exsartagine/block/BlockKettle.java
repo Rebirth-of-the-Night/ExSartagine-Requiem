@@ -44,7 +44,7 @@ public class BlockKettle extends HeatableGuiBlock {
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
     }
 
-    public static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, .875, 1);
+    public static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, .5, 1);
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
