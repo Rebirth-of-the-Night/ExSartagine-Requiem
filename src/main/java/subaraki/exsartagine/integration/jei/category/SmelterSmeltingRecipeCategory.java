@@ -1,4 +1,4 @@
-package subaraki.exsartagine.integration.jei;
+package subaraki.exsartagine.integration.jei.category;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;

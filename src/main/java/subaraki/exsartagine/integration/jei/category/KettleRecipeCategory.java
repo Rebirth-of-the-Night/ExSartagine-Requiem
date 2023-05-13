@@ -1,4 +1,4 @@
-package subaraki.exsartagine.integration.jei;
+package subaraki.exsartagine.integration.jei.category;
 
 import java.util.Collection;
 import java.util.List;

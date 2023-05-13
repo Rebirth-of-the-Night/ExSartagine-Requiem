@@ -27,12 +27,21 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
     @Override
     public boolean itemMatch(ItemStackHandler handler) {
 
-        for (int i= 0 ; i < ingredients.size();i++) {
-            Ingredient ingredient = ingredients.get(i);
-            ItemStack stack = handler.getStackInSlot(i);
-            if (!ingredient.test(stack)) return false;
+        int ingredientCount = 0;
+        IItemHandlerRecipeItemHelper recipeItemHelper = new IItemHandlerRecipeItemHelper();
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack itemstack = handler.getStackInSlot(i);
+
+            if (!itemstack.isEmpty()) {
+                ++ingredientCount;
+                recipeItemHelper.accountStack(itemstack, 1);
+            }
         }
-        return true;
+
+        if (ingredientCount != this.ingredients.size())
+            return false;
+        return recipeItemHelper.canCraft(this, null);
     }
 
     public boolean fluidMatch(FluidTank handler) {

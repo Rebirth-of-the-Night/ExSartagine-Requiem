@@ -2,14 +2,11 @@
     "type": "minecraft:crafting_shaped",
     "group": "exsartagine:pot",
     "pattern": [
-        "I I",
-        "CBC",
-        "CCC"
+        "B B",
+        "BBB"
     ],
     "key": {
-        "I": { "item": "minecraft:iron_ingot"},
-        "B": { "item": "minecraft:bucket"},
-		"C": { "item": "minecraft:cobblestone"}
+        "B": { "item": "minecraft:brick"}
 
     },
     "result": {

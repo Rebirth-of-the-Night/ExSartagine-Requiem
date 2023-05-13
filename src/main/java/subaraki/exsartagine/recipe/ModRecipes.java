@@ -13,7 +13,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -255,7 +254,7 @@ public class ModRecipes {
         addPlaceable(ExSartagineBlocks.range_extended_lit,true,false);
         addPlaceable(ExSartagineBlocks.hearth_extended,false,false);
         addPlaceable(ExSartagineBlocks.hearth_extended_lit,true,false);
-        addPlaceable(Blocks.LAVA,true,true);
+        addPlaceable(Blocks.LAVA,true,false);
 
         addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED),false,false);
         addPlaceable(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED),true,false);
@@ -348,6 +347,19 @@ public class ModRecipes {
 
         if (ExSartagine.DEBUG) {
             ExSartagine.DebugStuff.run();
+        }
+    }
+
+    public static Set<Item> validItems = new HashSet<>();
+
+    public static void cacheWokInputs() {
+        for (WokRecipe wokRecipe : getWokRecipes()) {
+            List<Ingredient> ingredients = wokRecipe.getIngredients();
+            for (Ingredient ingredient : ingredients) {
+                for (ItemStack stack : ingredient.getMatchingStacks()) {
+                    validItems.add(stack.getItem());
+                }
+            }
         }
     }
 

@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "exsartagine:range",
+    "pattern": [
+        "BBB",
+        "B B",
+        "OOO"
+    ],
+    "key": {
+        "B": { "item": "minecraft:brick"},
+        "O": { "item": "minecraft:cobblestone"}
+    },
+    "result": {
+        "item": "exsartagine:hearth_extended"
+    }
+}

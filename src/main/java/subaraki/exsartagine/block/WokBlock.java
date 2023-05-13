@@ -81,7 +81,7 @@ public class WokBlock extends KitchenwareBlock {
                                 new InvWrapper(playerIn.inventory), Integer.MAX_VALUE, playerIn, true);
                         if (fluidActionResult.isSuccess()) {
                             playerIn.setHeldItem(hand, fluidActionResult.getResult());
-                        } else {
+                        } else if (ModRecipes.validItems.contains(stack.getItem())){
                             ItemStack single = stack.copy();
                             single.setCount(1);
                             ItemStack returns = wokBlockEntity.addSingleItem(single);

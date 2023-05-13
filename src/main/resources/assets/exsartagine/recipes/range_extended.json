@@ -3,16 +3,14 @@
     "group": "exsartagine:range",
     "pattern": [
         "III",
-        "SBS",
-        "SMS"
+        "S S",
+        "SSS"
     ],
     "key": {
         "I": { "item": "minecraft:iron_ingot"},
-        "B": { "item": "minecraft:iron_block"},
-		"M": { "item": "minecraft:magma"},
         "S": { "item": "minecraft:stone","data" : 0}
     },
     "result": {
-        "item": "exsartagine:range"
+        "item": "exsartagine:range_extended"
     }
 }

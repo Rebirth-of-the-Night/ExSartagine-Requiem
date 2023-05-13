@@ -12,7 +12,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -104,5 +103,6 @@ public class ExSartagine {
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         Oredict.addToOreDict();
+        ModRecipes.cacheWokInputs();
     }
 }

@@ -182,10 +182,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		WokStackHandler() {
 			super(9);
 		}
-		@Override
-		public int getSlotLimit(int slot) {
-			return 1;
-		}
 
 		@Override
 		protected void onContentsChanged(int slot) {
