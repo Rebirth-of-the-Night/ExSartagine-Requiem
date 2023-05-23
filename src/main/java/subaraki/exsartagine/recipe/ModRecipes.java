@@ -254,7 +254,6 @@ public class ModRecipes {
         addPlaceable(ExSartagineBlocks.range_extended_lit,true,false);
         addPlaceable(ExSartagineBlocks.hearth_extended,false,false);
         addPlaceable(ExSartagineBlocks.hearth_extended_lit,true,false);
-        addPlaceable(Blocks.LAVA,true,false);
 
         addPlaceable(ExSartagineBlocks.range,iBlockState -> !iBlockState.getValue(BlockRange.HEATED),false,false);
         addPlaceable(ExSartagineBlocks.range,iBlockState -> iBlockState.getValue(BlockRange.HEATED),true,false);
