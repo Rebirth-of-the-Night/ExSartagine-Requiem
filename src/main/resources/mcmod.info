@@ -2,14 +2,14 @@
 {
   "modid": "exsartagine",
   "name": "ExSartagine Requiem",
-  "description": "Thermo Efficient Pots and Pans",
+  "description": "Thermo Efficient Pots and Pans. Now with hearths.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://github.com/ArtixAllMighty/ExSartagine/wiki",
   "updateUrl": "",
   "authorList": ["Subaraki", "Isaac","ArtixAllMighty", "Foreck", "Tfarcenim"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "exsartagine_logo",
   "screenshots": [],
   "dependencies": []
 }
