@@ -44,7 +44,7 @@ public class BlockKettle extends HeatableGuiBlock {
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
     }
 
-    public static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, .5, 1);
+    public static final AxisAlignedBB AABB = new AxisAlignedBB(.0625, 0, .0625, .9375, .5, .9375);
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -53,6 +53,16 @@ public class BlockKettle extends HeatableGuiBlock {
 
     @Override
     public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
