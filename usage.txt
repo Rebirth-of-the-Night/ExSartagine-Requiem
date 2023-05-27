@@ -1,133 +1,136 @@
 import mods.exsartagine.ExSartagine;
 
-    /**
-     * Adds a pot recipe
-     * @param input
-     * @param output
-     */
-    ExSartigine.addPotRecipe(IIngredient input, IItemStack output);
+///////////////////////// Pot ////////////////////////////
 
-    /**
-     * Removes all pot recipes that specify the given output
-     * @param output the output to remove
-     */
-    ExSartigine.removePotRecipe(IItemStack output);
+/**
+ * Adds a pot recipe
+ * @param input
+ * @param output
+ */
+ExSartigine.addPotRecipe(IIngredient input, IItemStack output);
 
-    /**
-     * Removes all pot recipes that specify the given output AND match the input
-     * @param input the input to check
-     * @param output the output to remove
-     */
-    ExSartigine.removePotRecipe(IIngredient input, IItemStack output);
-	
-	    ///////////////////////////////
+/**
+ * Removes all pot recipes that specify the given output
+ * @param output the output to remove
+ */
+ExSartigine.removePotRecipe(IItemStack output);
 
-    /**
-     * Adds wok recipe
-     * @param inputs up to 9 ingredients can be specified
-     * @param outputs up to 9 outputs can be specified
-     * @param flips flips required with `ore:spatula`, defaults to 0
-     */
-    ExSartigine.addWokRecipe(IIngredient[] inputs, IItemStack[] outputs,@Optional int flips);
-	
-    /**
-     * Adds wok recipe with liquid requirement
-     * @param inputs up to 9 ingredients can be specified
-     * @param liquid input liquid required for recipe
-     * @param outputs up to 9 outputs can be specified
-     * @param flips flips required with `ore:spatula`, defaults to 0
-     */
-    ExSartigine.addWokRecipe(IIngredient[] inputs,ILiquidStack liquid, IItemStack[] outputs,@Optional int flips);
+/**
+ * Removes all pot recipes that specify the given output AND match the input
+ * @param input the input to check
+ * @param output the output to remove
+ */
+ExSartigine.removePotRecipe(IIngredient input, IItemStack output);
 
-    /**
-     * Removes wok recipe by name
-     * @param name the name of the recipe specified in tooltip
-     */
-    ExSartigine.removeWokRecipe(String name);
-	
-    ////////////////////////////////////////////////////
+///////////////////////// Wok ////////////////////////////
 
-    /**
-     * Adds smelter recipe
-     * @param input
-     * @param output
-     */
-    ExSartigine.addSmelterRecipe(IIngredient input, IItemStack output);
-    /**
-     * Removed all smelter recipes producing the given output
-     * @param output
-     */
-    ExSartigine.removeSmelterRecipe(IItemStack output);
+/**
+ * Adds wok recipe
+ * @param inputs up to 9 ingredients can be specified
+ * @param outputs up to 9 outputs can be specified
+ * @param flips flips required with `ore:spatula`, defaults to 0
+ */
+ExSartigine.addWokRecipe(IIngredient[] inputs, IItemStack[] outputs,@Optional int flips);
 
-    /**
-     * Removes all smelter recipes producing the given output AND matching the input
-     * @param input
-     * @param output
-     */
-    ExSartigine.removeSmelterRecipe(IIngredient input, IItemStack output);
+/**
+ * Adds wok recipe with liquid requirement
+ * @param inputs up to 9 ingredients can be specified
+ * @param liquid input liquid required for recipe
+ * @param outputs up to 9 outputs can be specified
+ * @param flips flips required with `ore:spatula`, defaults to 0
+ */
+ExSartigine.addWokRecipe(IIngredient[] inputs,ILiquidStack liquid, IItemStack[] outputs,@Optional int flips);
 
+/**
+ * Removes wok recipe by name
+ * @param name the name of the recipe specified in tooltip
+ */
+ExSartigine.removeWokRecipe(String name);
 
-    /**
-     * Adds kettle recipe
-     * @param inputs up to 9 ingredients can be specified
-     * @param outputs up to 9 outputs can be specified
-     * @param liquid input liquid required for recipe
-     * @param time cook time in ticks, defaults to 200 (10 seconds)
-     */
-    ExSartigine.addKettleRecipe(IIngredient[] inputs, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time);
+///////////////////////// Smelter ////////////////////////////
 
-    /**
-     * Adds kettle recipe with liquid requirement
-     * @param inputs up to 9 ingredients can be specified
-     * @param liquid input liquid required for recipe
-     * @param outputs up to 9 outputs can be specified
-     * @param time cook time in ticks, defaults to 200 (10 seconds)
-     */
-    ExSartigine.addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time);
+/**
+ * Adds smelter recipe
+ * @param input
+ * @param output
+ */
+ExSartigine.addSmelterRecipe(IIngredient input, IItemStack output);
+/**
+ * Removed all smelter recipes producing the given output
+ * @param output
+ */
+ExSartigine.removeSmelterRecipe(IItemStack output);
 
-    /**
-     * Adds kettle recipe with liquid requirement and liquid output
-     * @param inputs up to 9 ingredients can be specified
-     * @param catalyst catalyst item, not consumed by recipe
-     * @param liquidInput input liquid required for recipe
-     * @param outputs up to 9 outputs can be specified
-     * @param liquidOutput output liquid for recipe
-     * @param time cook time in ticks, defaults to 200 (10 seconds)
-     */
-    ExSartigine.addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquidInput, ILiquidStack liquidOutput,IItemStack[] outputs, @Optional("200") int time);
+/**
+ * Removes all smelter recipes producing the given output AND matching the input
+ * @param input
+ * @param output
+ */
+ExSartigine.removeSmelterRecipe(IIngredient input, IItemStack output);
 
-    /**
-     * Removes kettle recipe by name
-     * @param name the name of the recipe specified in tooltip
-     */
-    ExSartigine.removeKettleRecipe(String name);
+///////////////////////// Bake Kettle ////////////////////////////
 
-    //////////////////////////////////////////////
+/**
+ * Adds kettle recipe
+ * @param inputs up to 9 ingredients can be specified
+ * @param outputs up to 9 outputs can be specified
+ * @param liquid input liquid required for recipe
+ * @param time cook time in ticks, defaults to 200 (10 seconds)
+ */
+ExSartigine.addKettleRecipe(IIngredient[] inputs, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time);
 
-    /**
-     * Adds a block that kitchenware can be placed on
-     * @param state The blockstate to add
-     * @param heat whether this block can heat kitchenware
-     * @param legs whether legs should be placed below the kitchenware (default: false)
-     */
-    ExSartigine.addPlaceable(IBlockState state,boolean heat,@Optional boolean legs);
-	
-    /**
-     * Adds a block that kitchenware can be placed on
-     * @param block The block to add
-     * @param heat whether this block can heat kitchenware
-     * @param legs whether legs should be placed below the kitchenware (default: false)
-     */
-    ExSartigine.addPlaceable(IBlock block,boolean heat,@Optional boolean legs);
+/**
+ * Adds kettle recipe with liquid requirement
+ * @param inputs up to 9 ingredients can be specified
+ * @param liquid input liquid required for recipe
+ * @param outputs up to 9 outputs can be specified
+ * @param time cook time in ticks, defaults to 200 (10 seconds)
+ */
+ExSartigine.addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time);
 
-    /**
-     * Removes kitchenware placeable
-     * @param state The blockstate to remove
-     */
-    ExSartigine.removePlaceable(IBlockState state);
+/**
+ * Adds kettle recipe with liquid requirement and liquid output
+ * @param inputs up to 9 ingredients can be specified
+ * @param catalyst catalyst item, not consumed by recipe
+ * @param liquidInput input liquid required for recipe
+ * @param outputs up to 9 outputs can be specified
+ * @param liquidOutput output liquid for recipe
+ * @param time cook time in ticks, defaults to 200 (10 seconds)
+ */
+ExSartigine.addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquidInput, ILiquidStack liquidOutput,IItemStack[] outputs, @Optional("200") int time);
 
-    /**
-     * Removes kitchenware placeable
-     * @param block The block to remove
-     */
-    ExSartigine.removePlaceable(IBlock block);
+/**
+ * Removes kettle recipe by name
+ * @param name the name of the recipe specified in tooltip
+ */
+ExSartigine.removeKettleRecipe(String name);
+
+///////////////////////// Placeable/Heating ////////////////////////////
+
+/**
+ * Adds a block that kitchenware can be placed on
+ * @param state The blockstate to add
+ * @param heat whether this block can heat kitchenware
+ * @param legs whether legs should be placed below the kitchenware (default: false)
+ */
+ExSartigine.addPlaceable(IBlockState state,boolean heat,@Optional boolean legs);
+
+/**
+ * Adds a block that kitchenware can be placed on
+ * @param block The block to add
+ * @param heat whether this block can heat kitchenware
+ * @param legs whether legs should be placed below the kitchenware (default: false)
+ */
+ExSartigine.addPlaceable(IBlock block,boolean heat,@Optional boolean legs);
+
+/**
+ * Removes kitchenware placeable
+ * @param state The blockstate to remove
+ */
+ExSartigine.removePlaceable(IBlockState state);
+
+/**
+ * Removes kitchenware placeable
+ * @param block The block to remove
+ */
+ExSartigine.removePlaceable(IBlock block);
