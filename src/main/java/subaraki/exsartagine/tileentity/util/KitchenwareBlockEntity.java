@@ -17,7 +17,7 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
 
     //check if the block below is hot
     public final boolean activeHeatSourceBelow() {
-        return ModRecipes.isHeatSource(world.getBlockState(pos.down()));
+        return ModRecipes.isHeatSource(world.getBlockState(pos.down()).getActualState(world, pos.down()));
     }
 
     public abstract IItemHandler getEntireItemInventory();

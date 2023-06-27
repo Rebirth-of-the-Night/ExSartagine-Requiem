@@ -27,7 +27,7 @@ public abstract class KitchenwareBlock extends Block {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return ModRecipes.isPlaceable(world.getBlockState(pos.down()));
+        return ModRecipes.isPlaceable(world.getBlockState(pos.down()).getActualState(world, pos.down()));
     }
 
     @Override
