@@ -106,6 +106,6 @@ public class ExSartagine {
     public void postInit(FMLPostInitializationEvent e) {
         Oredict.addToOreDict();
         ModRecipes.cacheWokInputs();
-        if(Loader.isModLoaded("immersiveengineering")){ImmersiveEngineering.registerHandlers();}
+        if(Loader.isModLoaded("immersiveengineering")){ImmersiveEngineering.registerHeatableAdapters();}
     }
 }

@@ -12,22 +12,27 @@ import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
 public class ImmersiveEngineering {
-    public static void registerHandlers(){
+    public static void registerHeatableAdapters(){
         ExternalHeaterHandler.registerHeatableAdapter(KitchenwareBlockEntity.class, new KitchenwareAdapter());
+        addPlaceableForHeater();
         ExternalHeaterHandler.registerHeatableAdapter(TileEntityRange.class, new RangeAdapter());
+    }
+
+    private static void addPlaceableForHeater(){
         ModRecipes.addPlaceable(IEContent.blockMetalDevice1, iBlockState -> (
-                iBlockState.getValue(PropertyEnum.create("type", BlockTypes_MetalDevice1.class))==BlockTypes_MetalDevice1.FURNACE_HEATER &&
-                        !iBlockState.getValue(IEProperties.MULTIBLOCKSLAVE) &&
-                        iBlockState.getValue(IEProperties.FACING_ALL) != EnumFacing.UP &&
-                        iBlockState.getValue(IEProperties.BOOLEANS[0])
+                iBlockState.getValue(PropertyEnum.create("type", BlockTypes_MetalDevice1.class))==BlockTypes_MetalDevice1.FURNACE_HEATER
+                        && !iBlockState.getValue(IEProperties.MULTIBLOCKSLAVE) //not part of multiblock
+                        && iBlockState.getValue(IEProperties.FACING_ALL) != EnumFacing.UP
+                        && iBlockState.getValue(IEProperties.BOOLEANS[0]) //active
         ),true, false);
         ModRecipes.addPlaceable(IEContent.blockMetalDevice1, iBlockState -> (
-                iBlockState.getValue(PropertyEnum.create("type", BlockTypes_MetalDevice1.class))==BlockTypes_MetalDevice1.FURNACE_HEATER &&
-                        !iBlockState.getValue(IEProperties.MULTIBLOCKSLAVE) &&
-                        iBlockState.getValue(IEProperties.FACING_ALL) != EnumFacing.UP &&
-                        !iBlockState.getValue(IEProperties.BOOLEANS[0])
+                iBlockState.getValue(PropertyEnum.create("type", BlockTypes_MetalDevice1.class))==BlockTypes_MetalDevice1.FURNACE_HEATER
+                        && !iBlockState.getValue(IEProperties.MULTIBLOCKSLAVE) //not part of multiblock
+                        && iBlockState.getValue(IEProperties.FACING_ALL) != EnumFacing.UP
+                        && !iBlockState.getValue(IEProperties.BOOLEANS[0]) //inactive
         ),false, false);
     }
+
     public static class KitchenwareAdapter extends ExternalHeaterHandler.HeatableAdapter<KitchenwareBlockEntity>{
         @Override
         public int doHeatTick(KitchenwareBlockEntity tileEntity, int energyAvailable, boolean redstone) {
