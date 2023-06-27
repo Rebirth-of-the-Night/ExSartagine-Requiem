@@ -37,7 +37,7 @@ public class ImmersiveEngineering {
         @Override
         public int doHeatTick(KitchenwareBlockEntity tileEntity, int energyAvailable, boolean redstone) {
             int consumption = Config.IEConfig.Machines.heater_consumption;
-            if(energyAvailable >= consumption){
+            if(redstone && energyAvailable >= consumption){
                 return consumption;
             }
             return 0;
@@ -48,7 +48,7 @@ public class ImmersiveEngineering {
         @Override
         public int doHeatTick(TileEntityRange tileEntity, int energyAvailable, boolean redstone) {
             int consumption = Config.IEConfig.Machines.heater_consumption;
-            if(!redstone && energyAvailable >= consumption){
+            if(redstone && energyAvailable >= consumption){
                 if(tileEntity.getFuelTimer()==0){tileEntity.setFuelTimer(1);}
                 tileEntity.setFuelTimer(tileEntity.getFuelTimer()+1);
                 tileEntity.setCooking(true);
