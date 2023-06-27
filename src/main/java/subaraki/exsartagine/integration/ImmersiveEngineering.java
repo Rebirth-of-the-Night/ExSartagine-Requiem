@@ -49,11 +49,11 @@ public class ImmersiveEngineering {
         public int doHeatTick(TileEntityRange tileEntity, int energyAvailable, boolean redstone) {
             int consumption = Config.IEConfig.Machines.heater_consumption;
             if(!redstone && energyAvailable >= consumption){
-                tileEntity.setFuelTimer(-1);
+                if(tileEntity.getFuelTimer()==0){tileEntity.setFuelTimer(1);}
+                tileEntity.setFuelTimer(tileEntity.getFuelTimer()+1);
                 tileEntity.setCooking(true);
                 return consumption;
             }
-            if(tileEntity.getFuelTimer()==-1){tileEntity.setFuelTimer(0);}
             return 0;
         }
     }
