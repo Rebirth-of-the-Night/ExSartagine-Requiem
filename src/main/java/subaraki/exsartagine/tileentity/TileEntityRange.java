@@ -97,7 +97,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
 
     public boolean isFueled() {
-        return fuelTimer > 0 || fuelTimer == -1;
+        return fuelTimer > 0;
     }
 
     public int getFuelTimer() {
