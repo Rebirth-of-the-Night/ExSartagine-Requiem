@@ -15,7 +15,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -29,7 +28,7 @@ import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModBlockEntities;
 import subaraki.exsartagine.init.ModSounds;
-import subaraki.exsartagine.integration.ImmersiveEngineering;
+import subaraki.exsartagine.integration.Integration;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
@@ -106,6 +105,6 @@ public class ExSartagine {
     public void postInit(FMLPostInitializationEvent e) {
         Oredict.addToOreDict();
         ModRecipes.cacheWokInputs();
-        if(Loader.isModLoaded("immersiveengineering")){ImmersiveEngineering.registerHeatableAdapters();}
+        Integration.postInit();
     }
 }
