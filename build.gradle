@@ -43,6 +43,9 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven" // JEI
     }
     maven { url "http://maven.amadornes.com/" }
+    maven {
+        url "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
@@ -74,6 +77,9 @@ dependencies {
         exclude group: 'mezz.jei'
     }
 
+    deobfCompile "curse.maven:athenaeum-284350:${athenaeum_file}"
+    deobfCompile "curse.maven:dropt-284973:${dropt_file}"
+    deobfCompile "curse.maven:pyrotech-306676:${pyrotech_file}"
 }
 
 processResources {
