@@ -46,6 +46,10 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    jcenter()
+    maven {
+        url "http://maven.shadowfacts.net/"
+    }
 }
 
 dependencies {
@@ -73,13 +77,17 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.17.536'
-    deobfCompile("betterwithmods:BetterWithMods:1.12-2.3.20-1030") {
+    deobfCompile("betterwithmods:BetterWithMods:1.12-2.3.24-1068") {
         exclude group: 'mezz.jei'
     }
 
     deobfCompile "curse.maven:athenaeum-284350:${athenaeum_file}"
     deobfCompile "curse.maven:dropt-284973:${dropt_file}"
     deobfCompile "curse.maven:pyrotech-306676:${pyrotech_file}"
+
+
+    deobfCompile "curse.maven:future-mc-310059:3924863"
+    compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 
     deobfCompile "curse.maven:campfire-719464:4533381"
     deobfProvided "curse.maven:fluidlogged-api-485654:4564413"
