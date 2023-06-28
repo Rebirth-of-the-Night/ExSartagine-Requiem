@@ -1,5 +1,8 @@
 package subaraki.exsartagine.block;
 
+import com.codetaylor.mc.athenaeum.util.Properties;
+import com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableAdjacentIgniterBlock;
+import com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableWithIgniterItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -22,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
@@ -34,7 +38,9 @@ import subaraki.exsartagine.util.Reference;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class BlockRange extends Block {
+@Optional.Interface(modid = "pyrotech", iface = "com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableWithIgniterItem")
+@Optional.Interface(modid = "pyrotech", iface = "com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableAdjacentIgniterBlock")
+public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem, IBlockIgnitableAdjacentIgniterBlock {
 
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool HEATED = PropertyBool.create("heated");
@@ -134,6 +140,36 @@ public class BlockRange extends Block {
             Utils.scatter(worldIn, pos, range.getInventory());
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Optional.Method(modid = "pyrotech")
+    @Override
+    public void igniteWithIgniterItem(World world, BlockPos pos, IBlockState blockState, EnumFacing facing){
+        TileEntity tile = world.getTileEntity(pos);
+
+        if ((tile instanceof TileEntityRange)) {
+            TileEntityRange range = (TileEntityRange) tile;
+            if (blockState.getValue(Properties.FACING_HORIZONTAL) == facing && manualIgnition.get() && !(range.isSelfIgnitingUpgrade())) {
+                if (!world.isRemote) {
+                    range.createSparks();
+                }
+            }
+        }
+    }
+
+    @Optional.Method(modid = "pyrotech")
+    @Override
+    public void igniteWithAdjacentIgniterBlock(World world, BlockPos pos, IBlockState blockState, EnumFacing facing) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if ((tile instanceof TileEntityRange)) {
+            TileEntityRange range = (TileEntityRange) tile;
+            if (manualIgnition.get() && !(range.isSelfIgnitingUpgrade())) {
+                if (!world.isRemote) {
+                    range.createSparks();
+                }
+            }
+        }
     }
 
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
