@@ -170,7 +170,7 @@ public class BlockRange extends Block {
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (worldIn.getTileEntity(pos) instanceof TileEntityRange) {
-            if (((TileEntityRange) worldIn.getTileEntity(pos)).isHeated()) {
+            if (((TileEntityRange) worldIn.getTileEntity(pos)).isFueled()) {
                 if (hearth) {
                     vanillaFurnaceParticles(stateIn, worldIn, pos, rand);
                 } else {

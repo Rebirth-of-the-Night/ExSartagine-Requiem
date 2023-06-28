@@ -41,7 +41,7 @@ public class GuiRange extends GuiContainer {
 
 		fade +=0.05f;
 		
-		if(range.isHeated())
+		if(range.isFueled())
 		{
 			GlStateManager.enableBlend();
 			GlStateManager.color(1f, 1f, 1f, (float)(Math.cos(Math.sin(fade))));

@@ -28,7 +28,6 @@ import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModBlockEntities;
 import subaraki.exsartagine.init.ModSounds;
-import subaraki.exsartagine.integration.Integration;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
@@ -105,6 +104,5 @@ public class ExSartagine {
     public void postInit(FMLPostInitializationEvent e) {
         Oredict.addToOreDict();
         ModRecipes.cacheWokInputs();
-        Integration.postInit();
     }
 }
