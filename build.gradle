@@ -80,6 +80,9 @@ dependencies {
     deobfCompile "curse.maven:athenaeum-284350:${athenaeum_file}"
     deobfCompile "curse.maven:dropt-284973:${dropt_file}"
     deobfCompile "curse.maven:pyrotech-306676:${pyrotech_file}"
+
+    deobfCompile "curse.maven:campfire-719464:4533381"
+    deobfProvided "curse.maven:fluidlogged-api-485654:4564413"
 }
 
 processResources {
