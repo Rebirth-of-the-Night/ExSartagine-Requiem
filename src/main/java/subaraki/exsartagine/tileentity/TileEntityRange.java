@@ -84,7 +84,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         }
     }
 
-    public void setCooking(boolean cooking) {
+    private void setCooking(boolean cooking) {
         setRangeConnectionsCooking(cooking);
         IBlockState state = world.getBlockState(pos);
         IBlockState newState = state.withProperty(BlockRange.HEATED,cooking);
@@ -239,7 +239,8 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void setFuelTimer(int timer){
         fuelTimer = timer;
-        if(maxFuelTimer==0){maxFuelTimer=fuelTimer;}
+        if(maxFuelTimer==0){ maxFuelTimer=fuelTimer; }
+        if(timer>0 && !isHeated()){ setCooking(true); }
     }
 
         @Override

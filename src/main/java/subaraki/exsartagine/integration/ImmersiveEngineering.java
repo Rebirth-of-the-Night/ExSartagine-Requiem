@@ -51,7 +51,6 @@ public class ImmersiveEngineering {
             if(redstone && energyAvailable >= consumption){
                 if(tileEntity.getFuelTimer()==0){tileEntity.setFuelTimer(1);}
                 tileEntity.setFuelTimer(tileEntity.getFuelTimer()+1);
-                tileEntity.setCooking(true);
                 return consumption;
             }
             return 0;
