@@ -69,6 +69,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.17.536'
+    deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-559"
 }
 
 processResources {
