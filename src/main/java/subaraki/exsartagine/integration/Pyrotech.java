@@ -11,7 +11,9 @@ public class Pyrotech {
     public static Block CAMPFIRE = null;
 
     public static void addPlaceables(){
-        ModRecipes.addPlaceable(CAMPFIRE, iBlockState -> (iBlockState.getValue(BlockCampfire.VARIANT)!=BlockCampfire.EnumType.LIT), false, true);
-        ModRecipes.addPlaceable(CAMPFIRE, iBlockState -> (iBlockState.getValue(BlockCampfire.VARIANT)==BlockCampfire.EnumType.LIT), true, true);
+        if(CAMPFIRE!=null) {
+            ModRecipes.addPlaceable(CAMPFIRE, iBlockState -> (iBlockState.getValue(BlockCampfire.VARIANT) != BlockCampfire.EnumType.LIT), false, true);
+            ModRecipes.addPlaceable(CAMPFIRE, iBlockState -> (iBlockState.getValue(BlockCampfire.VARIANT) == BlockCampfire.EnumType.LIT), true, true);
+        }
     }
 }
