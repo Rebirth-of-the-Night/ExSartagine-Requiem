@@ -58,6 +58,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
             // if no fuel was set and the tile is cooking
             if (fuelTimer == 0 && isHeated()) {
                 setCooking(false);
+                maxFuelTimer=0;
                 markDirty();
             }
         }
@@ -235,6 +236,13 @@ public class TileEntityRange extends TileEntity implements ITickable {
                 rangeExtension.setParentRange(pos);
             }
         }
+    }
+
+    public void setFuelTimer(int timer){
+        fuelTimer = timer;
+        if(maxFuelTimer<fuelTimer) { maxFuelTimer=fuelTimer; }
+        if(timer>0 && !isHeated()) { setCooking(true); }
+        markDirty();
     }
 
         @Override

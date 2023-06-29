@@ -91,6 +91,8 @@ dependencies {
 
     deobfCompile "curse.maven:campfire-719464:4533381"
     deobfProvided "curse.maven:fluidlogged-api-485654:4564413"
+
+    deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-559"
 }
 
 processResources {
