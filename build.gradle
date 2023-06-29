@@ -44,7 +44,7 @@ repositories {
     }
     maven { url "http://maven.amadornes.com/" }
     maven {
-        url "https://www.cursemaven.com"
+        url "https://cursemaven.com"
     }
     jcenter()
     maven {
@@ -85,7 +85,6 @@ dependencies {
     deobfCompile "curse.maven:dropt-284973:${dropt_file}"
     deobfCompile "curse.maven:pyrotech-306676:${pyrotech_file}"
 
-
     deobfCompile "curse.maven:future-mc-310059:3924863"
     compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 
@@ -93,6 +92,7 @@ dependencies {
     deobfProvided "curse.maven:fluidlogged-api-485654:4564413"
 
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-559"
+    deobfCompile "curse.maven:engineers-decor-313866:3783239"
 }
 
 processResources {
