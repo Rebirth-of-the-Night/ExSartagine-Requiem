@@ -238,6 +238,13 @@ public class TileEntityRange extends TileEntity implements ITickable {
         }
     }
 
+    public void setFuelTimer(int timer){
+        fuelTimer = timer;
+        if(maxFuelTimer<fuelTimer) { maxFuelTimer=fuelTimer; }
+        if(timer>0 && !isHeated()) { setCooking(true); }
+        markDirty();
+    }
+
         @Override
     public void markDirty() {
         super.markDirty();
