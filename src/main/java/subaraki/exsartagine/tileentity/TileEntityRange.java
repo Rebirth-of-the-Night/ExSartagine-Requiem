@@ -58,6 +58,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
             // if no fuel was set and the tile is cooking
             if (fuelTimer == 0 && isHeated()) {
                 setCooking(false);
+                maxFuelTimer=0;
                 markDirty();
             }
         }
