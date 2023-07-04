@@ -92,7 +92,7 @@ dependencies {
     deobfProvided "curse.maven:fluidlogged-api-485654:4564413"
 
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-559"
-    deobfCompile "curse.maven:engineers-decor-313866:3783239"
+    deobfProvided "curse.maven:engineers-decor-313866:3783239"
 }
 
 processResources {
