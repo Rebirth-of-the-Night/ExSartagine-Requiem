@@ -3,21 +3,21 @@
     "group": "exsartagine:bread",
     
     "ingredients": [
-        { 
+        {
             "ore": "foodDoughBread",
             "type": "forge:ore_dict"
         },
         {
-            "ore": "cropVegetable",
+            "ore": "listAllMeatRaw",
             "type": "forge:ore_dict"
         },
         {
-            "ore": "cropVegetable",
+            "ore": "listAllMeatRaw",
             "type": "forge:ore_dict"
         }
     ],
     "result": {
-        "item": "exsartagine:bread_meat",
-        "count": 6
+        "item": "exsartagine:bread_meat_raw",
+        "count": 2
     }
 }
