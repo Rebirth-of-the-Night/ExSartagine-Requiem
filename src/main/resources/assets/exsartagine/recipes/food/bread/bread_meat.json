@@ -3,21 +3,47 @@
     "group": "exsartagine:bread",
     
     "ingredients": [
-        { 
+        {
             "ore": "foodDoughBread",
             "type": "forge:ore_dict"
         },
-        {
-            "ore": "cropVegetable",
-            "type": "forge:ore_dict"
-        },
-        {
-            "ore": "cropVegetable",
-            "type": "forge:ore_dict"
-        }
+        [
+            {
+                "item": "minecraft:porkchop"
+            },
+            {
+                "item": "minecraft:beef"
+            },
+            {
+                "item": "minecraft:chicken"
+            },
+            {
+                "item": "minecraft:rabbit"
+            },
+            {
+                "item": "minecraft:mutton"
+            }
+        ],
+        [
+            {
+                "item": "minecraft:porkchop"
+            },
+            {
+                "item": "minecraft:beef"
+            },
+            {
+                "item": "minecraft:chicken"
+            },
+            {
+                "item": "minecraft:rabbit"
+            },
+            {
+                "item": "minecraft:mutton"
+            }
+        ]
     ],
     "result": {
-        "item": "exsartagine:bread_meat",
+        "item": "exsartagine:bread_meat_raw",
         "count": 6
     }
 }

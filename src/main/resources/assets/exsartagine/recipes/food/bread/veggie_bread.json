@@ -4,8 +4,8 @@
     
     "ingredients": [
         {
-           "ore": "foodDoughBread",
-           "type": "forge:ore_dict"
+            "ore": "foodDoughBread",
+            "type": "forge:ore_dict"
         },
         {
             "ore": "cropVegetable", 
@@ -17,6 +17,7 @@
         }
     ],
     "result": {
-        "item": "exsartagine:veggie_bread"
+        "item": "exsartagine:veggie_bread_raw",
+        "count": 2
     }
 }
