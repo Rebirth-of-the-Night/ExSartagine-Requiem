@@ -176,6 +176,9 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
             }
         }
         processFluids();
+
+        soiledTime = Math.max(cached.getDirtyTime(), 0);
+        markDirty();
     }
 
     public void processFluids() {

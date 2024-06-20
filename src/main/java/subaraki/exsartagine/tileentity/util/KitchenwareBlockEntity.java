@@ -14,6 +14,7 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
 
     protected int progress = 0;
     protected int clientCookTime = 0;
+    protected int soiledTime = 0;
 
     //check if the block below is hot
     public final boolean activeHeatSourceBelow() {
@@ -26,6 +27,10 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
         return progress;
     }
 
+    public int getSoiledTime() {
+        return this.soiledTime;
+    }
+
     public final int getClientCookTime() {
         return clientCookTime;
     }
@@ -35,6 +40,7 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
         super.writeToNBT(compound);
         compound.setInteger("progress", progress);
         compound.setInteger("cooktime", clientCookTime);
+        compound.setInteger("soiledtime", soiledTime);
         return compound;
     }
 
@@ -43,6 +49,7 @@ public abstract class KitchenwareBlockEntity extends TileEntity {
         super.readFromNBT(compound);
         this.progress = compound.getInteger("progress");
         this.clientCookTime = compound.getInteger("cooktime");
+        this.soiledTime = compound.getInteger("soiledtime");
     }
 
     /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////

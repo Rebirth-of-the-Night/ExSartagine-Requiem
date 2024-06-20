@@ -12,12 +12,14 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
 
     private final Ingredient ingredient;
     private final ItemStack output;
+    private final int dirtyTime;
 
     private static final int INPUT = 0;
 
-    public SmelterRecipe(Ingredient input, ItemStack output) {
-        ingredient = input;
+    public SmelterRecipe(Ingredient input, ItemStack output, int dirtyTime) {
+        this.ingredient = input;
         this.output = output;
+        this.dirtyTime = dirtyTime;
     }
 
     @Override
@@ -43,6 +45,10 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
     @Override
     public int getCookTime() {
         return 199;
+    }
+
+    public int getDirtyTime() {
+        return dirtyTime;
     }
 
     @Override

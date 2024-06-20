@@ -16,19 +16,16 @@ public class PotRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>
     private final Ingredient ingredient;
     private final FluidStack inputFluid;
     private final ItemStack output;
-    private final int time;
+    private final int time, dirtyTime;
 
     private static final int INPUT = 0;
 
-    public PotRecipe(Ingredient input, FluidStack inputFluid, ItemStack output, int time) {
+    public PotRecipe(Ingredient input, FluidStack inputFluid, ItemStack output, int time, int dirtyTime) {
         this.ingredient = input;
         this.inputFluid = inputFluid;
         this.output = output;
         this.time = time;
-    }
-
-    public PotRecipe(Ingredient input, ItemStack output) {
-        this(input, new FluidStack(FluidRegistry.WATER, 50), output, 125);
+        this.dirtyTime = dirtyTime;
     }
 
     @Override
@@ -64,6 +61,10 @@ public class PotRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>
     @Override
     public int getCookTime() {
         return time;
+    }
+
+    public int getDirtyTime() {
+        return dirtyTime;
     }
 
     @Override

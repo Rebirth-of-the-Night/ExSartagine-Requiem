@@ -99,6 +99,8 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 				}
 			}
 		}
+
+		soiledTime = Math.max(cached.getDirtyTime(), 0);
 	}
 
 	@Override

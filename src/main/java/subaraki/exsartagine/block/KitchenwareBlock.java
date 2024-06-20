@@ -19,6 +19,7 @@ import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 public abstract class KitchenwareBlock extends Block {
 
     public static final PropertyBool LEGS = PropertyBool.create("legs");
+    public static final PropertyBool DIRTY = PropertyBool.create("dirty");
 
     public KitchenwareBlock(Material materialIn) {
         super(materialIn);
@@ -43,7 +44,16 @@ public abstract class KitchenwareBlock extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this,LEGS);
+        return new BlockStateContainer(this, LEGS, DIRTY);
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (!(tile instanceof KitchenwareBlockEntity)) {
+            return state;
+        }
+        return state.withProperty(DIRTY, ((KitchenwareBlockEntity) tile).getSoiledTime() > 0);
     }
 
     @Override

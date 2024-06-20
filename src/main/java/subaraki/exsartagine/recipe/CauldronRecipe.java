@@ -7,12 +7,8 @@ import subaraki.exsartagine.init.RecipeTypes;
 
 public class CauldronRecipe extends PotRecipe {
 
-    public CauldronRecipe(Ingredient input, FluidStack inputFluid, ItemStack output, int time) {
-        super(input, inputFluid, output, time);
-    }
-
-    public CauldronRecipe(Ingredient input, ItemStack output) {
-        super(input, output);
+    public CauldronRecipe(Ingredient input, FluidStack inputFluid, ItemStack output, int time, int dirtyTime) {
+        super(input, inputFluid, output, time, dirtyTime);
     }
 
     @Override

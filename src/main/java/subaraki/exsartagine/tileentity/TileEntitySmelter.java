@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
-import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.util.ConfigHandler;
@@ -50,19 +49,25 @@ public class TileEntitySmelter extends TileEntityCooker {
 						getOutput().grow(1);
 						getInput().shrink(1);
 					}
+
+					soiledTime = 0; // TODO set soiled time once recipe logic is fixed
 				}
 			}
 			progress = 0;
-			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
+
+			markDirty();
 		}
 
 		if(activeHeatSourceBelow())
 		{
 			if(getInput().getCount() > 0 &&
-					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))
+					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty())) {
 				progress++;
-			else if (progress > 0)
+				markDirty();
+			} else if (progress > 0) {
 				progress--;
+				markDirty();
+			}
 		}
 		
 		if(!world.isRemote)

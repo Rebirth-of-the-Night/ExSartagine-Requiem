@@ -123,6 +123,7 @@ public class TileEntityPot extends TileEntityCooker {
                 if (fluid != null && fluid.amount > 0) {
                     fluidTank.drain(fluid.amount, true);
                 }
+                soiledTime = Math.max(recipe.getDirtyTime(), 0);
             } else {
                 progress++;
             }

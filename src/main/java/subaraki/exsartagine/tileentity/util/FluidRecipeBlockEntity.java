@@ -85,6 +85,7 @@ public abstract class FluidRecipeBlockEntity<T extends IItemHandler,U extends IF
         progress = 0;
         processItems();
         processFluids();
+
     }
 
     public void start() {

@@ -107,7 +107,7 @@ public class BlockSmelter extends HeatableGuiBlock {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FULL, FACING,LEGS);
+		return new BlockStateContainer(this, FULL, FACING, LEGS, DIRTY);
 	}
 	@Override
 	public int getMetaFromState(IBlockState state)

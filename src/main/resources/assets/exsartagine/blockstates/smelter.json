@@ -1,22 +1,29 @@
 {
-  "multipart": [
-    {   "when": { "facing": "north" },
-      "apply": { "model": "exsartagine:smelter","y": 0 }
+  "forge_marker": 1,
+  "defaults": {
+    "model": "exsartagine:smelter"
+  },
+  "variants": {
+    "facing": {
+      "north": { "y": 0 },
+      "east": { "y": 90 },
+      "south": { "y": 180 },
+      "west": { "y": 270 }
     },
-    {   "when": { "facing": "east" },
-      "apply": { "model": "exsartagine:smelter","y": 90 }
+    "legs": {
+      "true": { "submodel": "exsartagine:legs" },
+      "false": {}
     },
-    {   "when": { "facing": "south" },
-      "apply": { "model": "exsartagine:smelter","y": 180 }
+    "full": {
+      "true": { "submodel": "exsartagine:lava" }
     },
-    {   "when": { "facing": "west" },
-      "apply": { "model": "exsartagine:smelter","y": 270 }
-    },
-    {   "when": { "legs": "true" },
-      "apply": { "model": "exsartagine:legs"}
-    },
-    {   "when": { "full": "true" },
-      "apply": { "model": "exsartagine:lava"}
+    "dirty": {
+      "true": {
+        "textures": {
+          "0": "exsartagine:block/smelter_dirty"
+        }
+      },
+      "false": {}
     }
-  ]
+  }
 }

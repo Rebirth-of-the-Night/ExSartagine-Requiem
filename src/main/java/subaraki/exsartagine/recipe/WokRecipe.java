@@ -15,13 +15,14 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
     private final List<Ingredient> ingredients;
     private final FluidStack fluid;
     private final List<ItemStack> outputs;
-    private final int flips;
+    private final int flips, dirtyTime;
 
-    public WokRecipe(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> outputs, int flips) {
+    public WokRecipe(List<Ingredient> inputs, FluidStack fluid, List<ItemStack> outputs, int flips, int dirtyTime) {
         ingredients = inputs;
         this.fluid = fluid;
         this.outputs = outputs;
         this.flips = flips;
+        this.dirtyTime = dirtyTime;
     }
 
     @Override
@@ -78,6 +79,10 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
 
     public int getFlips() {
         return flips;
+    }
+
+    public int getDirtyTime() {
+        return dirtyTime;
     }
 
     @Override
