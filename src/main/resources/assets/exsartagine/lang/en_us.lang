@@ -6,6 +6,8 @@ tile.exsartagine.smelter.name=Smelter
 
 tile.exsartagine.pot.name=Cooking Pot
 pot.gui=Cooking Pot
+tile.exsartagine.cauldron.name=Cauldron
+cauldron.gui=Cauldron
 
 range.gui=Stove
 tile.exsartagine.range.name=Stove

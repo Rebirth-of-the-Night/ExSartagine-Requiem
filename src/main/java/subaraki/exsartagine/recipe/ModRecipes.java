@@ -30,6 +30,7 @@ import subaraki.exsartagine.tileentity.util.BlockInfo;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class ModRecipes {
 
@@ -41,7 +42,8 @@ public class ModRecipes {
         i++;
         addRecipe(name,recipe);
     }
-        public static <I extends IItemHandler, R extends CustomRecipe<I>> void addRecipe(ResourceLocation name, R recipe) {
+
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> void addRecipe(ResourceLocation name, R recipe) {
         IRecipeType<R> type = (IRecipeType<R>) recipe.getType();
         Map<ResourceLocation,CustomRecipe<?>> recs = recipes.get(type);
 
@@ -60,7 +62,19 @@ public class ModRecipes {
     }
 
     public static void addPotRecipe(Ingredient input, ItemStack result) {
-        addRecipe(result.getItem().getRegistryName(),new PotRecipe(input, result));
+        addRecipe(result.getItem().getRegistryName(), new PotRecipe(input, result));
+    }
+
+    public static void addPotRecipe(Ingredient input, FluidStack inputFluid, ItemStack result, int time) {
+        addRecipe(result.getItem().getRegistryName(), new PotRecipe(input, inputFluid, result, time));
+    }
+
+    public static void addCauldronRecipe(Ingredient input, ItemStack result) {
+        addRecipe(result.getItem().getRegistryName(), new CauldronRecipe(input, result));
+    }
+
+    public static void addCauldronRecipe(Ingredient input, FluidStack inputFluid, ItemStack result, int time) {
+        addRecipe(result.getItem().getRegistryName(), new CauldronRecipe(input, inputFluid, result, time));
     }
 
     static int i = 0;
@@ -110,6 +124,23 @@ public class ModRecipes {
         return changed;
     }
 
+    public static boolean removeCauldronRecipe(ItemStack output) {
+        return getRecipes(RecipeTypes.CAULDRON).removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+
+    public static boolean removeCauldronRecipe(ItemStack input, ItemStack output) {
+        return getRecipes(RecipeTypes.CAULDRON).removeIf(r -> r.itemMatch(new ItemStackHandler(NonNullList.from(input))) && ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
+    }
+
+    public static boolean removeCauldronRecipe(Ingredient input, ItemStack output) {
+        boolean changed = false;
+        for (ItemStack i : input.getMatchingStacks()) {
+            if (removeCauldronRecipe(i, output))
+                changed = true;
+        }
+        return changed;
+    }
+
     public static Collection<WokRecipe> getWokRecipes() {
         return getRecipes(RecipeTypes.WOK);
     }
@@ -145,38 +176,29 @@ public class ModRecipes {
     
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> ItemStack getCookingResult(I handler, IRecipeType<R> type) {
-        for (CustomRecipe<I> recipe : getRecipes(type)) {
-            if (recipe.itemMatch(handler))
-                return recipe.getResult(handler);
-        }
-        return ItemStack.EMPTY;
+        CustomRecipe<I> recipe = findRecipe(handler, type);
+        return recipe != null ? recipe.getResult(handler) : ItemStack.EMPTY;
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> List<ItemStack> getCookingResults(I handler, IRecipeType<R> type) {
-        for (CustomRecipe<I> recipe : getRecipes(type)) {
-            if (recipe.itemMatch(handler))
-                return recipe.getResults(handler);
-        }
-        return new ArrayList<>();
+        CustomRecipe<I> recipe = findRecipe(handler, type);
+        return recipe != null ? recipe.getResults(handler) : new ArrayList<>();
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {
-        Collection<R> recipes = getRecipes(type);
-        for (CustomRecipe<I> recipe : recipes) {
-            if (recipe.itemMatch(handler))
-                return recipe;
-        }
-        return null;
+        return flattenRecipes(type)
+                .filter(r -> r.itemMatch(handler))
+                .findFirst()
+                .orElse(null);
     }
 
     public static <I extends IItemHandler, F extends IFluidHandler, FR extends CustomFluidRecipe<I,F>>
     FR findFluidRecipe(I handler, F fluidHandler, IRecipeType<FR> type) {
-        Collection<FR> recipes = getRecipes(type);
-        for (FR recipe : recipes) {
-            if (recipe.match(handler,fluidHandler))
-                return recipe;
-        }
-        return null;
+        return flattenRecipes(type)
+                .map(r -> (FR)r)
+                .filter(r -> r.match(handler, fluidHandler))
+                .findFirst()
+                .orElse(null);
     }
 
     public static <I extends IItemHandler, F extends IFluidHandler> KettleRecipe findKettleRecipe(I handler,F fluidHandler) {
@@ -184,7 +206,7 @@ public class ModRecipes {
     }
 
     public static <I extends IItemHandler,T extends CustomRecipe<I>> boolean hasResult(I handler, IRecipeType<T> type) {
-        return getRecipes(type).stream().anyMatch(customRecipe -> customRecipe.itemMatch(handler));
+        return flattenRecipes(type).anyMatch(customRecipe -> customRecipe.itemMatch(handler));
     }
 
     public static void addPlaceable(Block block,boolean hot,boolean legs) {
@@ -228,6 +250,12 @@ public class ModRecipes {
             return map.values();
         }
         return Collections.emptyList();
+    }
+
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> Stream<CustomRecipe<I>> flattenRecipes(IRecipeType<R> type) {
+        return Stream.concat(
+                getRecipes(type).stream(),
+                type.getParents().stream().flatMap(t -> flattenRecipes((IRecipeType<? extends CustomRecipe<I>>)t))); // not a safe cast!
     }
 
     @SuppressWarnings("unchecked")
@@ -364,12 +392,9 @@ public class ModRecipes {
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> NonNullList<ItemStack> getRemainingItems(I craftMatrix, World worldIn, IRecipeType<R> type) {
 
-        Collection<R> recipes = getRecipes(type);
-
-        for (R irecipe : recipes) {
-            if (irecipe.itemMatch(craftMatrix)) {
-                return irecipe.getRemainingItems(craftMatrix);
-            }
+        CustomRecipe<I> recipe = findRecipe(craftMatrix, type);
+        if (recipe != null) {
+            return recipe.getRemainingItems(craftMatrix);
         }
 
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);

@@ -28,6 +28,7 @@ public class ExSartagineItems {
 	public static Item wok;
 	public static Item smelter;
 	public static Item pot;
+	public static Item cauldron;
 	public static Item range;
 	public static Item range_extended;
 	public static Item hearth;
@@ -102,6 +103,7 @@ public class ExSartagineItems {
 		wok = new ItemBlock(ExSartagineBlocks.wok).setRegistryName(ExSartagineBlocks.wok.getRegistryName()).setCreativeTab(pots);
 		smelter = new ItemBlock(ExSartagineBlocks.smelter).setRegistryName(ExSartagineBlocks.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
+		cauldron = new ItemBlock(ExSartagineBlocks.cauldron).setRegistryName(ExSartagineBlocks.cauldron.getRegistryName()).setCreativeTab(pots);
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
 		range_extended = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
 

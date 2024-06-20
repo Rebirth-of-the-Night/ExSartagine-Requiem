@@ -1,24 +1,17 @@
 package subaraki.exsartagine.gui.client.screen;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.RenderUtil;
 import subaraki.exsartagine.gui.client.SmallButton;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.ClearTankPacket;
@@ -90,25 +83,9 @@ public class KettleScreen extends GuiContainer {
         this.drawTexturedModalRect(i + 85, j + 34, 0, 182, (int) progress, 15); //Arrow
 
         //Draw fluid
-            renderFluid(mc, i + FL_INPUT_X, j + FL_Y - 2, kettle.fluidInputTank);
-            renderFluid(mc, i + FL_OUTPUT_X, j + FL_Y - 2, kettle.fluidOutputTank);
+        RenderUtil.renderFluidIntoGui(mc, i + FL_INPUT_X, j + FL_Y - 2, FL_WIDTH, FL_HEIGHT, kettle.fluidInputTank);
+        RenderUtil.renderFluidIntoGui(mc, i + FL_OUTPUT_X, j + FL_Y - 2, FL_WIDTH, FL_HEIGHT, kettle.fluidOutputTank);
     }
-
-    public void renderFluid(Minecraft minecraft, final int xPosition, final int yPosition,FluidTank fluidTank) {
-        GlStateManager.enableBlend();
-        GlStateManager.enableAlpha();
-
-        drawFluid(minecraft, xPosition, yPosition, fluidTank);
-
-        GlStateManager.color(1, 1, 1, 1);
-
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
-    }
-
-    private static final int TEX_WIDTH = 16;
-    private static final int TEX_HEIGHT = 16;
-    private static final int MIN_FLUID_HEIGHT = 1; // ensure tiny amounts of fluid are still visible
 
     private static final int FL_WIDTH = 7;
     private static final int FL_HEIGHT = 52;
@@ -116,96 +93,6 @@ public class KettleScreen extends GuiContainer {
     private static final int FL_INPUT_X = 77;
     private static final int FL_OUTPUT_X = 108;
 
-    private void drawFluid(Minecraft minecraft, final int xPosition, final int yPosition, FluidTank fluidTank) {
-        FluidStack fluidStack = fluidTank.getFluid();
-        if (fluidStack == null) {
-            return;
-        }
-        Fluid fluid = fluidStack.getFluid();
-        if (fluid == null) {
-            return;
-        }
-
-        TextureAtlasSprite fluidStillSprite = getStillFluidSprite(minecraft, fluid);
-
-        int fluidColor = fluid.getColor(fluidStack);
-
-        int scaledAmount = (fluidStack.amount * FL_HEIGHT) / fluidTank.getCapacity();
-        if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
-            scaledAmount = MIN_FLUID_HEIGHT;
-        }
-        if (scaledAmount > height) {
-            scaledAmount = height;
-        }
-
-        drawTiledSprite(minecraft, xPosition, yPosition, FL_WIDTH, FL_HEIGHT, fluidColor, scaledAmount, fluidStillSprite);
-    }
-
-    private void drawTiledSprite(Minecraft minecraft, final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
-        minecraft.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        setGLColorFromInt(color);
-
-        final int xTileCount = tiledWidth / TEX_WIDTH;
-        final int xRemainder = tiledWidth - (xTileCount * TEX_WIDTH);
-        final int yTileCount = scaledAmount / TEX_HEIGHT;
-        final int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
-
-        final int yStart = yPosition + tiledHeight;
-
-        for (int xTile = 0; xTile <= xTileCount; xTile++) {
-            for (int yTile = 0; yTile <= yTileCount; yTile++) {
-                int width = (xTile == xTileCount) ? xRemainder : TEX_WIDTH;
-                int height = (yTile == yTileCount) ? yRemainder : TEX_HEIGHT;
-                int x = xPosition + (xTile * TEX_WIDTH);
-                int y = yStart - ((yTile + 1) * TEX_HEIGHT);
-                if (width > 0 && height > 0) {
-                    int maskTop = TEX_HEIGHT - height;
-                    int maskRight = TEX_WIDTH - width;
-
-                    drawTextureWithMasking(x, y, sprite, maskTop, maskRight, 100);
-                }
-            }
-        }
-    }
-
-    private static TextureAtlasSprite getStillFluidSprite(Minecraft minecraft, Fluid fluid) {
-        TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
-        ResourceLocation fluidStill = fluid.getStill();
-        TextureAtlasSprite fluidStillSprite = null;
-        if (fluidStill != null) {
-            fluidStillSprite = textureMapBlocks.getTextureExtry(fluidStill.toString());
-        }
-        if (fluidStillSprite == null) {
-            fluidStillSprite = textureMapBlocks.getMissingSprite();
-        }
-        return fluidStillSprite;
-    }
-
-    private static void setGLColorFromInt(int color) {
-        float red = (color >> 16 & 0xFF) / 255.0F;
-        float green = (color >> 8 & 0xFF) / 255.0F;
-        float blue = (color & 0xFF) / 255.0F;
-
-        GlStateManager.color(red, green, blue, 1.0F);
-    }
-
-    private static void drawTextureWithMasking(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {
-        double uMin = textureSprite.getMinU();
-        double uMax = textureSprite.getMaxU();
-        double vMin = textureSprite.getMinV();
-        double vMax = textureSprite.getMaxV();
-        uMax = uMax - (maskRight / 16.0 * (uMax - uMin));
-        vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferBuilder.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
-        bufferBuilder.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
-        bufferBuilder.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
-        bufferBuilder.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
-        tessellator.draw();
-    }
 
     public List<String> getFluidTooltip(FluidTank fluidTank) {
         List<String> tooltip = new ArrayList<>();

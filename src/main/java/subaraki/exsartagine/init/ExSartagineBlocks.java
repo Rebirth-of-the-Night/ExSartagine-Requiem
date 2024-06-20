@@ -6,10 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.registries.IForgeRegistry;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.block.*;
-import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.util.ConfigHandler;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -18,6 +16,7 @@ public class ExSartagineBlocks {
 	public static Block wok;
 	public static Block smelter;
 	public static Block pot;
+	public static Block cauldron;
 	public static Block range;
 	public static Block range_extended;
 	public static Block range_extended_lit;
@@ -35,7 +34,8 @@ public class ExSartagineBlocks {
 	public static void load(IForgeRegistry<Block> registry){
 		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
-		pot = new BlockPot();
+		pot = new BlockPot(BlockPot.Variant.POT).setRegistryName("pot").setTranslationKey(ExSartagine.MODID+".pot");
+		cauldron = new BlockPot(BlockPot.Variant.CAULDRON).setRegistryName("cauldron").setTranslationKey(ExSartagine.MODID+".cauldron");
 		range = new BlockRange(() -> ConfigHandler.range_requires_ignition,3,false,1).setRegistryName("range").setTranslationKey(ExSartagine.MODID + ".range");
 		range_extended = new BlockRangeExtension(false,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
@@ -52,6 +52,7 @@ public class ExSartagineBlocks {
 		registry.register(wok);
 		registry.register(smelter);
 		registry.register(pot);
+		registry.register(cauldron);
 		registry.register(range);
 		registry.register(range_extended);
 		registry.register(range_extended_lit);

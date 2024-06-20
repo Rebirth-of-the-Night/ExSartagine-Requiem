@@ -5,85 +5,113 @@ import java.util.Random;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModSounds;
+import subaraki.exsartagine.particle.ParticleBoilingBubble;
 import subaraki.exsartagine.tileentity.TileEntityPot;
+import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
 
 public class BlockPot extends HeatableGuiBlock {
 
-	protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.15D, 0.0D, 0.15D, 0.85D, 0.6D, 0.85D);
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	public static final PropertyBool FULL = PropertyBool.create("full");
 
-	public BlockPot() {
-		super(Material.ROCK, Reference.POT);
+	public enum Variant {
+		POT(Material.ROCK, SoundType.STONE, Reference.POT, new AxisAlignedBB(0.15D, 0.0D, 0.15D, 0.85D, 0.6D, 0.85D)),
+		CAULDRON(Material.IRON, SoundType.METAL, Reference.CAULDRON, new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.525D, 0.9375D));
+
+        public final Material material;
+        public final SoundType soundType;
+		public final int guiId;
+        public final AxisAlignedBB boundingBox;
+
+        Variant(Material material, SoundType soundType, int guiId, AxisAlignedBB boundingBox) {
+            this.material = material;
+            this.soundType = soundType;
+			this.guiId = guiId;
+            this.boundingBox = boundingBox;
+        }
+	}
+
+	private final Variant variant;
+
+	public BlockPot(Variant variant) {
+		super(variant.material, variant.guiId);
+		this.variant = variant;
 
 		setHardness(8f);
-		setSoundType(SoundType.STONE);
+		setSoundType(variant.soundType);
 		setCreativeTab(ExSartagineItems.pots);
 		setHarvestLevel("pickaxe", 1);
-		setTranslationKey(ExSartagine.MODID+".pot");
-		setRegistryName("pot");
 		setHardness(3.5f);
-		this.setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.NORTH).withProperty(FULL, false));
+		this.setDefaultState(getDefaultState().withProperty(FACING, EnumFacing.NORTH));
+	}
 
+	public Variant getVariant() {
+		return variant;
 	}
 
 	/////////////////rendering//////////////
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return AABB;
+		return variant.boundingBox;
 	}
 
-	///////////////TE Stuff//////////////////////
+	@Override
+	public BlockRenderLayer getRenderLayer() {
+		return variant == Variant.CAULDRON ? BlockRenderLayer.CUTOUT : BlockRenderLayer.SOLID;
+	}
+
+///////////////TE Stuff//////////////////////
 
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		ItemStack stack = playerIn.getHeldItem(hand);
-		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null)) {
-			IFluidHandlerItem iFluidHandlerItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,null);
-			FluidStack drained = iFluidHandlerItem.drain(new FluidStack(FluidRegistry.WATER,1000),false);
-			if (drained != null && drained.amount >= 0) {
-				TileEntityPot pot = ((TileEntityPot) worldIn.getTileEntity(pos));
-				FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(stack, pot.fluidTank, new InvWrapper(playerIn.inventory), drained.amount, playerIn, true);
-				if (fluidActionResult.isSuccess()) {
-					playerIn.setHeldItem(hand,fluidActionResult.getResult());
-					((TileEntityPot) worldIn.getTileEntity(pos)).replenishWater();
-					worldIn.notifyBlockUpdate(pos, state, getDefaultState(), 3);
-					onBlockAdded(worldIn, pos, state); //assure activation of any heating source
-					return true;
-				}
-			}
-		}
-		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileEntityPot && ((TileEntityPot)tile).fillFromItem(player, hand))
+			return true;
+
+		return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity)
+	{
+		if (entity.posY + 0.0625D < pos.getY() + variant.boundingBox.maxY || !(entity instanceof EntityItem))
+			return;
+
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileEntityPot)
+			((TileEntityPot)tile).pickUpItem((EntityItem)entity);
+	}
+
+	@Override
+	public void fillWithRain(World world, BlockPos pos) {
+		if(ConfigHandler.pot_rain_fill_chance <= 0 || (ConfigHandler.pot_rain_fill_chance < 100 && world.rand.nextInt(100) >= ConfigHandler.pot_rain_fill_chance))
+			return;
+
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileEntityPot)
+			((TileEntityPot)tile).fillWithRain();
 	}
 
 	@Override
@@ -112,17 +140,49 @@ public class BlockPot extends HeatableGuiBlock {
 		double d1 = (double)pos.getY() + 0.6D;
 		double d2 = (double)pos.getZ() + 0.5D;
 
-		if(worldIn.getTileEntity(pos) instanceof TileEntityPot)
-		{
-			if(((TileEntityPot)worldIn.getTileEntity(pos)).activeHeatSourceBelow() && !((TileEntityPot)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty() && ((TileEntityPot)worldIn.getTileEntity(pos)).getWaterLevel() > 0)
-			{
-				for(int i = 0 ; i < 10 ; i++)
-					worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, -0.02D, 0.0D, new int[1]);
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if(!(tile instanceof TileEntityPot))
+			return;
 
-				worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, d0+(RANDOM.nextDouble()/3 - 0.15), d1, d2+(RANDOM.nextDouble()/3 - 0.15), 0.0D, 0.5D, 0.0D);
-				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
-				worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1, false);
-			}
+		TileEntityPot pot = (TileEntityPot)tile;
+		if(!pot.activeHeatSourceBelow() || pot.getInventory().getStackInSlot(0).isEmpty() || pot.getOrCreateRecipe() == null)
+			return;
+
+		worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
+
+		FluidStack fluid = pot.getStoredFluid();
+		if(fluid == null)
+		{
+			worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1, false);
+			return;
+		}
+		worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1, false);
+
+		if (fluid.getFluid().getDensity(fluid) >= 1800) { // pretty much arbitrary threshold; should exclude lava and molten metals
+			return;
+		}
+
+		int col = fluid.getFluid().getColor(fluid);
+		float r = ((col >> 16) & 0xFF) / 255F;
+		float g = ((col >> 8) & 0xFF) / 255F;
+		float b = (col & 0xFF) / 255F;
+
+		double bh;
+		switch (variant) {
+			case POT:
+				bh = d1 - 0.35;
+				for(int i = 2 + RANDOM.nextInt(2) ; i > 0 ; i--)
+					Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBoilingBubble(worldIn,
+							d0+(RANDOM.nextDouble()*0.3 - 0.15), bh+RANDOM.nextDouble()*0.001, d2+(RANDOM.nextDouble()*0.3 - 0.15), r, g, b));
+				break;
+			case CAULDRON:
+				bh = d1 - 0.2;
+				for(int i = 4 + RANDOM.nextInt(4) ; i > 0 ; i--) {
+					double ang = RANDOM.nextDouble() * 2.0 * Math.PI, rad = RANDOM.nextDouble() * 0.35;
+					Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBoilingBubble(worldIn,
+							d0+rad*Math.cos(ang), bh+RANDOM.nextDouble()*0.001, d2+rad*Math.sin(ang), r, g, b));
+				}
+				break;
 		}
 	}
 
@@ -131,14 +191,13 @@ public class BlockPot extends HeatableGuiBlock {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FULL, FACING,LEGS);
+		return new BlockStateContainer(this, FACING, LEGS);
 	}
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
-		i = i | ((state.getValue(FULL) ? 1 : 0) << 2);
 		i += super.getMetaFromState(state);
 		return i;
 	}
@@ -152,8 +211,7 @@ public class BlockPot extends HeatableGuiBlock {
 			enumfacing = EnumFacing.NORTH;
 		}
 
-		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(FULL, (meta & 0b100) > 0)
-				.withProperty(LEGS,(meta & LEGS_BIT) != 0);
+		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(LEGS,(meta & LEGS_BIT) != 0);
 	}
 
 	@Override

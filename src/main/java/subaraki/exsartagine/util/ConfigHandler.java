@@ -19,4 +19,15 @@ public class ConfigHandler {
 	@Config.Name("hearth_requires_manual_ignition")
 	@Config.Comment("Does the hearth require manual ignition before it will start")
 	public static boolean hearth_requires_ignition = true;
+
+	@Config.Name("pot_rain_fill_chance")
+	@Config.Comment("The chance for the pot or cauldron to be filled with rainwater on each random tick. Expressed in percent. [0% - 100%]")
+	@Config.RangeInt(min = 0, max = 100)
+	public static int pot_rain_fill_chance = 5;
+
+	@Config.Name("pot_rain_fill_amount")
+	@Config.Comment("The amount of rainwater collected by the pot or cauldron on each successful random tick")
+	@Config.RangeInt(min = 0)
+	public static int pot_rain_fill_amount = 300;
+
 }

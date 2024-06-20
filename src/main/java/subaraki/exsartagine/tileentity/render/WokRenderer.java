@@ -2,14 +2,9 @@ package subaraki.exsartagine.tileentity.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import subaraki.exsartagine.RenderUtil;
@@ -34,7 +29,7 @@ public class WokRenderer extends TileEntitySpecialRenderer<WokBlockEntity> {
         if (stack != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(-.2,-.85,-.2);
-            RenderUtil.renderFluidLevel(stack,x,y,z);
+            RenderUtil.renderFluidLevel(stack, x, y, z, .28, RenderUtil.PlanarShape.QUAD);
             GlStateManager.popMatrix();
         }
     }

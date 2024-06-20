@@ -12,6 +12,7 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -33,15 +34,50 @@ import com.google.common.collect.Sets;
 @ZenClass("mods." + ExSartagine.MODID + ".ExSartagine")
 public class CraftTweakerSupport {
 
+    /**
+     * Adds a pot recipe that consumes 50 mB of water
+     * @param input the input item
+     * @param output the output item
+     * @param time the processing time in ticks, which defaults to 200
+     */
+    @ZenMethod
+    public static void addPotRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 200L) int time) {
+        CraftTweakerAPI.apply(new AddPotAction(CraftTweakerMC.getIngredient(input), new FluidStack(FluidRegistry.WATER, 50), CraftTweakerMC.getItemStack(output), time));
+    }
 
     /**
      * Adds a pot recipe
-     * @param input
-     * @param output
+     * @param input the input item
+     * @param inputFluid the input fluid
+     * @param output the output item
+     * @param time the processing time in ticks, which defaults to 200
      */
     @ZenMethod
-    public static void addPotRecipe(IIngredient input, IItemStack output) {
-        CraftTweakerAPI.apply(new AddPotAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output)));
+    public static void addPotRecipe(IIngredient input, ILiquidStack inputFluid, IItemStack output, @Optional(valueLong = 200L) int time) {
+        CraftTweakerAPI.apply(new AddPotAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getLiquidStack(inputFluid), CraftTweakerMC.getItemStack(output), time));
+    }
+
+    /**
+     * Adds a cauldron recipe
+     * @param input the input item
+     * @param inputFluid the input fluid
+     * @param output the output item
+     * @param time the processing time in ticks, which defaults to 200
+     */
+    @ZenMethod
+    public static void addCauldronRecipe(IIngredient input, ILiquidStack inputFluid, IItemStack output, @Optional(valueLong = 200L) int time) {
+        CraftTweakerAPI.apply(new AddCauldronAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getLiquidStack(inputFluid), CraftTweakerMC.getItemStack(output), time));
+    }
+
+    /**
+     * Adds a cauldron recipe that consumes 50 mB of water
+     * @param input the input item
+     * @param output the output item
+     * @param time the processing time in ticks, which defaults to 200
+     */
+    @ZenMethod
+    public static void addCauldronRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 200L) int time) {
+        CraftTweakerAPI.apply(new AddCauldronAction(CraftTweakerMC.getIngredient(input), new FluidStack(FluidRegistry.WATER, 50), CraftTweakerMC.getItemStack(output), time));
     }
 
     /**
@@ -61,6 +97,25 @@ public class CraftTweakerSupport {
     @ZenMethod
     public static void removePotRecipe(IIngredient input, IItemStack output) {
         CraftTweakerAPI.apply(new RemovePotAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output)));
+    }
+
+    /**
+     * Removes all cauldron recipes producing the given output
+     * @param output the output to remove
+     */
+    @ZenMethod
+    public static void removeCauldronRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new RemoveCauldronAction(CraftTweakerMC.getItemStack(output)));
+    }
+
+    /**
+     * Removes all cauldron recipes that specify the given output AND matching the input
+     * @param input the input to check
+     * @param output the output to remove
+     */
+    @ZenMethod
+    public static void removeCauldronRecipe(IIngredient input, IItemStack output) {
+        CraftTweakerAPI.apply(new RemoveCauldronAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output)));
     }
 
     ///////////////////////////////
@@ -234,11 +289,15 @@ public class CraftTweakerSupport {
 
     private static class AddPotAction implements IAction {
         private final Ingredient input;
+        private final FluidStack inputFluid;
         private final ItemStack output;
+        private final int time;
 
-        public AddPotAction(Ingredient input, ItemStack output) {
+        public AddPotAction(Ingredient input, FluidStack inputFluid, ItemStack output, int time) {
             this.input = input;
+            this.inputFluid = inputFluid;
             this.output = output;
+            this.time = time;
         }
 
         @Override
@@ -248,7 +307,7 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            ModRecipes.addPotRecipe(input, output);
+            ModRecipes.addPotRecipe(input, inputFluid, output, time);
         }
     }
 
@@ -284,6 +343,65 @@ public class CraftTweakerSupport {
 
             if (!done)
                 CraftTweakerAPI.logWarning("No pot recipes removed for input " + input + " and output " + output);
+        }
+    }
+
+    private static class AddCauldronAction implements IAction {
+        private final Ingredient input;
+        private final FluidStack inputFluid;
+        private final ItemStack output;
+        private final int time;
+
+        public AddCauldronAction(Ingredient input, FluidStack inputFluid, ItemStack output, int time) {
+            this.input = input;
+            this.inputFluid = inputFluid;
+            this.output = output;
+            this.time = time;
+        }
+
+        @Override
+        public String describe() {
+            return "Adding cauldron recipe with input " + input;
+        }
+
+        @Override
+        public void apply() {
+            ModRecipes.addCauldronRecipe(input, inputFluid, output, time);
+        }
+    }
+
+    private static class RemoveCauldronAction implements IAction {
+        private final Ingredient input;
+        private final ItemStack output;
+
+        public RemoveCauldronAction(ItemStack output) {
+            this.input = null;
+            this.output = output;
+        }
+
+        public RemoveCauldronAction(Ingredient input, ItemStack output) {
+            this.input = input;
+            this.output = output;
+        }
+
+        @Override
+        public String describe() {
+            if (this.input == null)
+                return "Removing cauldron recipe with output " + output;
+            else
+                return "Removing cauldron recipe with input " + input + " and output " + output;
+        }
+
+        @Override
+        public void apply() {
+            boolean done;
+            if (this.input == null)
+                done = ModRecipes.removeCauldronRecipe(output);
+            else
+                done = ModRecipes.removeCauldronRecipe(input, output);
+
+            if (!done)
+                CraftTweakerAPI.logWarning("No cauldron recipes removed for input " + input + " and output " + output);
         }
     }
 
