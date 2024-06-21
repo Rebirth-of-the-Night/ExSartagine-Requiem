@@ -8,7 +8,7 @@ import subaraki.exsartagine.init.RecipeTypes;
 import java.util.Collections;
 import java.util.List;
 
-public class SmelterRecipe implements CustomRecipe<IItemHandler> {
+public class SmelterRecipe implements CustomRecipe<IItemHandler>, DirtyingRecipe {
 
     private final Ingredient ingredient;
     private final ItemStack output;
@@ -47,6 +47,7 @@ public class SmelterRecipe implements CustomRecipe<IItemHandler> {
         return 199;
     }
 
+    @Override
     public int getDirtyTime() {
         return dirtyTime;
     }

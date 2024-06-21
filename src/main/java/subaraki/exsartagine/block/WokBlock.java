@@ -1,14 +1,11 @@
 package subaraki.exsartagine.block;
 
-import java.util.Random;
-
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,7 +16,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -27,15 +23,15 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.oredict.OreDictionary;
 import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.recipe.ModRecipes;
-import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
+
+import java.util.Random;
 
 public class WokBlock extends KitchenwareBlock {
 
@@ -139,9 +135,10 @@ public class WokBlock extends KitchenwareBlock {
         if (tileEntity instanceof WokBlockEntity) {
 			WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
 
-            if (wokBlockEntity.isCooking()) {
+            if (wokBlockEntity.isWorking()) {
                 worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
                 worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
+                worldIn.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1);
             }
         }
     }

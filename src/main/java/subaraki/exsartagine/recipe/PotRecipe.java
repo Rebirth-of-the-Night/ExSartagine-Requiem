@@ -2,7 +2,6 @@ package subaraki.exsartagine.recipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -11,7 +10,7 @@ import subaraki.exsartagine.init.RecipeTypes;
 import java.util.Collections;
 import java.util.List;
 
-public class PotRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler> {
+public class PotRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>, DirtyingRecipe {
 
     private final Ingredient ingredient;
     private final FluidStack inputFluid;
@@ -63,6 +62,7 @@ public class PotRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>
         return time;
     }
 
+    @Override
     public int getDirtyTime() {
         return dirtyTime;
     }

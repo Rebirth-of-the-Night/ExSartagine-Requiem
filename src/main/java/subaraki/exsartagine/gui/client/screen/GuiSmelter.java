@@ -56,7 +56,7 @@ public class GuiSmelter extends GuiContainer {
 		else
 			this.drawTexturedModalRect(i+56, j+53, 176, 12, 16, 16); //furnace out
 
-		float progress = smelter.getProgress() / 5.52f; //progress max = 200. 200 / 36 = 5.5. 5.5*200 = 36; 36 is texture max
+		float progress = smelter.getProgressFraction() * 36; //progress max = 200. 200 / 36 = 5.5. 5.5*200 = 36; 36 is texture max
 		this.drawTexturedModalRect(i+73, j+17, 176, 44, (int)progress, 15); //Arrow
 	}
 	

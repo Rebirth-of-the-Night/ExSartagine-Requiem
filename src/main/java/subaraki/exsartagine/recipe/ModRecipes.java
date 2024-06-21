@@ -190,17 +190,6 @@ public class ModRecipes {
     public static boolean removeKettleRecipeByName(ResourceLocation name) {
         return removeRecipeByName(name,RecipeTypes.KETTLE);
     }
-    
-
-    public static <I extends IItemHandler, R extends CustomRecipe<I>> ItemStack getCookingResult(I handler, IRecipeType<R> type) {
-        CustomRecipe<I> recipe = findRecipe(handler, type);
-        return recipe != null ? recipe.getResult(handler) : ItemStack.EMPTY;
-    }
-
-    public static <I extends IItemHandler, R extends CustomRecipe<I>> List<ItemStack> getCookingResults(I handler, IRecipeType<R> type) {
-        CustomRecipe<I> recipe = findRecipe(handler, type);
-        return recipe != null ? recipe.getResults(handler) : new ArrayList<>();
-    }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {
         return flattenRecipes(type)
@@ -209,17 +198,34 @@ public class ModRecipes {
                 .orElse(null);
     }
 
-    public static <I extends IItemHandler, F extends IFluidHandler, FR extends CustomFluidRecipe<I,F>>
-    FR findFluidRecipe(I handler, F fluidHandler, IRecipeType<FR> type) {
+    public static <I extends IItemHandler, R extends CustomRecipe<I>>
+    R findRecipe(I handler, Class<R> recipeClass, IRecipeType<? extends R> type) {
         return flattenRecipes(type)
-                .map(r -> (FR)r)
+                .filter(recipeClass::isInstance)
+                .map(recipeClass::cast)
+                .filter(r -> r.itemMatch(handler))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static <I extends IItemHandler, F extends IFluidHandler, FR extends CustomFluidRecipe<I, F>>
+    CustomFluidRecipe<I, F> findFluidRecipe(I handler, F fluidHandler, IRecipeType<FR> type) {
+        return flattenRecipes(type)
+                .filter(r -> r instanceof CustomFluidRecipe)
+                .map(r -> (CustomFluidRecipe<I, F>) r)
                 .filter(r -> r.match(handler, fluidHandler))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static <I extends IItemHandler, F extends IFluidHandler> KettleRecipe findKettleRecipe(I handler,F fluidHandler) {
-        return findFluidRecipe(handler,fluidHandler,RecipeTypes.KETTLE);
+    public static <I extends IItemHandler, F extends IFluidHandler, FR extends CustomFluidRecipe<I, F>>
+    FR findFluidRecipe(I handler, F fluidHandler, Class<FR> recipeClass, IRecipeType<? extends FR> type) {
+        return flattenRecipes(type)
+                .filter(recipeClass::isInstance)
+                .map(recipeClass::cast)
+                .filter(r -> r.match(handler, fluidHandler))
+                .findFirst()
+                .orElse(null);
     }
 
     public static <I extends IItemHandler,T extends CustomRecipe<I>> boolean hasResult(I handler, IRecipeType<T> type) {
@@ -272,7 +278,7 @@ public class ModRecipes {
     public static <I extends IItemHandler, R extends CustomRecipe<I>> Stream<CustomRecipe<I>> flattenRecipes(IRecipeType<R> type) {
         return Stream.concat(
                 getRecipes(type).stream(),
-                type.getParents().stream().flatMap(t -> flattenRecipes((IRecipeType<? extends CustomRecipe<I>>)t))); // not a safe cast!
+                type.getParents().stream().flatMap(t -> flattenRecipes((IRecipeType<? extends CustomRecipe<I>>)t)));
     }
 
     @SuppressWarnings("unchecked")

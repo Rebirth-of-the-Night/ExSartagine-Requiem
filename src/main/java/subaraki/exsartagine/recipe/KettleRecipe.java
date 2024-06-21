@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler> {
+public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>, DirtyingRecipe {
 
     private final List<Ingredient> inputs;
     @Nullable
@@ -141,6 +141,7 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandl
         return outputFluid;
     }
 
+    @Override
     public int getDirtyTime() {
         return dirtyTime;
     }

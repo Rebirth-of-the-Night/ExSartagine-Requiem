@@ -53,7 +53,7 @@ public class ExSartagine {
     public static class DebugStuff {
         public static void run() {
             ModRecipes.addRecipe(new ResourceLocation("test:recipe"),new WokRecipe(Lists.newArrayList(Ingredient.fromItem(Items.IRON_INGOT)),
-                    new FluidStack(FluidRegistry.LAVA,100),Lists.newArrayList(new ItemStack(Items.GOLD_INGOT)),3));
+                    new FluidStack(FluidRegistry.LAVA,100),Lists.newArrayList(new ItemStack(Items.GOLD_INGOT)),3,0));
         }
     }
 

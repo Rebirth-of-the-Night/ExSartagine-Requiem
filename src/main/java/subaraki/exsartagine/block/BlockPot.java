@@ -25,9 +25,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.ModSounds;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.particle.ParticleBoilingBubble;
+import subaraki.exsartagine.recipe.IRecipeType;
+import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.ConfigHandler;
+import subaraki.exsartagine.util.Helpers;
 import subaraki.exsartagine.util.Reference;
 
 public class BlockPot extends HeatableGuiBlock {
@@ -35,15 +39,19 @@ public class BlockPot extends HeatableGuiBlock {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public enum Variant {
-		POT(Material.ROCK, SoundType.STONE, Reference.POT, new AxisAlignedBB(0.15D, 0.0D, 0.15D, 0.85D, 0.6D, 0.85D)),
-		CAULDRON(Material.IRON, SoundType.METAL, Reference.CAULDRON, new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.525D, 0.9375D));
+		POT(RecipeTypes.POT, Material.ROCK, SoundType.STONE, Reference.POT,
+				new AxisAlignedBB(0.15D, 0.0D, 0.15D, 0.85D, 0.6D, 0.85D)),
+		CAULDRON(RecipeTypes.CAULDRON, Material.IRON, SoundType.METAL, Reference.CAULDRON,
+				new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.525D, 0.9375D));
 
+		public final IRecipeType<? extends PotRecipe> recipeType;
         public final Material material;
         public final SoundType soundType;
 		public final int guiId;
         public final AxisAlignedBB boundingBox;
 
-        Variant(Material material, SoundType soundType, int guiId, AxisAlignedBB boundingBox) {
+        Variant(IRecipeType<? extends PotRecipe> recipeType, Material material, SoundType soundType, int guiId, AxisAlignedBB boundingBox) {
+            this.recipeType = recipeType;
             this.material = material;
             this.soundType = soundType;
 			this.guiId = guiId;
@@ -106,7 +114,7 @@ public class BlockPot extends HeatableGuiBlock {
 
 	@Override
 	public void fillWithRain(World world, BlockPos pos) {
-		if(ConfigHandler.pot_rain_fill_chance <= 0 || (ConfigHandler.pot_rain_fill_chance < 100 && world.rand.nextInt(100) >= ConfigHandler.pot_rain_fill_chance))
+		if(!Helpers.bernoulli(world.rand, ConfigHandler.pot_rain_fill_chance))
 			return;
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -145,7 +153,7 @@ public class BlockPot extends HeatableGuiBlock {
 			return;
 
 		TileEntityPot pot = (TileEntityPot)tile;
-		if(!pot.activeHeatSourceBelow() || pot.getInventory().getStackInSlot(0).isEmpty() || pot.getOrCreateRecipe() == null)
+		if(!pot.isWorking())
 			return;
 
 		worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);

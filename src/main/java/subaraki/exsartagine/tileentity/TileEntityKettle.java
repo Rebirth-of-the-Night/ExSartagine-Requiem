@@ -4,9 +4,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -16,25 +13,26 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import subaraki.exsartagine.gui.common.KettleFSH;
 import subaraki.exsartagine.gui.common.KettleISH;
-import subaraki.exsartagine.init.ModSounds;
+import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.KettleRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
+import subaraki.exsartagine.util.Helpers;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityKettle extends KitchenwareBlockEntity implements ITickable {
+public class TileEntityKettle extends KitchenwareBlockEntity<KettleRecipe> {
 
     private static final int OUTPUT_START = 10;
-
-    public KettleRecipe cached;
-    public boolean running;
 
     public final ItemStackHandler handler = new KettleISH(this, 1 + 9 + 9 + 1);
 
@@ -43,62 +41,6 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
     public final FluidTank fluidOutputTank = new KettleFSH(this, 1000);
 
     public final IFluidHandler iFluidHandlerWrapper = new IFluidHandlerWrapper();
-
-    @Override
-    public void update() {
-        if (!world.isRemote) {
-            if (activeHeatSourceBelow() && canStart()) {
-                KettleRecipe recipe = getOrCreateRecipe();
-                if (recipe != null) {
-                    clientCookTime = recipe.getCookTime();
-                    if (clientCookTime == progress) {
-                        process();
-                    } else {
-                        if (running) {
-                          //  if (world.getTotalWorldTime() %40 == 0)
-                               // world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.BUBBLING, SoundCategory.BLOCKS, 1, 1);
-                        } else {
-                            start();
-                        }
-                        progress++;
-                        markDirty();
-                    }
-                }
-            } else {
-                decreaseProgress();
-            }
-        }
-    }
-
-    public void decreaseProgress() {
-        if (progress > 0) {
-            progress--;
-            markDirty();
-        }
-        running = false;
-    }
-
-    public boolean canStart() {
-        KettleRecipe recipe = getOrCreateRecipe();
-        if (recipe == null)
-            return false;
-
-        if (!checkFluids(recipe)) return false;
-
-
-        List<ItemStack> results = recipe.getResults(handler);
-        for (ItemStack stack : results) {
-            ItemStack remainder = stack.copy();
-            for (int i = OUTPUT_START; i < KettleISH.CONTAINER_SLOT; i++) {
-                remainder = handler.insertItem(i, remainder, true);
-                if (remainder.isEmpty()) break;
-            }
-            if (!remainder.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public void swapTanks() {
         FluidStack oldInput = fluidInputTank.getFluid();
@@ -130,64 +72,55 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
         }
     }
 
-    public boolean checkFluids(KettleRecipe recipe) {
-        if (!recipe.fluidMatch(fluidInputTank)) {
-            return false;
+    @Nullable
+    @Override
+    public KettleRecipe findRecipe() {
+        return ModRecipes.findFluidRecipe(handler, fluidInputTank, KettleRecipe.class, RecipeTypes.KETTLE);
+    }
+
+    @Override
+    public boolean doesRecipeMatch(final KettleRecipe recipe) {
+        return recipe.match(handler, fluidInputTank);
+    }
+
+    @Override
+    public boolean canFitOutputs(final KettleRecipe recipe) {
+        List<ItemStack> results = recipe.getResults(handler);
+        IItemHandlerModifiable tempOutputs = Helpers.copyInventory(handler, OUTPUT_START, KettleISH.CONTAINER_SLOT);
+        for (ItemStack stack : results) {
+            if (!ItemHandlerHelper.insertItemStacked(tempOutputs, stack, false).isEmpty()) {
+                return false;
+            }
         }
+
         FluidStack outputStack = recipe.getOutputFluid();
-        if (outputStack == null) {
+        if (outputStack == null || outputStack.amount <= 0) {
             return true;
         }
 
-        int filled = fluidOutputTank.fill(outputStack, false);
-        if (filled < outputStack.amount) {
-            return false;
+        return fluidOutputTank.fill(outputStack, false) >= outputStack.amount;
+    }
+
+    @Override
+    public void processRecipe(final KettleRecipe recipe) {
+        // produce outputs
+        IItemHandler output = new RangedWrapper(handler, OUTPUT_START, KettleISH.CONTAINER_SLOT);
+        for (ItemStack stack : recipe.getResults(handler)) {
+            ItemHandlerHelper.insertItemStacked(output, stack.copy(), false);
         }
-        return true;
-    }
-
-    public void start() {
-        running = true;
-        clientCookTime = cached.getCookTime();
-    }
-
-    public KettleRecipe getOrCreateRecipe() {
-        if (cached != null && cached.match(handler,fluidInputTank)) {
-            return cached;
+        if (recipe.getOutputFluid() != null) {
+            fluidOutputTank.fillInternal(recipe.getOutputFluid().copy(), true);
         }
-        return cached = ModRecipes.findKettleRecipe(handler, fluidInputTank);
-    }
 
-    public void process() {
-        progress = 0;
-        List<ItemStack> results = cached.getResults(handler);
-
+        // consume inputs
         for (int i = 1; i < OUTPUT_START; ++i) {
-                this.handler.extractItem(i, 1, false);
+            this.handler.extractItem(i, 1, false);
+        }
+        if (recipe.getInputFluid() != null) {
+            fluidInputTank.drainInternal(recipe.getInputFluid().amount, true);
         }
 
-        for (ItemStack stack : results) {
-            ItemStack remainder = stack.copy();
-            for (int i = OUTPUT_START; i < KettleISH.CONTAINER_SLOT; i++) {
-                remainder = handler.insertItem(i, remainder, false);
-                if (remainder.isEmpty()) {
-                    break;
-                }
-            }
-        }
-        processFluids();
-
-        soiledTime = Math.max(cached.getDirtyTime(), 0);
-        markDirty();
-    }
-
-    public void processFluids() {
-        if (cached.getInputFluid() != null) {
-            fluidInputTank.drainInternal(cached.getInputFluid().amount, true);
-        }
-        if (cached.getOutputFluid() != null) {
-            fluidOutputTank.fillInternal(cached.getOutputFluid(), true);
-        }
+        super.processRecipe(recipe);
     }
 
     @Override
@@ -247,15 +180,9 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
     }
 
     @Override
-    public int getProgress() {
-        return progress;
-    }
-
-    @Override
     @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setBoolean("running", running);
         compound.setTag("inv", handler.serializeNBT());
         NBTTagCompound fluidInputCompound = new NBTTagCompound();
         NBTTagCompound fluidOutputCompound = new NBTTagCompound();
@@ -271,7 +198,6 @@ public class TileEntityKettle extends KitchenwareBlockEntity implements ITickabl
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        this.running = compound.getBoolean("running");
         if (compound.hasKey("inv"))
             handler.deserializeNBT(compound.getCompoundTag("inv"));
 

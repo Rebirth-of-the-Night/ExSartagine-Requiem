@@ -14,24 +14,24 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import subaraki.exsartagine.block.BlockPot;
-import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.IRecipeType;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.PotRecipe;
 import subaraki.exsartagine.util.ConfigHandler;
 
-public class TileEntityPot extends TileEntityCooker {
+import javax.annotation.Nullable;
+
+public class TileEntityPot extends TileEntityCooker<PotRecipe> {
 
     public static final int TANK_CAPACITY = 1000;
 
     private static final int MAX_PICK_UP_DELAY = 16;
 
+    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY);
+
     // no need to serialize these
     private BlockPot.Variant variant = null;
-    private PotRecipe cached = null;
     private int pickUpDelay = 0;
-
-    public FluidTank fluidTank = new FluidTank(TANK_CAPACITY);
 
     public TileEntityPot() {
         initInventory(2);
@@ -50,14 +50,7 @@ public class TileEntityPot extends TileEntityCooker {
     }
 
     public IRecipeType<? extends PotRecipe> getRecipeType() {
-        switch (getVariant()) {
-            case POT:
-                return RecipeTypes.POT;
-            case CAULDRON:
-                return RecipeTypes.CAULDRON;
-            default:
-                throw new IllegalStateException();
-        }
+        return getVariant().recipeType;
     }
 
     public FluidStack getStoredFluid() {
@@ -98,80 +91,43 @@ public class TileEntityPot extends TileEntityCooker {
         markDirty();
     }
 
-    public float getProgressFraction() {
-        PotRecipe recipe = getOrCreateRecipe();
-        return recipe != null ? (progress / (float)recipe.getCookTime()) : 0F;
-    }
-
     @Override
     public void update() {
-        if (world.isRemote) {
-            return;
-        }
-
-        PotRecipe recipe = getRunnableRecipe();
-        if (recipe != null && activeHeatSourceBelow()) {
-            if (recipe.getCookTime() <= progress) {
-                progress = 0;
-                if (getOutput().isEmpty()) {
-                    setResult(recipe.getResult(getInventory()));
-                } else {
-                    getOutput().grow(recipe.getResult(getInventory()).getCount());
-                }
-                getInput().shrink(1);
-                final FluidStack fluid = recipe.getInputFluid();
-                if (fluid != null && fluid.amount > 0) {
-                    fluidTank.drain(fluid.amount, true);
-                }
-                soiledTime = Math.max(recipe.getDirtyTime(), 0);
-            } else {
-                progress++;
-            }
-            markDirty();
-        } else {
-            decreaseProgress();
-        }
-
+        super.update();
         if (pickUpDelay > 0) {
             --pickUpDelay;
         }
     }
 
-    public void decreaseProgress() {
-        if (progress > 0) {
-            progress--;
-            markDirty();
-        }
+    @Nullable
+    @Override
+    public PotRecipe findRecipe() {
+        return ModRecipes.findFluidRecipe(getInventory(), fluidTank, PotRecipe.class, getRecipeType());
     }
 
-    public PotRecipe getRunnableRecipe() {
-        ItemStack input = getInput();
-        if (input.isEmpty()) {
-            return null;
-        }
-
-        PotRecipe potRecipe = getOrCreateRecipe();
-        if (potRecipe == null) {
-            return null;
-        }
-
-        ItemStack output = getOutput();
-        if (output.isEmpty()) {
-            return potRecipe;
-        }
-
-        ItemStack result = potRecipe.getResult(getInventory());
-        if (getInventory().insertItem(RESULT, result, true).isEmpty()) {
-            return potRecipe;
-        }
-        return null;
+    @Override
+    public boolean doesRecipeMatch(PotRecipe recipe) {
+        return recipe.match(getInventory(), fluidTank);
     }
 
-    public PotRecipe getOrCreateRecipe() {
-        if (cached != null && cached.match(getInventory(), fluidTank)) {
-            return cached;
+    @Override
+    public boolean canFitOutputs(PotRecipe recipe) {
+        return canFitOutputs0(recipe);
+    }
+
+    @Override
+    public void processRecipe(PotRecipe recipe) {
+        // produce output
+        getInventory().insertItem(RESULT, recipe.getResult(getInventory()).copy(), false);
+
+        // consume inputs
+        getInput().shrink(1);
+        final FluidStack fluid = recipe.getInputFluid();
+        if (fluid != null && fluid.amount > 0) {
+            fluidTank.drain(fluid.amount, true);
         }
-        return cached = ModRecipes.findFluidRecipe(getInventory(), fluidTank, getRecipeType());
+
+        super.processRecipe(recipe);
     }
 
     @Override
@@ -204,4 +160,5 @@ public class TileEntityPot extends TileEntityCooker {
         super.readFromNBT(compound);
         fluidTank.readFromNBT(compound);
     }
+
 }
