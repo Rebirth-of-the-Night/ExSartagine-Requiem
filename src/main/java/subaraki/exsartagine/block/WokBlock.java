@@ -66,8 +66,12 @@ public class WokBlock extends KitchenwareBlock {
 
         if (tileEntity instanceof WokBlockEntity) {
             WokBlockEntity wokBlockEntity = (WokBlockEntity) tileEntity;
-            if (!worldIn.isRemote) {
 
+            if (wokBlockEntity.isSoiled() && wokBlockEntity.tryClean(playerIn, hand)) {
+                return true;
+            }
+
+            if (!worldIn.isRemote) {
                 if (!stack.isEmpty()) {
                     if (Oredict.checkMatch(Oredict.SPATULA, stack)) {
                         wokBlockEntity.flip(playerIn, stack);
@@ -171,6 +175,7 @@ public class WokBlock extends KitchenwareBlock {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override

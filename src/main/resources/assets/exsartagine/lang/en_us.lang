@@ -76,7 +76,11 @@ item.exsartagine.spaghetti_bolognaise.name=Bolognaise Spaghetti
 item.exsartagine.spaghetti_cheese.name=Bolognaise Spaghetti with cheese
 item.exsartagine.spaghetti_veggie.name=Veggie Spaghetti
 
+exsartagine.gui.dirty=This cookware is dirty!
+exsartagine.gui.void_tank=Void tank contents
+exsartagine.gui.swap_tanks=Swap fluid tanks
+exsartagine.gui.dirty_recipe=Dirties the cookware for %s!
+exsartagine.gui.clean_recipe=Cleans the cookware
+
 itemGroup.potsnpans=Pots 'n Pans
 itemGroup.exsartaginefoods=Ex Sartagine Foods
-
-

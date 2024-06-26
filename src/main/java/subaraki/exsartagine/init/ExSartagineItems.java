@@ -103,7 +103,9 @@ public class ExSartagineItems {
 		wok = new ItemBlock(ExSartagineBlocks.wok).setRegistryName(ExSartagineBlocks.wok.getRegistryName()).setCreativeTab(pots);
 		smelter = new ItemBlock(ExSartagineBlocks.smelter).setRegistryName(ExSartagineBlocks.smelter.getRegistryName()).setCreativeTab(pots);
 		pot = new ItemBlock(ExSartagineBlocks.pot).setRegistryName(ExSartagineBlocks.pot.getRegistryName()).setCreativeTab(pots);
-		cauldron = new ItemBlock(ExSartagineBlocks.cauldron).setRegistryName(ExSartagineBlocks.cauldron.getRegistryName()).setCreativeTab(pots);
+		if (ExSartagineBlocks.cauldron != null) {
+			cauldron = new ItemBlock(ExSartagineBlocks.cauldron).setRegistryName(ExSartagineBlocks.cauldron.getRegistryName()).setCreativeTab(pots);
+		}
 		range = new ItemBlock(ExSartagineBlocks.range).setRegistryName(ExSartagineBlocks.range.getRegistryName()).setCreativeTab(pots);
 		range_extended = new ItemBlock(ExSartagineBlocks.range_extended).setRegistryName(ExSartagineBlocks.range_extended.getRegistryName()).setCreativeTab(pots);
 

@@ -17,7 +17,7 @@
     "dirty": {
       "true": {
         "textures": {
-          "1": "exsartagine:block/wok_dirty"
+          "1": "exsartagine:block/dirty_wok"
         }
       },
       "false": {}

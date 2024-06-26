@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.RenderUtil;
+import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.client.SmallButton;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.ClearTankPacket;
@@ -30,6 +31,8 @@ public class KettleScreen extends GuiContainer {
     private final InventoryPlayer playerInventory;
     private final TileEntityKettle kettle;
 
+    private GuiButton swapButton, leftVoidButton, rightVoidButton;
+
     public KettleScreen(EntityPlayer player, TileEntityKettle kettle) {
         super(new ContainerKettle(player.inventory, kettle));
 
@@ -45,11 +48,9 @@ public class KettleScreen extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        addButton(new GuiButtonImage(BUTTON_ID,guiLeft + 86,guiTop+ 50,20,20,0,0,0,BUTTON_TEXTURE));
-        addButton(new SmallButton(1,guiLeft + 76,guiTop + 69,10,10,""));
-        addButton(new SmallButton(2,guiLeft + 107,guiTop + 69,10,10,""));
-
-
+        addButton(swapButton = new GuiButtonImage(BUTTON_ID,guiLeft + 86,guiTop+ 50,20,20,0,0,0,BUTTON_TEXTURE));
+        addButton(leftVoidButton = new SmallButton(1,guiLeft + 76,guiTop + 69,10,10,""));
+        addButton(rightVoidButton = new SmallButton(2,guiLeft + 107,guiTop + 69,10,10,""));
     }
 
     @Override
@@ -85,6 +86,8 @@ public class KettleScreen extends GuiContainer {
         //Draw fluid
         RenderUtil.renderFluidIntoGui(mc, i + FL_INPUT_X, j + FL_Y - 2, FL_WIDTH, FL_HEIGHT, kettle.fluidInputTank);
         RenderUtil.renderFluidIntoGui(mc, i + FL_OUTPUT_X, j + FL_Y - 2, FL_WIDTH, FL_HEIGHT, kettle.fluidOutputTank);
+
+        GuiHelpers.drawDirtyIcon(mc, kettle, i + 88, j + 16);
     }
 
     private static final int FL_WIDTH = 7;
@@ -120,12 +123,26 @@ public class KettleScreen extends GuiContainer {
 
     @Override
     protected void renderHoveredToolTip(int x, int y) {
-        super.renderHoveredToolTip(x, y);
+        int i = guiLeft, j = guiTop;
+        if (leftVoidButton.isMouseOver() || rightVoidButton.isMouseOver()) {
+            this.drawHoveringText(I18n.format(ExSartagine.MODID + ".gui.void_tank"), x, y);
+            return;
+        }
+        if (swapButton.isMouseOver()) {
+            this.drawHoveringText(I18n.format(ExSartagine.MODID + ".gui.swap_tanks"), x, y);
+            return;
+        }
         if (isPointInRegion(FL_INPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, x, y) && kettle.fluidInputTank.getFluid() != null) {
             this.drawHoveringText(getFluidTooltip(kettle.fluidInputTank), x, y, fontRenderer);
+            return;
         }
         if (isPointInRegion(FL_OUTPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, x, y) && kettle.fluidOutputTank.getFluid() != null) {
             this.drawHoveringText(getFluidTooltip(kettle.fluidOutputTank), x, y, fontRenderer);
+            return;
         }
+        if (GuiHelpers.drawDirtyTooltip(this, kettle, i + 88, j + 16, x, y)) {
+            return;
+        }
+        super.renderHoveredToolTip(x, y);
     }
 }

@@ -1,7 +1,5 @@
 package subaraki.exsartagine.block;
 
-import java.util.Random;
-
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,7 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.init.ExSartagineItems;
@@ -33,6 +31,8 @@ import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Helpers;
 import subaraki.exsartagine.util.Reference;
+
+import java.util.Random;
 
 public class BlockPot extends HeatableGuiBlock {
 
@@ -95,9 +95,14 @@ public class BlockPot extends HeatableGuiBlock {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TileEntityPot && ((TileEntityPot)tile).fillFromItem(player, hand))
-			return true;
-
+		if (tile instanceof TileEntityPot)
+		{
+			TileEntityPot pot = (TileEntityPot)tile;
+			if (pot.isSoiled() && pot.tryClean(player, hand))
+				return true;
+			if (pot.fillFromItem(player, hand))
+				return true;
+		}
 		return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
 	}
 
@@ -226,10 +231,12 @@ public class BlockPot extends HeatableGuiBlock {
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
+
 }

@@ -10,6 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.RenderUtil;
+import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.common.ContainerPot;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
@@ -68,24 +69,29 @@ public class GuiPot extends GuiContainer {
 		}
 
 		RenderUtil.renderFluidIntoGui(mc, i + 14, j + 15, 5, 54, pot.getStoredFluid(), TileEntityPot.TANK_CAPACITY);
+
+		GuiHelpers.drawDirtyIcon(mc, pot, i + 84, j + 56);
 	}
 
 	@Override
 	protected void renderHoveredToolTip(int x, int y) {
-		int sx = x - guiLeft, sy = y - guiTop;
-		if (sx >= 14 && sx < 19 && sy >= 15 && sy < 69) {
+		int i = guiLeft, j = guiTop;
+		if (GuiHelpers.isPointInRect(x, y, i + 14, j + 15, 5, 54)) {
 			FluidStack fluid = pot.getStoredFluid();
 			if (fluid == null || fluid.amount <= 0) {
 				drawHoveringText(String.format(TextFormatting.GRAY + "0 / %,d mB", TileEntityPot.TANK_CAPACITY), x, y);
 			} else {
 				drawHoveringText(Arrays.asList(
-						fluid.getLocalizedName(),
-						String.format(TextFormatting.GRAY + "%,d / %,d mB", fluid.amount, TileEntityPot.TANK_CAPACITY)),
+								fluid.getLocalizedName(),
+								String.format(TextFormatting.GRAY + "%,d / %,d mB", fluid.amount, TileEntityPot.TANK_CAPACITY)),
 						x, y);
 			}
-		} else {
-			super.renderHoveredToolTip(x, y);
+			return;
 		}
+		if (GuiHelpers.drawDirtyTooltip(this, pot, i + 84, j + 56, x, y)) {
+			return;
+		}
+		super.renderHoveredToolTip(x, y);
 	}
 
 	@Override

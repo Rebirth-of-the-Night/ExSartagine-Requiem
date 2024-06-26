@@ -11,6 +11,7 @@ import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import subaraki.exsartagine.integration.jei.JeiPlugin;
 import subaraki.exsartagine.integration.jei.category.AbstractCookingRecipeCategory;
 import subaraki.exsartagine.recipe.PotRecipe;
 
@@ -46,5 +47,12 @@ public class PotRecipeWrapper implements IRecipeWrapper {
     @Override
     public void drawInfo(final Minecraft minecraft, final int recipeWidth, final int recipeHeight, final int mouseX, final int mouseY) {
         cookProgress.draw(minecraft, 63, 20);
+        JeiPlugin.drawDirtyIcon(minecraft, recipe, 71, 39);
     }
+
+    @Override
+    public List<String> getTooltipStrings(final int mouseX, final int mouseY) {
+        return JeiPlugin.getDirtyTooltip(recipe, 71, 39, mouseX, mouseY);
+    }
+
 }

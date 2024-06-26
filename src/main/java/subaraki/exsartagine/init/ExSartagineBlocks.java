@@ -35,7 +35,9 @@ public class ExSartagineBlocks {
 		wok = new WokBlock().setRegistryName("wok").setTranslationKey(ExSartagine.MODID+".wok");
 		smelter = new BlockSmelter();
 		pot = new BlockPot(BlockPot.Variant.POT).setRegistryName("pot").setTranslationKey(ExSartagine.MODID+".pot");
-		cauldron = new BlockPot(BlockPot.Variant.CAULDRON).setRegistryName("cauldron").setTranslationKey(ExSartagine.MODID+".cauldron");
+		if (ConfigHandler.enable_cauldron) {
+			cauldron = new BlockPot(BlockPot.Variant.CAULDRON).setRegistryName("cauldron").setTranslationKey(ExSartagine.MODID+".cauldron");
+		}
 		range = new BlockRange(() -> ConfigHandler.range_requires_ignition,3,false,1).setRegistryName("range").setTranslationKey(ExSartagine.MODID + ".range");
 		range_extended = new BlockRangeExtension(false,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended").setTranslationKey(ExSartagine.MODID+".range_extended");
 		range_extended_lit = new BlockRangeExtension(true,() -> range_extended,() -> range_extended_lit,ranges).setRegistryName("range_extended_lit").setTranslationKey(ExSartagine.MODID+".range_extended_lit");
@@ -52,7 +54,9 @@ public class ExSartagineBlocks {
 		registry.register(wok);
 		registry.register(smelter);
 		registry.register(pot);
-		registry.register(cauldron);
+		if (cauldron != null) {
+			registry.register(cauldron);
+		}
 		registry.register(range);
 		registry.register(range_extended);
 		registry.register(range_extended_lit);

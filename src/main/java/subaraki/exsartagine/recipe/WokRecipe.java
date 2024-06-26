@@ -10,7 +10,7 @@ import subaraki.exsartagine.init.RecipeTypes;
 
 import java.util.List;
 
-public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank> {
+public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>, DirtyingRecipe {
 
     private final List<Ingredient> ingredients;
     private final FluidStack fluid;
@@ -81,6 +81,7 @@ public class WokRecipe implements CustomFluidRecipe<ItemStackHandler, FluidTank>
         return flips;
     }
 
+    @Override
     public int getDirtyTime() {
         return dirtyTime;
     }

@@ -15,12 +15,13 @@
       "false": {}
     },
     "full": {
-      "true": { "submodel": "exsartagine:lava" }
+      "true": { "submodel": "exsartagine:lava" },
+      "false": {}
     },
     "dirty": {
       "true": {
         "textures": {
-          "0": "exsartagine:block/smelter_dirty"
+          "1": "exsartagine:block/dirty_smelter_top"
         }
       },
       "false": {}

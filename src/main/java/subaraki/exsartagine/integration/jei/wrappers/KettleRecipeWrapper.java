@@ -6,8 +6,10 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import subaraki.exsartagine.integration.jei.JeiPlugin;
 import subaraki.exsartagine.recipe.KettleRecipe;
 
 import java.util.List;
@@ -34,4 +36,15 @@ public class KettleRecipeWrapper implements IRecipeWrapper {
         ingredients.setInput(VanillaTypes.FLUID,recipe.getInputFluid());
         ingredients.setOutput(VanillaTypes.FLUID,recipe.getOutputFluid());
     }
+
+    @Override
+    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        JeiPlugin.drawDirtyIcon(minecraft, recipe, 90, 1);
+    }
+
+    @Override
+    public List<String> getTooltipStrings(int mouseX, int mouseY) {
+        return JeiPlugin.getDirtyTooltip(recipe, 90, 1, mouseX, mouseY);
+    }
+
 }

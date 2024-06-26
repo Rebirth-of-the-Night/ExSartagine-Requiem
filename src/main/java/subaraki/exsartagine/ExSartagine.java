@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
@@ -36,6 +37,7 @@ import subaraki.exsartagine.tileentity.TileEntityPot;
 import subaraki.exsartagine.tileentity.WokBlockEntity;
 import subaraki.exsartagine.tileentity.render.CookerRenderer;
 import subaraki.exsartagine.tileentity.render.WokRenderer;
+import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
 
 @Mod.EventBusSubscriber
@@ -46,6 +48,9 @@ public class ExSartagine {
     public static ExSartagine instance;
 
     public static final boolean DEBUG = Launch.blackboard.get("fml.deobfuscatedEnvironment") != null;
+
+    private Logger logger;
+
     public ExSartagine() {
         instance = this;
     }
@@ -57,9 +62,14 @@ public class ExSartagine {
         }
     }
 
+    public Logger getLogger() {
+        return logger;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
+        logger = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
     }
 
@@ -106,5 +116,8 @@ public class ExSartagine {
         Oredict.addToOreDict();
         ModRecipes.cacheWokInputs();
         Integration.postInit();
+        if (!FluidRegistry.isFluidRegistered(ConfigHandler.washer_fluid)) {
+            logger.warn("Configured washer fluid is not in the registry: {}", ConfigHandler.washer_fluid);
+        }
     }
 }

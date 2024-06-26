@@ -7,6 +7,11 @@ import subaraki.exsartagine.ExSartagine;
 @Config(modid = ExSartagine.MODID)
 public class ConfigHandler {
 
+	@Config.Name("enable_cauldron")
+	@Config.Comment("Enables the cauldron, an upgraded variant of the pot")
+	@Config.RequiresMcRestart
+	public static boolean enable_cauldron = true;
+
 	@Config.Name("bonus_chance")
 	@Config.Comment("Define how often a bonus ingot will smelt in the Smelter. Expressed in percent. [0% - 100%]")
 	@Config.RangeInt(min = 0,max = 100)
@@ -29,5 +34,14 @@ public class ConfigHandler {
 	@Config.Comment("The amount of rainwater collected by the pot or cauldron on each successful random tick")
 	@Config.RangeInt(min = 0)
 	public static int pot_rain_fill_amount = 300;
+
+	@Config.Name("washer_fluid")
+	@Config.Comment("The fluid used by washer items to clean dirty kitchenware")
+	public static String washer_fluid = "water";
+
+	@Config.Name("washer_fluid_amount")
+	@Config.Comment("The amount of washing fluid required to clean dirty kitchenware")
+	@Config.RangeInt(min = 0)
+	public static int washer_fluid_amount = 250;
 
 }

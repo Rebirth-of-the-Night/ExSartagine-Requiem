@@ -54,7 +54,8 @@ public class TileEntitySmelter extends TileEntityCooker<SmelterRecipe> {
 
 	@Override
 	public boolean canFitOutputs(SmelterRecipe recipe) {
-		return canFitOutputs0(recipe);
+		ItemStack result = recipe.getResult(getInventory());
+		return getInventory().insertItem(RESULT, result, true).isEmpty() && getInventory().insertItem(BONUSSLOT, result, true).isEmpty();
 	}
 
 	@Override

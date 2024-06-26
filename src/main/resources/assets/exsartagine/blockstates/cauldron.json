@@ -17,7 +17,8 @@
     "dirty": {
       "true": {
         "textures": {
-          "1": "exsartagine:block/cauldron_dirty"
+          "0": "exsartagine:block/dirty_bake_kettle_detail",
+          "1": "exsartagine:block/dirty_cauldron"
         }
       },
       "false": {}

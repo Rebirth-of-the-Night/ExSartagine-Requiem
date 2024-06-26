@@ -91,4 +91,19 @@ public class Helpers {
         return odds >= 0 && (odds >= 100 || rand.nextInt(100) < odds);
     }
 
+    public static String formatTime(int ticks) {
+        if (ticks == 0) {
+            return "0:00";
+        }
+        int seconds = (ticks + 19) / 20;
+        if (seconds < 60) {
+            return String.format("0:%02d", seconds);
+        }
+        int minutes = seconds / 60;
+        if (minutes < 60) {
+            return String.format("%d:%02d", minutes, seconds % 60);
+        }
+        return String.format("%d:%02d:%02d", minutes / 60, minutes % 60, seconds % 60);
+    }
+
 }
