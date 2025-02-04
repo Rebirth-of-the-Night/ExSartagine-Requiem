@@ -4,13 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -20,13 +18,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 import subaraki.exsartagine.util.Reference;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class BlockKettle extends HeatableGuiBlock {
 
@@ -68,17 +64,24 @@ public class BlockKettle extends HeatableGuiBlock {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof TileEntityKettle) {
+            TileEntityKettle kettle = (TileEntityKettle) tile;
 
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            if (!worldIn.isRemote) {
-                TileEntityKettle kettle = (TileEntityKettle) worldIn.getTileEntity(pos);
-                IFluidHandler iFluidHandler = kettle.fluidInputTank;
-                if (FluidUtil.interactWithFluidHandler(playerIn,hand,iFluidHandler)) {
-                    return true;
-                }
+            if (kettle.tryClean(playerIn, hand)) {
+                return true;
             }
-            return true;
+
+            ItemStack stack = playerIn.getHeldItem(hand);
+            if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+                if (!worldIn.isRemote) {
+                    IFluidHandler iFluidHandler = kettle.fluidInputTank;
+                    if (FluidUtil.interactWithFluidHandler(playerIn, hand, iFluidHandler)) {
+                        return true;
+                    }
+                }
+                return true;
+            }
         }
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }

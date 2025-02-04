@@ -1,79 +1,39 @@
 package subaraki.exsartagine.tileentity;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
 import subaraki.exsartagine.block.BlockSmelter;
-import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.ModRecipes;
+import subaraki.exsartagine.recipe.SmelterRecipe;
 import subaraki.exsartagine.util.ConfigHandler;
+import subaraki.exsartagine.util.Helpers;
 
-public class TileEntitySmelter extends TileEntityCooker {
+import javax.annotation.Nullable;
+
+public class TileEntitySmelter extends TileEntityCooker<SmelterRecipe> {
 
 	private static final int BONUSSLOT = 2;
-	private final int bonusChance = ConfigHandler.percent; // in percentage
 
 	public TileEntitySmelter() {
 		initInventory(3);
-		clientCookTime = 199;
 	}
 
 	@Override
 	public void update() {
-
-		if(progress >= clientCookTime)
-		{
-			if(!world.isRemote)
-			{
-				if(getInput().getCount() > 0 &&
-						(getOutput().isEmpty() || getOutput().getCount() < getOutput().getMaxStackSize()))
-				{
-					if(world.rand.nextInt(100)+1 <= bonusChance){ //+1, so 0% is no chance [1-100]
-						if(getBonus().isEmpty())
-						{
-							ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).copy();
-							setResult(BONUSSLOT, itemstack);
-						}
-						else
-							getBonus().grow(1);
-					}
-
-					if(getOutput().isEmpty())
-					{
-						ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).copy();
-						setResult(itemstack);
-						getInput().shrink(1);
-					}
-					else
-					{
-						getOutput().grow(1);
-						getInput().shrink(1);
-					}
+		super.update();
+		if (!world.isRemote) {
+			IBlockState state = world.getBlockState(pos);
+			//set lava block rendering
+			if (state.getValue(BlockSmelter.FULL)) {
+				if (getOutput().isEmpty() && getBonus().isEmpty()) {
+					world.setBlockState(pos, state.withProperty(BlockSmelter.FULL, false), 2);
+				}
+			} else {
+				if (!getOutput().isEmpty() || !getBonus().isEmpty()) {
+					world.setBlockState(pos, state.withProperty(BlockSmelter.FULL, true), 2);
 				}
 			}
-			progress = 0;
-			world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), ExSartagineBlocks.smelter.getDefaultState(), 3);
-		}
-
-		if(activeHeatSourceBelow())
-		{
-			if(getInput().getCount() > 0 &&
-					(getOutput().getItem().equals(FurnaceRecipes.instance().getSmeltingResult(getEntryStackOne()).getItem()) || getOutput().isEmpty()))
-				progress++;
-			else if (progress > 0)
-				progress--;
-		}
-		
-		if(!world.isRemote)
-		{
-			//set lava block rendering
-			if(!world.getBlockState(pos).getValue(BlockSmelter.FULL) && (!getOutput().isEmpty() || !getBonus().isEmpty()))
-				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, true), 3);
-			//set lava block gone
-			if(world.getBlockState(pos).getValue(BlockSmelter.FULL) && (getOutput().isEmpty() && getBonus().isEmpty()))
-				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockSmelter.FULL, false), 3);
-	
 		}
 	}
 
@@ -81,19 +41,41 @@ public class TileEntitySmelter extends TileEntityCooker {
 		return getOutput(BONUSSLOT);
 	}
 
+	@Nullable
+	@Override
+	public SmelterRecipe findRecipe() {
+		return ModRecipes.findRecipe(getInventory(), SmelterRecipe.class, RecipeTypes.SMELTER);
+	}
+
+	@Override
+	public boolean doesRecipeMatch(SmelterRecipe recipe) {
+		return recipe.itemMatch(getInventory());
+	}
+
+	@Override
+	public boolean canFitOutputs(SmelterRecipe recipe) {
+		ItemStack result = recipe.getResult(getInventory());
+		return getInventory().insertItem(RESULT, result, true).isEmpty() && getInventory().insertItem(BONUSSLOT, result, true).isEmpty();
+	}
+
+	@Override
+	public void processRecipe(SmelterRecipe recipe) {
+		// produce outputs
+		ItemStack result = recipe.getResult(getInventory());
+		getInventory().insertItem(RESULT, result.copy(), false);
+		if (Helpers.bernoulli(world.rand, ConfigHandler.percent)) {
+			getInventory().insertItem(BONUSSLOT, result.copy(), false);
+		}
+
+		// consume input
+		getInput().shrink(1);
+
+		super.processRecipe(recipe);
+	}
+
 	@Override
 	public boolean isValid(ItemStack stack) {
 		return ModRecipes.hasResult(stack, RecipeTypes.SMELTER);
 	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-		return compound;
-	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-	}
 }

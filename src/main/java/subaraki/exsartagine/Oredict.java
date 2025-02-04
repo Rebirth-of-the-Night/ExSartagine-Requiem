@@ -9,9 +9,11 @@ import java.util.List;
 
 public class Oredict {
 
-    public static final String SPATULA = "ore:spatula";
-    public static final String IGNITER = "ore:igniter";
+    public static final String SPATULA = "spatula";
+    public static final String IGNITER = "igniter";
     public static final String SELF_IGNITER = ExSartagine.MODID+":self_igniter_upgrade";
+    public static final String CLEANER = "cleaner";
+    public static final String WASHER = "washer";
     public static final String CHEESE = "itemCheese";
 
     public static void addToOreDict() {

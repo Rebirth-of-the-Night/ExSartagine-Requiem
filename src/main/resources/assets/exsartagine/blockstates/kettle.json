@@ -1,10 +1,21 @@
 {
-    "multipart": [
-        {
-            "apply": { "model": "exsartagine:kettle","y": 0 }
-        },
-        {   "when": { "legs": "true" },
-            "apply": { "model": "exsartagine:legs" }
+  "forge_marker": 1,
+  "defaults": {
+    "model": "exsartagine:kettle"
+  },
+  "variants": {
+    "legs": {
+      "true": { "submodel": "exsartagine:legs" },
+      "false": {}
+    },
+    "dirty": {
+      "true": {
+        "textures": {
+          "0": "exsartagine:block/dirty_bake_kettle_detail",
+          "1": "exsartagine:block/dirty_bake_kettle"
         }
-    ]
+      },
+      "false": {}
+    }
+  }
 }

@@ -12,13 +12,13 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.integration.jei.JeiPlugin;
 import subaraki.exsartagine.recipe.WokRecipe;
 
 import java.awt.*;
 import java.util.List;
 
 public class WokRecipeWrapper implements IRecipeWrapper {
-
 
     private final WokRecipe recipe;
     private final IJeiHelpers jeiHelpers;
@@ -48,14 +48,20 @@ public class WokRecipeWrapper implements IRecipeWrapper {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int flips = recipe.getFlips();
         if (flips > 0) {
-            String flipString = ""+flips;
+            String flipString = Integer.toString(flips);
             FontRenderer fontRenderer = minecraft.fontRenderer;
             int stringWidth = fontRenderer.getStringWidth(flipString);
-            fontRenderer.drawString(flipString, recipeWidth - stringWidth - 66, 47, Color.gray.getRGB());
+            fontRenderer.drawString(flipString, recipeWidth - stringWidth - 65, 47, Color.gray.getRGB());
             Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(ExSartagine.MODID,"textures/gui/jei/spatula.png"));
 
-            Gui.drawModalRectWithCustomSizedTexture(recipeWidth/2 - 3, 31, 0, 0,16,16,16,16);
-
+            Gui.drawModalRectWithCustomSizedTexture(recipeWidth/2 - 3, 32, 0, 0,16,16,16,16);
         }
+        JeiPlugin.drawDirtyIcon(minecraft, recipe, 71, 1);
     }
+
+    @Override
+    public List<String> getTooltipStrings(final int mouseX, final int mouseY) {
+        return JeiPlugin.getDirtyTooltip(recipe, 71, 1, mouseX, mouseY);
+    }
+
 }

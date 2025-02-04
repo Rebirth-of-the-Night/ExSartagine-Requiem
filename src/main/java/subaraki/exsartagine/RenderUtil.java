@@ -1,16 +1,20 @@
 package subaraki.exsartagine;
+
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
+import net.minecraftforge.fluids.IFluidTank;
 import org.lwjgl.opengl.GL11;
 
 //borrowed from tinker's construct https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/client/RenderUtil.java
@@ -64,19 +68,20 @@ public class RenderUtil {
         TextureAtlasSprite flowing = mc.getTextureMapBlocks().getTextureExtry(fluid.getFluid().getFlowing(fluid).toString());
 
         // x/y/z2 - x/y/z1 is because we need the width/height/depth
-        putATexturedQuad(renderer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.DOWN, color, brightness, false, upsideDown);
-        putATexturedQuad(renderer, flowing, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.NORTH, color, brightness, true, upsideDown);
-        putATexturedQuad(renderer, flowing, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.EAST, color, brightness, true, upsideDown);
-        putATexturedQuad(renderer, flowing, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.SOUTH, color, brightness, true, upsideDown);
-        putATexturedQuad(renderer, flowing, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.WEST, color, brightness, true, upsideDown);
-        putATexturedQuad(renderer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.UP, color, brightness, false, upsideDown);
+        putTexturedShape(renderer, still, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.DOWN, color, brightness, false, upsideDown);
+        putTexturedShape(renderer, flowing, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.NORTH, color, brightness, true, upsideDown);
+        putTexturedShape(renderer, flowing, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.EAST, color, brightness, true, upsideDown);
+        putTexturedShape(renderer, flowing, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.SOUTH, color, brightness, true, upsideDown);
+        putTexturedShape(renderer, flowing, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.WEST, color, brightness, true, upsideDown);
+        putTexturedShape(renderer, still, PlanarShape.QUAD, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.UP, color, brightness, false, upsideDown);
 
         tessellator.draw();
 
         post();
     }
 
-    public static void putATexturedQuad(BufferBuilder renderer, TextureAtlasSprite sprite, double x, double y, double z, double w, double h, double d, EnumFacing face,
+    public static void putTexturedShape(BufferBuilder renderer, TextureAtlasSprite sprite, PlanarShape shape,
+                                        double x, double y, double z, double w, double h, double d, EnumFacing face,
                                         int color, int brightness, boolean flowing, boolean flipHorizontally) {
         int l1 = brightness >> 0x10 & 0xFFFF;
         int l2 = brightness & 0xFFFF;
@@ -86,11 +91,12 @@ public class RenderUtil {
         int g = color >> 8 & 0xFF;
         int b = color & 0xFF;
 
-        putATexturedQuad(renderer, sprite, x, y, z, w, h, d, face, r, g, b, a, l1, l2, flowing, flipHorizontally);
+        putTexturedShape(renderer, sprite, shape, x, y, z, w, h, d, face, r, g, b, a, l1, l2, flowing, flipHorizontally);
     }
 
     // x and x+w has to be within [0,1], same for y/h and z/d
-    public static void putATexturedQuad(BufferBuilder renderer, TextureAtlasSprite sprite, double x, double y, double z, double w, double h, double d, EnumFacing face,
+    public static void putTexturedShape(BufferBuilder renderer, TextureAtlasSprite sprite, PlanarShape shape,
+                                        double x, double y, double z, double w, double h, double d, EnumFacing face,
                                         int r, int g, int b, int a, int light1, int light2, boolean flowing, boolean flipHorizontally) {
         // safety
         if (sprite == null) {
@@ -165,43 +171,11 @@ public class RenderUtil {
             maxV = tmp;
         }
 
-        switch (face) {
-            case DOWN:
-                renderer.pos(x1, y1, z1).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y1, z1).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y1, z2).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y1, z2).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                break;
-            case UP:
-                renderer.pos(x1, y2, z1).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y2, z2).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z2).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z1).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                break;
-            case NORTH:
-                renderer.pos(x1, y1, z1).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y2, z1).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z1).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y1, z1).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                break;
-            case SOUTH:
-                renderer.pos(x1, y1, z2).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y1, z2).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z2).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y2, z2).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                break;
-            case WEST:
-                renderer.pos(x1, y1, z1).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y1, z2).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y2, z2).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x1, y2, z1).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                break;
-            case EAST:
-                renderer.pos(x2, y1, z1).color(r, g, b, a).tex(minU, maxV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z1).color(r, g, b, a).tex(minU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y2, z2).color(r, g, b, a).tex(maxU, minV).lightmap(light1, light2).endVertex();
-                renderer.pos(x2, y1, z2).color(r, g, b, a).tex(maxU, maxV).lightmap(light1, light2).endVertex();
-                break;
+        for (PV vertex : shape.vertices) {
+            vertex.pos(renderer, x1, y1, z1, x2, y2, z2, face);
+            renderer.color(r, g, b, a);
+            vertex.tex(renderer, minU, minV, maxU, maxV);
+            renderer.lightmap(light1, light2).endVertex();
         }
     }
 
@@ -227,7 +201,7 @@ public class RenderUtil {
         RenderHelper.enableStandardItemLighting();
     }
 
-    public static void renderFluidLevel(FluidStack fluid,double x, double y, double z) {
+    public static void renderFluidLevel(FluidStack fluid, double x, double y, double z, double s, PlanarShape shape) {
         int color = fluid.getFluid().getColor(fluid);
 
         mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -236,8 +210,6 @@ public class RenderUtil {
 
         pre(x, y, z);
 
-        double s = .28;
-
         double wd = (1d - s) / 2d;
         double dd = (1d - s) / 2d;
 
@@ -245,14 +217,189 @@ public class RenderUtil {
         double dd2 = 1d - dd;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder renderer = tessellator.getBuffer();
-        renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+        renderer.begin(shape.glMode, DefaultVertexFormats.BLOCK);
         TextureAtlasSprite still = mc.getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill(fluid).toString());
 
 
-        putATexturedQuad(renderer, still, wd,.5,dd,wd2,.5,dd2, EnumFacing.UP, color, brightness, false, upsideDown);
+        putTexturedShape(renderer, still, shape, wd,.5,dd,wd2,.5,dd2, EnumFacing.UP, color, brightness, false, upsideDown);
 
         tessellator.draw();
         post();
+    }
+
+    public static void renderFluidIntoGui(Minecraft minecraft, int xPosition, int yPosition, int width, int height, IFluidTank tank) {
+        renderFluidIntoGui(minecraft, xPosition, yPosition, width, height, tank.getFluid(), tank.getCapacity());
+    }
+
+    public static void renderFluidIntoGui(Minecraft minecraft, int xPosition, int yPosition, int width, int height, FluidStack fluidStack, int capacity) {
+        GlStateManager.enableBlend();
+        GlStateManager.enableAlpha();
+
+        drawFluid(minecraft, xPosition, yPosition, width, height, fluidStack, capacity);
+
+        GlStateManager.color(1, 1, 1, 1);
+
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+    }
+
+    private static final int FLUID_TEX_WIDTH = 16;
+    private static final int FLUID_TEX_HEIGHT = 16;
+    private static final int MIN_FLUID_HEIGHT = 1; // ensure tiny amounts of fluid are still visible
+
+    private static void drawFluid(Minecraft minecraft, int xPosition, int yPosition, int width, int height, FluidStack fluidStack, int capacity) {
+        if (fluidStack == null) {
+            return;
+        }
+        Fluid fluid = fluidStack.getFluid();
+        if (fluid == null) {
+            return;
+        }
+
+        TextureAtlasSprite fluidStillSprite = getStillFluidSprite(minecraft, fluid);
+
+        int fluidColor = fluid.getColor(fluidStack);
+
+        int scaledAmount = (fluidStack.amount * height) / capacity;
+        if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
+            scaledAmount = MIN_FLUID_HEIGHT;
+        }
+        if (scaledAmount > height) {
+            scaledAmount = height;
+        }
+
+        drawTiledSprite(minecraft, xPosition, yPosition, width, height, fluidColor, scaledAmount, fluidStillSprite);
+    }
+
+    public static void drawTiledSprite(Minecraft minecraft, final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
+        minecraft.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        setGLColorFromInt(color);
+
+        final int xTileCount = tiledWidth / FLUID_TEX_WIDTH;
+        final int xRemainder = tiledWidth - (xTileCount * FLUID_TEX_WIDTH);
+        final int yTileCount = scaledAmount / FLUID_TEX_HEIGHT;
+        final int yRemainder = scaledAmount - (yTileCount * FLUID_TEX_HEIGHT);
+
+        final int yStart = yPosition + tiledHeight;
+
+        for (int xTile = 0; xTile <= xTileCount; xTile++) {
+            for (int yTile = 0; yTile <= yTileCount; yTile++) {
+                int width = (xTile == xTileCount) ? xRemainder : FLUID_TEX_WIDTH;
+                int height = (yTile == yTileCount) ? yRemainder : FLUID_TEX_HEIGHT;
+                int x = xPosition + (xTile * FLUID_TEX_WIDTH);
+                int y = yStart - ((yTile + 1) * FLUID_TEX_HEIGHT);
+                if (width > 0 && height > 0) {
+                    int maskTop = FLUID_TEX_HEIGHT - height;
+                    int maskRight = FLUID_TEX_WIDTH - width;
+
+                    drawTextureWithMasking(x, y, sprite, maskTop, maskRight, 100);
+                }
+            }
+        }
+    }
+
+    private static TextureAtlasSprite getStillFluidSprite(Minecraft minecraft, Fluid fluid) {
+        TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
+        ResourceLocation fluidStill = fluid.getStill();
+        TextureAtlasSprite fluidStillSprite = null;
+        if (fluidStill != null) {
+            fluidStillSprite = textureMapBlocks.getTextureExtry(fluidStill.toString());
+        }
+        if (fluidStillSprite == null) {
+            fluidStillSprite = textureMapBlocks.getMissingSprite();
+        }
+        return fluidStillSprite;
+    }
+
+    public static void setGLColorFromInt(int color) {
+        float red = (color >> 16 & 0xFF) / 255.0F;
+        float green = (color >> 8 & 0xFF) / 255.0F;
+        float blue = (color & 0xFF) / 255.0F;
+
+        GlStateManager.color(red, green, blue, 1.0F);
+    }
+
+    public static void drawTextureWithMasking(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {
+        double uMin = textureSprite.getMinU();
+        double uMax = textureSprite.getMaxU();
+        double vMin = textureSprite.getMinV();
+        double vMax = textureSprite.getMaxV();
+        uMax = uMax - (maskRight / 16.0 * (uMax - uMin));
+        vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferBuilder.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
+        bufferBuilder.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
+        bufferBuilder.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
+        bufferBuilder.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
+        tessellator.draw();
+    }
+
+    private static final double OCT_SW = 1.0 / (1.0 + 2.0 / Math.sqrt(2)); // width of a regular octagon's side
+    private static final double OCT_SO = OCT_SW / Math.sqrt(2); // offset of the side from the square's edge
+
+    public enum PlanarShape {
+
+        QUAD(GL11.GL_QUADS, new PV(0, 0), new PV(0, 1), new PV(1, 1), new PV(1, 0)), // square
+        OCTAGON(GL11.GL_TRIANGLE_FAN, new PV(0.5, 0.5), // regular octagon
+                new PV(OCT_SO + OCT_SW, 0), new PV(OCT_SO, 0),
+                new PV(0, OCT_SO), new PV(0, OCT_SO + OCT_SW),
+                new PV(OCT_SO, 1), new PV(OCT_SO + OCT_SW, 1),
+                new PV(1, OCT_SO + OCT_SW), new PV(1, OCT_SO),
+                new PV(OCT_SO + OCT_SW, 0));
+
+        public final int glMode;
+        public final ImmutableList<PV> vertices;
+
+        PlanarShape(int glMode, PV... vertices) {
+            this.glMode = glMode;
+            this.vertices = ImmutableList.copyOf(vertices);
+        }
+
+    }
+
+    public static class PV { // planar vertex
+
+        public final double x, y;
+
+        public PV(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        private static double lerp(double k, double min, double max) {
+            return min + k * (max - min);
+        }
+
+        public void pos(BufferBuilder renderer, double x1, double y1, double z1, double x2, double y2, double z2, EnumFacing face) {
+            switch (face) {
+                case DOWN:
+                    renderer.pos(lerp(this.y, x1, x2), y1, lerp(this.x, z1, z2));
+                    break;
+                case UP:
+                    renderer.pos(lerp(this.x, x1, x2), y2, lerp(this.y, z1, z2));
+                    break;
+                case NORTH:
+                    renderer.pos(lerp(this.x, x1, x2), lerp(this.y, y1, y2), z1);
+                    break;
+                case SOUTH:
+                    renderer.pos(lerp(this.y, x1, x2), lerp(this.x, y1, y2), z2);
+                    break;
+                case WEST:
+                    renderer.pos(x1, lerp(this.x, y1, y2), lerp(this.y, z1, z2));
+                    break;
+                case EAST:
+                    renderer.pos(x2, lerp(this.y, y1, y2), lerp(this.x, z1, z2));
+                    break;
+            }
+        }
+
+        public void tex(BufferBuilder renderer, double u1, double v1, double u2, double v2) {
+            renderer.tex(lerp(this.x, u1, u2), lerp(this.y, v1, v2));
+        }
+
     }
 
 }

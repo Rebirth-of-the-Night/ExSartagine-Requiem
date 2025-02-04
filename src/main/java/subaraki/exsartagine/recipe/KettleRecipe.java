@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler> {
+public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandler>, DirtyingRecipe {
 
     private final List<Ingredient> inputs;
     @Nullable
@@ -25,15 +25,16 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandl
     private final FluidStack inputFluid;
     private final FluidStack outputFluid;
     private final List<ItemStack> outputs;
-    private final int time;
+    private final int time, dirtyTime;
 
-    public KettleRecipe(List<Ingredient> inputs, @Nullable Ingredient catalyst, FluidStack inputFluid, FluidStack outputFluid, List<ItemStack> outputs, int time) {
+    public KettleRecipe(List<Ingredient> inputs, @Nullable Ingredient catalyst, FluidStack inputFluid, FluidStack outputFluid, List<ItemStack> outputs, int time, int dirtyTime) {
         this.inputs = inputs;
         this.catalyst = catalyst;
         this.inputFluid = inputFluid;
         this.outputFluid = outputFluid;
         this.outputs = outputs;
         this.time = time;
+        this.dirtyTime = dirtyTime;
     }
 
     public Ingredient getCatalyst() {
@@ -138,6 +139,11 @@ public class KettleRecipe implements CustomFluidRecipe<IItemHandler, IFluidHandl
 
     public FluidStack getOutputFluid() {
         return outputFluid;
+    }
+
+    @Override
+    public int getDirtyTime() {
+        return dirtyTime;
     }
 
     //needed to force recipes using fluid to come first

@@ -6,6 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.common.ContainerSmelter;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
 
@@ -56,10 +57,21 @@ public class GuiSmelter extends GuiContainer {
 		else
 			this.drawTexturedModalRect(i+56, j+53, 176, 12, 16, 16); //furnace out
 
-		float progress = smelter.getProgress() / 5.52f; //progress max = 200. 200 / 36 = 5.5. 5.5*200 = 36; 36 is texture max
+		float progress = smelter.getProgressFraction() * 36; //progress max = 200. 200 / 36 = 5.5. 5.5*200 = 36; 36 is texture max
 		this.drawTexturedModalRect(i+73, j+17, 176, 44, (int)progress, 15); //Arrow
+
+		GuiHelpers.drawDirtyIcon(mc, smelter, i + 84, j + 44);
 	}
-	
+
+	@Override
+	protected void renderHoveredToolTip(int x, int y) {
+		int i = guiLeft, j = guiTop;
+		if (GuiHelpers.drawDirtyTooltip(this, smelter, i + 84, j + 44, x, y)) {
+			return;
+		}
+		super.renderHoveredToolTip(x, y);
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);

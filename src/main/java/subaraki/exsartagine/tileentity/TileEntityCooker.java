@@ -3,15 +3,15 @@ package subaraki.exsartagine.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import subaraki.exsartagine.recipe.CustomRecipe;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 
-public abstract class TileEntityCooker extends KitchenwareBlockEntity implements ITickable {
+public abstract class TileEntityCooker<R extends CustomRecipe<?>> extends KitchenwareBlockEntity<R> {
 
 	protected static final int RESULT = 1;
 	protected static final int INPUT = 0;
@@ -32,8 +32,7 @@ public abstract class TileEntityCooker extends KitchenwareBlockEntity implements
 		return inventory;
 	}
 
-
-	public void setResult(ItemStack stack){
+	public void setResult(ItemStack stack) {
 		setResult(RESULT, stack);
 	}
 	
@@ -56,6 +55,10 @@ public abstract class TileEntityCooker extends KitchenwareBlockEntity implements
 	public ItemStack getEntryStackOne(){
 		ItemStack stack = getInventory().getStackInSlot(INPUT);
 		return stack.copy(); 
+	}
+
+	protected boolean canFitOutputs0(CustomRecipe<IItemHandler> recipe) {
+		return getInventory().insertItem(RESULT, recipe.getResult(getInventory()), true).isEmpty();
 	}
 
 	abstract public boolean isValid(ItemStack stack);

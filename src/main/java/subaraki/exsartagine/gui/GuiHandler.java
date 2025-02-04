@@ -20,7 +20,7 @@ public class GuiHandler implements IGuiHandler {
 
 		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new ContainerSmelter(player.inventory, (TileEntitySmelter)te);
-		if(te instanceof TileEntityPot && ID == Reference.POT)
+		if(te instanceof TileEntityPot && (ID == Reference.POT || ID == Reference.CAULDRON))
 			return new ContainerPot(player.inventory, (TileEntityPot)te);
 		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new ContainerRange(player.inventory, (TileEntityRange)te);
@@ -38,8 +38,14 @@ public class GuiHandler implements IGuiHandler {
 
 		if(te instanceof TileEntitySmelter && ID == Reference.SMELTER)
 			return new GuiSmelter(player, (TileEntitySmelter)te);
-		if(te instanceof TileEntityPot && ID == Reference.POT)
-			return new GuiPot(player, (TileEntityPot)te);
+		if(te instanceof TileEntityPot) {
+			switch (ID) {
+				case Reference.POT:
+					return new GuiPot(player, (TileEntityPot)te);
+				case Reference.CAULDRON:
+					return new GuiCauldron(player, (TileEntityPot)te);
+			}
+		}
 		if(te instanceof TileEntityRange && ID == Reference.RANGE)
 			return new GuiRange(player, (TileEntityRange)te);
 		if(te instanceof TileEntityKettle && ID == Reference.KETTLE)
