@@ -4,55 +4,45 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import subaraki.exsartagine.init.ModSounds;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.*;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import subaraki.exsartagine.init.RecipeTypes;
+import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
-import subaraki.exsartagine.tileentity.util.FluidRecipeBlockEntity;
+import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
+import subaraki.exsartagine.util.Helpers;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, FluidTank, WokRecipe> implements ITickable {
+public class WokBlockEntity extends KitchenwareBlockEntity<WokRecipe> {
 
-	public WokBlockEntity() {
-		initInventory();
-	}
+	private final ItemStackHandler inventoryInput = new WokStackHandler();
+	private final WokStackHandler inventoryOutput = new WokStackHandler();
+	private final FluidTank fluidInventoryInput = new WokTank(10000);
 
 	private int flips;
 
 	public double rotation;
 
-	@Override
-	public void update() {
-		if (!world.isRemote) {
-			if (canStart() && activeHeatSourceBelow()) {
-				WokRecipe recipe = getOrCreateRecipe();
-				if (recipe.getCookTime() <= progress && canProcess(recipe)) {
-					process();
-				} else {
-					if (cooking) {
-						if (world.getTotalWorldTime() % 20 == 0)
-							world.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1);
-					} else {
-						start();
-					}
-					progress++;
-					markDirty();
-				}
-			} else {
-				decreaseProgress();
-			}
-		}
+	public IItemHandlerModifiable getInventoryInput() {
+		return inventoryInput;
 	}
 
-	public boolean canProcess(WokRecipe recipe) {
-		return recipe.getFlips() <= flips;
+	public IItemHandlerModifiable getInventoryOutput() {
+		return inventoryOutput;
+	}
+
+	@Override
+	public IItemHandler getEntireItemInventory() {
+		return new CombinedInvWrapper(inventoryInput, inventoryOutput);
+	}
+
+	public FluidTank getFluidInventoryInput() {
+		return fluidInventoryInput;
 	}
 
 	public ItemStack addSingleItem(ItemStack stack) {
@@ -65,7 +55,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 	}
 
 	public void flip(EntityPlayer player,ItemStack stack) {
-		WokRecipe recipe = getOrCreateRecipe();
+		WokRecipe recipe = getRunningRecipe();
 		if (recipe == null) return;
 		flips++;
 
@@ -77,58 +67,51 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 		markDirty();
 	}
 
+	@Nullable
 	@Override
-	public void processItems() {
-		List<ItemStack> results = cached.getResults(inventoryInput);
-		int count = 0;
+	public WokRecipe findRecipe() {
+		return ModRecipes.findFluidRecipe(inventoryInput, fluidInventoryInput, WokRecipe.class, RecipeTypes.WOK);
+	}
 
-		for (int i = 0; i < inventoryInput.getSlots(); ++i) {
-			ItemStack itemstack = this.inventoryInput.getStackInSlot(i);
+	@Override
+	public boolean doesRecipeMatch(WokRecipe recipe) {
+		return recipe.match(inventoryInput, fluidInventoryInput);
+	}
 
-			if (!itemstack.isEmpty()) {
-				this.inventoryInput.extractItem(i, 1, false);
-			}
-		}
-
+	@Override
+	public boolean canFitOutputs(WokRecipe recipe) {
+		List<ItemStack> results = recipe.getResults(inventoryInput);
+		IItemHandlerModifiable tempOutput = Helpers.copyInventory(inventoryOutput);
 		for (ItemStack stack : results) {
-			ItemStack remainder = stack.copy();
-			for (int i = 0; i < inventoryOutput.getSlots(); i++) {
-				remainder = inventoryOutput.insertItem(i, remainder, false);
-				if (remainder.isEmpty()) {
-					break;
-				}
+			if (!ItemHandlerHelper.insertItemStacked(tempOutput, stack, false).isEmpty()) {
+				return false;
 			}
 		}
-	}
-
-	@Override
-	public void process() {
-		super.process();
-		flips = 0;
-	}
-
-	@Override
-	public boolean checkFluidInv(WokRecipe recipe) {
 		return true;
 	}
 
-	/**inits inventory with 9 slots. input and output*/
-	protected void initInventory(){
-		inventoryInput = new WokStackHandler();
-		inventoryOutput = new WokStackHandler();
-		fluidInventoryInput = new WokTank(10000);
-		fluidInventoryInput.setTileEntity(this);
-		recipeType = RecipeTypes.WOK;
+	@Override
+	public boolean canFinishRecipe(WokRecipe recipe) {
+		return recipe.getFlips() <= flips;
 	}
 
-	public void clearInput() {
-		for (int i = 0; i < inventoryInput.getSlots();i++) {
-			inventoryInput.setStackInSlot(i,ItemStack.EMPTY);
+	@Override
+	public void processRecipe(WokRecipe recipe) {
+		// produce outputs
+		for (ItemStack stack : recipe.getResults(inventoryInput)) {
+			ItemHandlerHelper.insertItemStacked(inventoryOutput, stack.copy(), false);
 		}
-		cooking = false;
-		cached = null;
-		progress = 0;
-		markDirty();
+
+		// consume inputs
+		for (int i = 0; i < inventoryInput.getSlots(); ++i) {
+			this.inventoryInput.extractItem(i, 1, false);
+		}
+		if (recipe.getInputFluid() != null) {
+			fluidInventoryInput.drain(recipe.getInputFluid().amount, true);
+		}
+
+		flips = 0;
+		super.processRecipe(recipe);
 	}
 
 	@Override
@@ -143,10 +126,6 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 				return (T) inventoryInput;
 		}
 		return super.getCapability(capability, facing);
-	}
-
-	public boolean isCooking(){
-		return cooking;
 	}
 
 	@Override
@@ -188,6 +167,7 @@ public class WokBlockEntity extends FluidRecipeBlockEntity<ItemStackHandler, Flu
 			super.onContentsChanged(slot);
 			markDirty();
 		}
+
 	}
 
 	public class WokTank extends FluidTank {

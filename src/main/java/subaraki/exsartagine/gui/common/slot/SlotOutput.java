@@ -48,6 +48,14 @@ public class SlotOutput extends SlotItemHandler
         return p_190901_2_;
     }
 
+    @Override
+    public void onSlotChange(ItemStack newStack, ItemStack oldStack) {
+        int diff = oldStack.getCount() - newStack.getCount();
+        if (diff > 0) {
+            onCrafting(oldStack, diff);
+        }
+    }
+
     /**
      * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood. Typically increases an
      * internal count then calls onCrafting(item).

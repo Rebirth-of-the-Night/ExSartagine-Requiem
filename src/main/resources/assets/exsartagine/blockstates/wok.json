@@ -1,19 +1,26 @@
 {
-    "multipart": [
-        {   "when": { "facing": "north" },
-            "apply": { "model": "exsartagine:wok","y": 0 }
-        },
-        {   "when": { "facing": "east" },
-            "apply": { "model": "exsartagine:wok","y": 90 }
-        },
-        {   "when": { "facing": "south" },
-            "apply": { "model": "exsartagine:wok","y": 180 }
-        },
-        {   "when": { "facing": "west" },
-            "apply": { "model": "exsartagine:wok","y": 270 }
-        },
-        {   "when": { "legs": "true" },
-            "apply": { "model": "exsartagine:legs"}
+  "forge_marker": 1,
+  "defaults": {
+    "model": "exsartagine:wok"
+  },
+  "variants": {
+    "facing": {
+      "north": { "y": 0 },
+      "east": { "y": 90 },
+      "south": { "y": 180 },
+      "west": { "y": 270 }
+    },
+    "legs": {
+      "true": { "submodel": "exsartagine:legs" },
+      "false": {}
+    },
+    "dirty": {
+      "true": {
+        "textures": {
+          "1": "exsartagine:block/dirty_wok"
         }
-    ]
+      },
+      "false": {}
+    }
+  }
 }

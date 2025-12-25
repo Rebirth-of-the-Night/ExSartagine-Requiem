@@ -6,16 +6,22 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
 import subaraki.exsartagine.ExSartagine;
+import subaraki.exsartagine.RenderUtil;
+import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.common.ContainerPot;
 import subaraki.exsartagine.tileentity.TileEntityPot;
+
+import java.util.Arrays;
 
 public class GuiPot extends GuiContainer {
 
 	private static final ResourceLocation GUI_POT = new ResourceLocation(ExSartagine.MODID,"textures/gui/pot.png");
 
-	private final InventoryPlayer playerInventory;
-	private final TileEntityPot pot;
+	protected final InventoryPlayer playerInventory;
+	protected final TileEntityPot pot;
 
 	public GuiPot(EntityPlayer player, TileEntityPot pot) {
 		super(new ContainerPot(player.inventory, pot));
@@ -57,13 +63,37 @@ public class GuiPot extends GuiContainer {
 		else
 			this.drawTexturedModalRect(i+56, j+53, 176, 12, 16, 16); //furnace out
 
-		float progress = pot.getProgress() / 3.55f; //progress max = 125. 125 / 33 = 3.75 3.75*125 = 33; 33 is texture max
-		this.drawTexturedModalRect(i+76, j+34, 176, 44, (int)progress, 18); //Arrow
+		float progress = pot.getProgressFraction();
+		if (progress > 0F) {
+			this.drawTexturedModalRect(i + 76, j + 34, 176, 44, (int)(progress * 33), 18); //Arrow
+		}
 
-		int waterProgress = (int)(pot.getWaterLevel() / (1000/54f));
-		this.drawTexturedModalRect(i+14, j+15+(54 - waterProgress), 176, 62 + (54 - waterProgress), 5, 54);
+		RenderUtil.renderFluidIntoGui(mc, i + 14, j + 15, 5, 54, pot.getStoredFluid(), TileEntityPot.TANK_CAPACITY);
+
+		GuiHelpers.drawDirtyIcon(mc, pot, i + 84, j + 56);
 	}
-	
+
+	@Override
+	protected void renderHoveredToolTip(int x, int y) {
+		int i = guiLeft, j = guiTop;
+		if (GuiHelpers.isPointInRect(x, y, i + 14, j + 15, 5, 54)) {
+			FluidStack fluid = pot.getStoredFluid();
+			if (fluid == null || fluid.amount <= 0) {
+				drawHoveringText(String.format(TextFormatting.GRAY + "0 / %,d mB", TileEntityPot.TANK_CAPACITY), x, y);
+			} else {
+				drawHoveringText(Arrays.asList(
+								fluid.getLocalizedName(),
+								String.format(TextFormatting.GRAY + "%,d / %,d mB", fluid.amount, TileEntityPot.TANK_CAPACITY)),
+						x, y);
+			}
+			return;
+		}
+		if (GuiHelpers.drawDirtyTooltip(this, pot, i + 84, j + 56, x, y)) {
+			return;
+		}
+		super.renderHoveredToolTip(x, y);
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);

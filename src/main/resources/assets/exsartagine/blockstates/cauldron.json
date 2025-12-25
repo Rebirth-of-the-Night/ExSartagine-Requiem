@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "exsartagine:smelter"
+    "model": "exsartagine:cauldron"
   },
   "variants": {
     "facing": {
@@ -14,14 +14,11 @@
       "true": { "submodel": "exsartagine:legs" },
       "false": {}
     },
-    "full": {
-      "true": { "submodel": "exsartagine:lava" },
-      "false": {}
-    },
     "dirty": {
       "true": {
         "textures": {
-          "1": "exsartagine:block/dirty_smelter_top"
+          "0": "exsartagine:block/dirty_bake_kettle_detail",
+          "1": "exsartagine:block/dirty_cauldron"
         }
       },
       "false": {}

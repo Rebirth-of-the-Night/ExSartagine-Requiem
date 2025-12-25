@@ -8,17 +8,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class Utils {
-
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public static void scatter(World worldIn, BlockPos pos, IItemHandler inventory) {
         dropInventoryItems(worldIn, pos, inventory);
@@ -44,7 +39,7 @@ public class Utils {
 
     public static boolean doesStackMatchOre(@Nonnull ItemStack stack, String name) {
         if (!OreDictionary.doesOreNameExist(name)) {
-            LOGGER.warn("doesStackMatchOre called with non-existing name. stack: {} name: {}", stack, name);
+            ExSartagine.instance.getLogger().warn("doesStackMatchOre called with non-existing name. stack: {} name: {}", stack, name);
             return false;
         } else if (stack.isEmpty()) {
             return false;
