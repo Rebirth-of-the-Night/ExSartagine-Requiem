@@ -72,7 +72,7 @@ public abstract class KitchenwareBlockEntity<R extends CustomRecipe<?>> extends 
     }
 
     public boolean isSoiled() {
-        return true; //soiledTime > 0;
+        return soiledTime > 0;
     }
 
     public boolean tryClean(EntityPlayer player, EnumHand hand) {
