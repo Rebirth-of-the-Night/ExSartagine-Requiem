@@ -44,7 +44,7 @@ public class WokRecipeCategory extends AbstractCookingRecipeCategory<WokRecipeWr
 
     @Override
     public void setupRecipes(IModRegistry registry) {
-        List<WokRecipeWrapper> recipes = ModRecipes.getRecipeMap(RecipeTypes.WOK).entrySet().stream()
+        List<WokRecipeWrapper> recipes = ModRecipes.getRecipeMap(RecipeTypes.WOK).entries().stream()
                 .map(resourceLocationCustomRecipeEntry ->
                         new WokRecipeWrapper(resourceLocationCustomRecipeEntry.getValue(), registry.getJeiHelpers(), resourceLocationCustomRecipeEntry.getKey())).collect(Collectors.toList());
         registry.addRecipes(recipes, getUid());

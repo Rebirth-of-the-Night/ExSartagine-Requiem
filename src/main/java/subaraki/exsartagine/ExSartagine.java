@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -46,8 +45,6 @@ public class ExSartagine {
 
     public static final String MODID = "exsartagine";
     public static ExSartagine instance;
-
-    public static final boolean DEBUG = Launch.blackboard.get("fml.deobfuscatedEnvironment") != null;
 
     private Logger logger;
 

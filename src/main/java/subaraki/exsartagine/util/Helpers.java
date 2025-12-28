@@ -13,6 +13,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -104,6 +105,19 @@ public class Helpers {
             return String.format("%d:%02d", minutes, seconds % 60);
         }
         return String.format("%d:%02d:%02d", minutes / 60, minutes % 60, seconds % 60);
+    }
+
+    public static boolean areItemStackListsEqual(List<ItemStack> a, List<ItemStack> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        Iterator<ItemStack> iterA = a.iterator(), iterB = b.iterator();
+        while (iterA.hasNext()) {
+            if (!ItemStack.areItemStacksEqual(iterA.next(), iterB.next())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

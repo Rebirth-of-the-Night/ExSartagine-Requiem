@@ -42,7 +42,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the pot should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addPotRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addPotRecipe(IIngredient input, @Optional IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
         CraftTweakerAPI.apply(new AddPotAction(CraftTweakerMC.getIngredient(input), new FluidStack(FluidRegistry.WATER, 50), CraftTweakerMC.getItemStack(output), time, dirtyTime));
     }
 
@@ -55,7 +55,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the pot should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addPotRecipe(IIngredient input, ILiquidStack inputFluid, IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addPotRecipe(IIngredient input, ILiquidStack inputFluid, @Optional IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
         CraftTweakerAPI.apply(new AddPotAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getLiquidStack(inputFluid), CraftTweakerMC.getItemStack(output), time, dirtyTime));
     }
 
@@ -68,7 +68,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the cauldron should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addCauldronRecipe(IIngredient input, ILiquidStack inputFluid, IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addCauldronRecipe(IIngredient input, ILiquidStack inputFluid, @Optional IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
         CraftTweakerAPI.apply(new AddCauldronAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getLiquidStack(inputFluid), CraftTweakerMC.getItemStack(output), time, dirtyTime));
     }
 
@@ -80,7 +80,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the cauldron should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addCauldronRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addCauldronRecipe(IIngredient input, @Optional IItemStack output, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
         CraftTweakerAPI.apply(new AddCauldronAction(CraftTweakerMC.getIngredient(input), new FluidStack(FluidRegistry.WATER, 50), CraftTweakerMC.getItemStack(output), time, dirtyTime));
     }
 
@@ -164,6 +164,16 @@ public class CraftTweakerSupport {
         CraftTweakerAPI.apply(new RemoveWokAction(new ResourceLocation(name)));
     }
 
+    /**
+     * Removes wok recipe by outputs
+     * @param outputs the outputs of the recipe to remove
+     */
+    @ZenMethod
+    public static void removeWokRecipe(IItemStack[] outputs) {
+        List<ItemStack> outputStacks = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
+        CraftTweakerAPI.apply(new RemoveWokByOutputsAction(outputStacks));
+    }
+
     ////////////////////////////////////////////////////
 
     /**
@@ -173,7 +183,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the smelter should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addSmelterRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addSmelterRecipe(IIngredient input, @Optional IItemStack output, @Optional(valueLong = 0L) int dirtyTime) {
         CraftTweakerAPI.apply(new AddSmelterAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output), dirtyTime));
     }
 
@@ -253,6 +263,16 @@ public class CraftTweakerSupport {
         CraftTweakerAPI.apply(new RemoveKettleAction(new ResourceLocation(name)));
     }
 
+    /**
+     * Removes kettle recipe by outputs
+     * @param outputs the outputs of the recipe to remove
+     */
+    @ZenMethod
+    public static void removeKettleRecipe(IItemStack[] outputs) {
+        List<ItemStack> outputStacks = Arrays.stream(outputs).map(CraftTweakerMC::getItemStack).collect(Collectors.toList());
+        CraftTweakerAPI.apply(new RemoveKettleByOutputsAction(outputStacks));
+    }
+
     //////////////////////////////////////////////
 
     /**
@@ -297,6 +317,10 @@ public class CraftTweakerSupport {
 
     //////////////////////////////////////////////////////////
 
+    private static ItemStack optionalStack(@Nullable ItemStack stack) {
+        return stack != null ? stack : ItemStack.EMPTY;
+    }
+
     private static class AddPotAction implements IAction {
         private final Ingredient input;
         private final FluidStack inputFluid;
@@ -306,7 +330,7 @@ public class CraftTweakerSupport {
         public AddPotAction(Ingredient input, FluidStack inputFluid, ItemStack output, int time, int dirtyTime) {
             this.input = input;
             this.inputFluid = inputFluid;
-            this.output = output;
+            this.output = optionalStack(output);
             this.time = time;
             this.dirtyTime = dirtyTime;
         }
@@ -326,14 +350,13 @@ public class CraftTweakerSupport {
         private final Ingredient input;
         private final ItemStack output;
 
-        public RemovePotAction(ItemStack output) {
-            this.input = null;
-            this.output = output;
-        }
-
         public RemovePotAction(Ingredient input, ItemStack output) {
             this.input = input;
             this.output = output;
+        }
+
+        public RemovePotAction(ItemStack output) {
+            this(null, output);
         }
 
         @Override
@@ -366,7 +389,7 @@ public class CraftTweakerSupport {
         public AddCauldronAction(Ingredient input, FluidStack inputFluid, ItemStack output, int time, int dirtyTime) {
             this.input = input;
             this.inputFluid = inputFluid;
-            this.output = output;
+            this.output = optionalStack(output);
             this.time = time;
             this.dirtyTime = dirtyTime;
         }
@@ -386,14 +409,13 @@ public class CraftTweakerSupport {
         private final Ingredient input;
         private final ItemStack output;
 
-        public RemoveCauldronAction(ItemStack output) {
-            this.input = null;
-            this.output = output;
-        }
-
         public RemoveCauldronAction(Ingredient input, ItemStack output) {
             this.input = input;
             this.output = output;
+        }
+
+        public RemoveCauldronAction(ItemStack output) {
+            this(null, output);
         }
 
         @Override
@@ -421,14 +443,13 @@ public class CraftTweakerSupport {
         private final Ingredient input;
         private final ItemStack output;
 
-        public RemoveSmelterAction(ItemStack output) {
-            this.input = null;
-            this.output = output;
-        }
-
         public RemoveSmelterAction(Ingredient input, ItemStack output) {
             this.input = input;
             this.output = output;
+        }
+
+        public RemoveSmelterAction(ItemStack output) {
+            this(null, output);
         }
 
         @Override
@@ -537,6 +558,27 @@ public class CraftTweakerSupport {
         }
     }
 
+    private static class RemoveKettleByOutputsAction implements IAction {
+        private final List<ItemStack> outputs;
+
+        public RemoveKettleByOutputsAction(List<ItemStack> outputs) {
+            this.outputs = outputs;
+        }
+
+        @Override
+        public String describe() {
+            return "Removing kettle recipe with outputs " + outputs;
+        }
+
+        @Override
+        public void apply() {
+            boolean done = ModRecipes.removeKettleRecipeByOutputs(outputs);
+
+            if (!done)
+                CraftTweakerAPI.logWarning("No kettle recipes removed for outputs " + outputs);
+        }
+    }
+
     private static class BlockStateAction implements IAction {
         private final Collection<net.minecraft.block.state.IBlockState> states;
         private final boolean isHeatSource;
@@ -595,7 +637,30 @@ public class CraftTweakerSupport {
             done = ModRecipes.removeWokRecipeByName(name);
 
             if (!done) {
-                CraftTweakerAPI.logWarning("No pot recipes removed for name " + name);
+                CraftTweakerAPI.logWarning("No wok recipes removed for name " + name);
+            }
+        }
+    }
+
+    private static class RemoveWokByOutputsAction implements IAction {
+        private final List<ItemStack> outputs;
+
+        private RemoveWokByOutputsAction(List<ItemStack> outputs) {
+            this.outputs = outputs;
+        }
+
+        @Override
+        public String describe() {
+            return "Removing wok recipe with outputs " + outputs;
+        }
+
+        @Override
+        public void apply() {
+            boolean done;
+            done = ModRecipes.removeWokRecipeByOutputs(outputs);
+
+            if (!done) {
+                CraftTweakerAPI.logWarning("No wok recipes removed for outputs " + outputs);
             }
         }
     }
@@ -607,13 +672,13 @@ public class CraftTweakerSupport {
 
         public AddSmelterAction(Ingredient input, ItemStack output, int dirtyTime) {
             this.input = input;
-            this.output = output;
+            this.output = optionalStack(output);
             this.dirtyTime = dirtyTime;
         }
 
         @Override
         public String describe() {
-            return "Adding pot recipe with input " + input;
+            return "Adding smelter recipe with input " + input;
         }
 
         @Override
