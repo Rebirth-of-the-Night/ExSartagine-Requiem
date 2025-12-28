@@ -116,7 +116,7 @@ public class ExSartagineItems {
 
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_egg");
-		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_beans");
+		boiled_beans = (ItemFood) new ItemFood(20, 10.0f,false).setRegistryName("boiled_beans");
 		boiled_potato = (ItemFood) new ItemFood(6, 0.5f,false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_potato");
 
 		flour = new Item().setCreativeTab(CreativeTabs.FOOD).setRegistryName("flour");
