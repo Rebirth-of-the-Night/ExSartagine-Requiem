@@ -273,6 +273,26 @@ public class CraftTweakerSupport {
         CraftTweakerAPI.apply(new RemoveKettleByOutputsAction(outputStacks));
     }
 
+    /**
+     * Adds cooktop recipe
+     * @param input input ingredient
+     * @param output output items
+     * @param time cook time in ticks, defaults to 200 (10 seconds)
+     */
+    @ZenMethod
+    public static void addCooktopRecipe(IIngredient input, IItemStack output, @Optional("200") int time) {
+        CraftTweakerAPI.apply(new AddCooktopAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output), time));
+    }
+
+    /**
+     * Removes cooktop recipe by output
+     * @param output the outputs of the recipe to remove
+     */
+    @ZenMethod
+    public static void removeCooktopRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new RemoveCooktopAction(CraftTweakerMC.getItemStack(output)));
+    }
+
     //////////////////////////////////////////////
 
     /**
@@ -576,6 +596,46 @@ public class CraftTweakerSupport {
 
             if (!done)
                 CraftTweakerAPI.logWarning("No kettle recipes removed for outputs " + outputs);
+        }
+    }
+
+    private static class AddCooktopAction implements IAction {
+        private final Ingredient input;
+        private final ItemStack output;
+        private final int cookTime;
+
+        private AddCooktopAction(Ingredient input, ItemStack output, int cookTime) {
+            this.input = input;
+            this.output = output;
+            this.cookTime = cookTime;
+        }
+
+        @Override
+        public String describe() {
+            return "Adding cooktop recipe with input " + input;
+        }
+
+        @Override
+        public void apply() {
+            ModRecipes.addCooktopRecipe(input, output, cookTime);
+        }
+    }
+
+    private static class RemoveCooktopAction implements IAction {
+        private final ItemStack output;
+
+        private RemoveCooktopAction(ItemStack output) {
+            this.output = output;
+        }
+
+        @Override
+        public String describe() {
+            return "Removing cooktop recipe with output " + output;
+        }
+
+        @Override
+        public void apply() {
+            ModRecipes.removeCooktopRecipe(output);
         }
     }
 

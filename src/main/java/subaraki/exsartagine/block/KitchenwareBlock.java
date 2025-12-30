@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.recipe.ModRecipes;
+import subaraki.exsartagine.tileentity.TileEntityCooktop;
 import subaraki.exsartagine.tileentity.util.KitchenwareBlockEntity;
 import subaraki.exsartagine.util.Helpers;
 
@@ -39,7 +40,15 @@ public abstract class KitchenwareBlock extends Block {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return ModRecipes.isPlaceable(world.getBlockState(pos.down()).getActualState(world, pos.down()));
+        BlockPos rangePos = pos.down();
+        if (!ModRecipes.isPlaceable(world.getBlockState(rangePos).getActualState(world, rangePos))) {
+            return false;
+        }
+        TileEntity te = world.getTileEntity(rangePos);
+        if (te instanceof TileEntityCooktop && ((TileEntityCooktop) te).getCooktopInventory().isNonEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -12,22 +12,21 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import subaraki.exsartagine.init.ExSartagineBlocks;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
 
@@ -54,15 +53,26 @@ public class BlockRangeExtension extends Block {
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
     }
 
+    public boolean isLit() {
+        return lit;
+    }
+
     @Override
     public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player,
                                     EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return false;
+        if (facing != EnumFacing.UP) {
+            return false;
+        }
+        TileEntity te = world.getTileEntity(pos);
+        if (!(te instanceof TileEntityRangeExtension)) {
+            return false;
+        }
+        return ((TileEntityRangeExtension) te).handlePlayerCooktopInteraction(player, hand, hitX, hitZ);
     }
 
     //check to see if this extension should drop itself when a nearby block is broken
@@ -107,6 +117,17 @@ public class BlockRangeExtension extends Block {
         }
 
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
+        if (lit
+                && !entity.isImmuneToFire()
+                && entity instanceof EntityLivingBase
+                && !EnchantmentHelper.hasFrostWalkerEnchantment((EntityLivingBase) entity)) {
+            entity.attackEntityFrom(DamageSource.HOT_FLOOR, 1.0F);
+        }
+        super.onEntityWalk(world, pos, entity);
     }
 
     /////////////////rendering//////////////
@@ -179,6 +200,13 @@ public class BlockRangeExtension extends Block {
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (lit) {
             BlockRange.smokeParticles(stateIn, worldIn, pos, rand);
+        }
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileEntityRangeExtension) {
+            TileEntityRangeExtension rext = (TileEntityRangeExtension) te;
+            if (rext.getCooktopInventory().isWorking()) {
+                worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1);
+            }
         }
     }
 

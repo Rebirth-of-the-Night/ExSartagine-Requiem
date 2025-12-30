@@ -119,6 +119,10 @@ public class ModRecipes {
         addRecipe(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime, dirtyTime));
     }
 
+    public static void addCooktopRecipe(Ingredient ingredient, ItemStack output, int cookTime) {
+        addRecipe(new CooktopRecipe(ingredient, output, cookTime));
+    }
+
     //note, only the pot and smelter should use this method
 
     private static final ItemStackHandler DUMMY = new ItemStackHandler();
@@ -200,6 +204,10 @@ public class ModRecipes {
 
     public static boolean removeKettleRecipeByOutputs(List<ItemStack> outputs) {
         return getRecipes(RecipeTypes.KETTLE).removeIf(r -> Helpers.areItemStackListsEqual(outputs, r.getResults(new ItemStackHandler())));
+    }
+
+    public static boolean removeCooktopRecipe(ItemStack output) {
+        return getRecipes(RecipeTypes.COOKTOP).removeIf(r -> ItemStack.areItemStacksEqual(output, r.getDisplay()));
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {
@@ -349,19 +357,6 @@ public class ModRecipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
 
-        FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
-                .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
-                .forEach(entry -> {
-                    List<Ingredient> i = new ArrayList<>();
-                    i.add(Ingredient.fromStacks(entry.getKey()));
-                    List<ItemStack> o = new ArrayList<>();
-                    o.add(entry.getValue());
-                    WokRecipe wokRecipe =  new WokRecipe(i,null,o, 0, 0);
-                    ResourceLocation name = entry.getKey().getItem().getRegistryName();
-                    String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
-                    addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
-                });
-
         addBuiltinKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),Ingredient.fromItem(Items.CHICKEN)
                 ,Ingredient.fromItem(Items.BOWL)),null,new FluidStack(FluidRegistry.WATER,100),
                 null,Lists.newArrayList(new ItemStack(ExSartagineItems.noodles_chicken_cooked)),200);
@@ -412,7 +407,20 @@ public class ModRecipes {
 
     public static Set<Item> validItems = new HashSet<>();
 
-    public static void cacheWokInputs() {
+    public static void lateInit() {
+        for (Map.Entry<ItemStack, ItemStack> entry : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
+            if (entry.getKey().getItem() instanceof ItemFood) {
+                Ingredient ing = Ingredient.fromStacks(entry.getKey());
+
+                WokRecipe wokRecipe =  new WokRecipe(Collections.singletonList(ing), null, Collections.singletonList(entry.getValue()), 0, 0);
+                ResourceLocation name = Objects.requireNonNull(entry.getKey().getItem().getRegistryName());
+                String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
+                addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
+
+                addCooktopRecipe(ing, entry.getValue(), 200);
+            }
+        }
+
         for (WokRecipe wokRecipe : getWokRecipes()) {
             List<Ingredient> ingredients = wokRecipe.getIngredients();
             for (Ingredient ingredient : ingredients) {

@@ -50,6 +50,7 @@ public class JeiPlugin implements IModPlugin {
         kettleRecipeCategory = new KettleRecipeCategory(new ItemStack(ExSartagineBlocks.kettle),helper);
         categories.add(kettleRecipeCategory);
         categories.add(new WokRecipeCategory(new ItemStack(ExSartagineBlocks.wok),helper));
+        categories.add(new CooktopRecipeCategory(new ItemStack(ExSartagineBlocks.range),helper));
 
         for (AbstractCookingRecipeCategory<?> category : categories) {
             reg.addRecipeCategories(category);
@@ -66,6 +67,9 @@ public class JeiPlugin implements IModPlugin {
         if (ExSartagineBlocks.cauldron != null) {
             registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.cauldron), ExSartagine.MODID + "." + RecipeTypes.POT.name());
         }
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.range_extended), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.hearth), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.hearth_extended), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
 
         //xpos, ypos,width,height
         registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, ExSartagine.MODID+"."+ RecipeTypes.POT.name());

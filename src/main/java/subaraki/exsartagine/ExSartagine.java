@@ -2,13 +2,23 @@ package subaraki.exsartagine;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -23,6 +33,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL11;
+import subaraki.exsartagine.block.BlockRange;
+import subaraki.exsartagine.block.BlockRangeExtension;
 import subaraki.exsartagine.gui.GuiHandler;
 import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.ExSartagineItems;
@@ -32,9 +45,9 @@ import subaraki.exsartagine.integration.Integration;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
-import subaraki.exsartagine.tileentity.TileEntityPot;
-import subaraki.exsartagine.tileentity.WokBlockEntity;
+import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.CookerRenderer;
+import subaraki.exsartagine.tileentity.render.CooktopRenderer;
 import subaraki.exsartagine.tileentity.render.WokRenderer;
 import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
@@ -77,6 +90,77 @@ public class ExSartagine {
             ExSartagineItems.registerRenders();
             ClientRegistry.bindTileEntitySpecialRenderer(WokBlockEntity.class, new WokRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPot.class, new CookerRenderer());
+            CooktopRenderer cooktopRenderer = new CooktopRenderer();
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRange.class, cooktopRenderer);
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRangeExtension.class, cooktopRenderer);
+        }
+
+        @SubscribeEvent
+        public static void onDrawBlockHighlight(DrawBlockHighlightEvent event) {
+            RayTraceResult trace = event.getTarget();
+            if (trace.typeOfHit == RayTraceResult.Type.BLOCK && trace.sideHit == EnumFacing.UP) {
+                BlockPos pos = trace.getBlockPos();
+                int posX = pos.getX(), posY = pos.getY(), posZ = pos.getZ();
+                IBlockState state = event.getPlayer().world.getBlockState(pos);
+                Block block = state.getBlock();
+                if (block instanceof BlockRange || block instanceof BlockRangeExtension) {
+                    double hitX = trace.hitVec.x - posX, hitZ = trace.hitVec.z - posZ;
+                    if (hitZ < 0.5) {
+                        if (hitX < 0.5) {
+                            drawHighlightBox(event.getPlayer(),
+                                    posX + 0.03125f, posZ + 0.03125f,
+                                    posX + 0.46875f, posZ + 0.46875f,
+                                    posY + 1.002f, event.getPartialTicks());
+                        } else {
+                            drawHighlightBox(event.getPlayer(),
+                                    posX + 0.53125f, posZ + 0.03125f,
+                                    posX + 0.96875f, posZ + 0.46875f,
+                                    posY + 1.002f, event.getPartialTicks());
+                        }
+                    } else if (hitX < 0.5) {
+                        drawHighlightBox(event.getPlayer(),
+                                posX + 0.03125f, posZ + 0.53125f,
+                                posX + 0.46875f, posZ + 0.96875f,
+                                posY + 1.002f, event.getPartialTicks());
+                    } else {
+                        drawHighlightBox(event.getPlayer(),
+                                posX + 0.53125f, posZ + 0.53125f,
+                                posX + 0.96875f, posZ + 0.96875f,
+                                posY + 1.002f, event.getPartialTicks());
+                    }
+                }
+            }
+        }
+        
+        private static void drawHighlightBox(EntityPlayer player, float minX, float minZ, float maxX, float maxZ, float y, float partialTicks) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(
+                    -player.lastTickPosX - (player.posX - player.lastTickPosX) * partialTicks,
+                    -player.lastTickPosY - (player.posY - player.lastTickPosY) * partialTicks,
+                    -player.lastTickPosZ - (player.posZ - player.lastTickPosZ) * partialTicks);
+
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(
+                    GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                    GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GlStateManager.glLineWidth(2.0F);
+            GlStateManager.disableTexture2D();
+            GlStateManager.depthMask(false);
+            GlStateManager.color(0f, 0f, 0f, 0.4f);
+
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buf = tess.getBuffer();
+            buf.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+            buf.pos(minX, y, minZ).endVertex();
+            buf.pos(maxX, y, minZ).endVertex();
+            buf.pos(maxX, y, maxZ).endVertex();
+            buf.pos(minX, y, maxZ).endVertex();
+            tess.draw();
+
+            GlStateManager.depthMask(true);
+            GlStateManager.enableTexture2D();
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -111,7 +195,7 @@ public class ExSartagine {
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         Oredict.addToOreDict();
-        ModRecipes.cacheWokInputs();
+        ModRecipes.lateInit();
         Integration.postInit();
         if (!FluidRegistry.isFluidRegistered(ConfigHandler.washer_fluid)) {
             logger.warn("Configured washer fluid is not in the registry: {}", ConfigHandler.washer_fluid);

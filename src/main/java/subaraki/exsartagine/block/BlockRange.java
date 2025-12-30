@@ -11,6 +11,10 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -18,25 +22,26 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 import subaraki.exsartagine.ExSartagine;
-import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityRange;
+import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
 
+import java.util.List;
 import java.util.Random;
-import java.util.function.Supplier;
 
 @Optional.Interface(modid = "pyrotech", iface = "com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableWithIgniterItem")
 @Optional.Interface(modid = "pyrotech", iface = "com.codetaylor.mc.pyrotech.library.spi.block.IBlockIgnitableAdjacentIgniterBlock")
@@ -44,17 +49,12 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
 
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool HEATED = PropertyBool.create("heated");
-    private final Supplier<Boolean> manualIgnition;
-    private final int maxExtensions;
-    private final boolean hearth;
-    private final double fuelEfficiency;
 
-    public BlockRange(Supplier<Boolean> manualIgnition, int maxExtensions, boolean hearth,double fuelEfficiency) {
+    private final Tier tier;
+
+    public BlockRange(Tier tier) {
         super(Material.IRON);
-        this.manualIgnition = manualIgnition;
-        this.maxExtensions = maxExtensions;
-        this.hearth = hearth;
-        this.fuelEfficiency = fuelEfficiency;
+        this.tier = tier;
         setSoundType(SoundType.METAL);
         setCreativeTab(ExSartagineItems.pots);
         setHarvestLevel("pickaxe", 1);
@@ -76,31 +76,8 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
         if (!(tile instanceof TileEntityRange))
             return false;
 
-
-        if (manualIgnition.get()) {
-
-            if (!((TileEntityRange) tile).isSelfIgnitingUpgrade()) {
-
-                ItemStack stack = player.getHeldItem(hand);
-                boolean matches = Oredict.checkMatch(Oredict.IGNITER, stack);
-                if (matches) {
-                    if (!worldIn.isRemote) {
-                        ((TileEntityRange) tile).createSparks();
-                        worldIn.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1, player.getRNG().nextFloat() * 0.4F + 0.8F);
-                        stack.damageItem(1, player);
-                    }
-                    return true;
-                }
-                matches = Oredict.checkMatch(Oredict.SELF_IGNITER, stack);
-                if (matches) {
-                    if (!worldIn.isRemote) {
-                        ((TileEntityRange) tile).setSelfIgnitingUpgrade(true);
-                        stack.shrink(1);
-                    }
-                    return true;
-                }
-            }
-        }
+        if (((TileEntityRange) tile).handlePlayerInteraction(player, hand, facing, hitX, hitY, hitZ))
+            return true;
 
         player.openGui(ExSartagine.instance, Reference.RANGE, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
@@ -112,7 +89,7 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
 
     @Override
     public int getLightValue(IBlockState state) {
-        if (hearth && state.getValue(HEATED)) return 14;
+        if (tier == Tier.HEARTH && state.getValue(HEATED)) return 14;
         return super.getLightValue(state);
     }
 
@@ -145,14 +122,10 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
     @Optional.Method(modid = "pyrotech")
     @Override
     public void igniteWithIgniterItem(World world, BlockPos pos, IBlockState blockState, EnumFacing facing){
-        TileEntity tile = world.getTileEntity(pos);
-
-        if ((tile instanceof TileEntityRange)) {
-            TileEntityRange range = (TileEntityRange) tile;
-            if (blockState.getValue(Properties.FACING_HORIZONTAL) == facing && manualIgnition.get() && !(range.isSelfIgnitingUpgrade())) {
-                if (!world.isRemote) {
-                    range.createSparks();
-                }
+        if (blockState.getValue(Properties.FACING_HORIZONTAL) == facing) {
+            TileEntity tile = world.getTileEntity(pos);
+            if ((tile instanceof TileEntityRange)) {
+                ((TileEntityRange) tile).ignite();
             }
         }
     }
@@ -161,18 +134,23 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
     @Override
     public void igniteWithAdjacentIgniterBlock(World world, BlockPos pos, IBlockState blockState, EnumFacing facing) {
         TileEntity tile = world.getTileEntity(pos);
-
         if ((tile instanceof TileEntityRange)) {
-            TileEntityRange range = (TileEntityRange) tile;
-            if (manualIgnition.get() && !(range.isSelfIgnitingUpgrade())) {
-                if (!world.isRemote) {
-                    range.createSparks();
-                }
-            }
+            ((TileEntityRange) tile).ignite();
         }
     }
 
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
+
+    @Override
+    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
+        if (!entity.isImmuneToFire()
+                && world.getBlockState(pos).getValue(HEATED)
+                && entity instanceof EntityLivingBase
+                && !EnchantmentHelper.hasFrostWalkerEnchantment((EntityLivingBase) entity)) {
+            entity.attackEntityFrom(DamageSource.HOT_FLOOR, 1.0F);
+        }
+        super.onEntityWalk(world, pos, entity);
     }
 
     ///////////////TE Stuff//////////////////////
@@ -205,13 +183,18 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
 
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (worldIn.getTileEntity(pos) instanceof TileEntityRange) {
-            if (((TileEntityRange) worldIn.getTileEntity(pos)).isFueled()) {
-                if (hearth) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileEntityRange) {
+            TileEntityRange range = (TileEntityRange) te;
+            if (range.isFueled()) {
+                if (tier == Tier.HEARTH) {
                     vanillaFurnaceParticles(stateIn, worldIn, pos, rand);
                 } else {
                     smokeParticles(stateIn, worldIn, pos, rand);
                 }
+            }
+            if (range.getCooktopInventory().isWorking()) {
+                worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1);
             }
         }
     }
@@ -270,6 +253,21 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
         }
     }
 
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flags) {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null && tag.hasKey("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
+            NBTTagCompound blockTag = tag.getCompoundTag("BlockEntityTag");
+            if (blockTag.getBoolean("self_igniting_upgrade")) {
+                tooltip.add(TextFormatting.RED + "+" + TextFormatting.GRAY + I18n.format(ExSartagine.MODID + ".gui.self_igniting_upgrade"));
+            }
+            if (blockTag.getBoolean("combustion_chamber_upgrade")) {
+                tooltip.add(TextFormatting.RED + "+" + TextFormatting.GRAY + I18n.format(ExSartagine.MODID + ".gui.combustion_chamber_upgrade"));
+            }
+        }
+        super.addInformation(stack, world, tooltip, flags);
+    }
+
     /////// TURNING STUFF ////////////////
 
     protected BlockStateContainer createBlockState() {
@@ -300,15 +298,46 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
-    public int getMaxExtensions() {
-        return maxExtensions;
+    public Tier getTier() {
+        return tier;
     }
 
-    public Supplier<Boolean> isManualIgnition() {
-        return manualIgnition;
-    }
+    public enum Tier {
+        HEARTH(1, 0.5f, 30) {
+            @Override
+            public boolean isManualIgnition() {
+                return ConfigHandler.hearth_requires_ignition;
+            }
+        },
+        RANGE(3, 1f, 50) {
+            @Override
+            public boolean isManualIgnition() {
+                return ConfigHandler.range_requires_ignition;
+            }
+        };
 
-    public double getFuelEfficiency() {
-        return fuelEfficiency;
+        private final int maxExtensions;
+        private final float fuelEfficiency;
+        private final int cookingSpeed;
+
+        Tier(int maxExtensions, float fuelEfficiency, int cookingSpeed) {
+            this.maxExtensions = maxExtensions;
+            this.fuelEfficiency = fuelEfficiency;
+            this.cookingSpeed = cookingSpeed;
+        }
+
+        public int getMaxExtensions() {
+            return maxExtensions;
+        }
+
+        public float getFuelEfficiency() {
+            return fuelEfficiency;
+        }
+
+        public int getCookingSpeed() {
+            return cookingSpeed;
+        }
+
+        public abstract boolean isManualIgnition();
     }
 }

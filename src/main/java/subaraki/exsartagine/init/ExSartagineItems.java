@@ -33,6 +33,7 @@ public class ExSartagineItems {
 	public static Item range_extended;
 	public static Item hearth;
 	public static Item hearth_extended;
+    public static Item combustion_chamber;
 
 	public static Item kettle;
 
@@ -114,6 +115,7 @@ public class ExSartagineItems {
 
 		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
 
+        combustion_chamber = new Item().setCreativeTab(pots).setRegistryName("combustion_chamber");
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_egg");
 		boiled_beans = (ItemFood) new ItemFood(20, 10.0f,false).setRegistryName("boiled_beans");

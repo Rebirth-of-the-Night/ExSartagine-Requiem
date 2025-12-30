@@ -29,7 +29,9 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
     }
 
     public float getProgressFraction() {
-        return runningRecipe != null ? MathHelper.clamp(progress / (float) runningRecipe.getCookTime(), 0F, 1F) : 0F;
+        return runningRecipe != null
+                ? MathHelper.clamp(progress / (float) (runningRecipe.getCookTime() * host.getRecipeTimeScale()), 0F, 1F)
+                : 0F;
     }
 
     public boolean tick() {
@@ -58,7 +60,7 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
 
         if (!host.canDoWork(runningRecipe)) {
             if (progress > 0) {
-                --progress;
+                progress = Math.max(progress - host.getRecipeTimeScale(), 0);
                 return true;
             }
             return didWork;
@@ -68,14 +70,14 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
             return didWork;
         }
 
-        if (progress >= runningRecipe.getCookTime()) {
+        if (progress >= runningRecipe.getCookTime() * host.getRecipeTimeScale()) {
             if (!host.canFitOutputs(runningRecipe) || !host.canFinishRecipe(runningRecipe)) {
                 return didWork;
             }
             progress = 0;
             host.processRecipe(runningRecipe);
         } else {
-            ++progress;
+            progress += host.getRecipeTimeIncrement();
             host.onWorkTick(runningRecipe, progress);
         }
         return true;
@@ -83,9 +85,6 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
 
     public void writeToNBT(NBTTagCompound tag) {
         tag.setInteger("progress", progress);
-        if (runningRecipe != null) {
-            tag.setInteger("cooktime", runningRecipe.getCookTime());
-        }
     }
 
     public void readFromNBT(NBTTagCompound tag) {
