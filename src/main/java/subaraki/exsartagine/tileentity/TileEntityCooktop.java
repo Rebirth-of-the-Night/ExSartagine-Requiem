@@ -6,7 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -20,6 +23,7 @@ import subaraki.exsartagine.recipe.CooktopRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.util.RecipeHandler;
 import subaraki.exsartagine.tileentity.util.RecipeHost;
+import subaraki.exsartagine.util.Helpers;
 
 public abstract class TileEntityCooktop extends TileEntity {
     public static int getHitSlot(float hitX, float hitZ) {
@@ -35,34 +39,7 @@ public abstract class TileEntityCooktop extends TileEntity {
     public abstract BlockRange.Tier getEffectiveTier();
 
     public boolean handlePlayerCooktopInteraction(EntityPlayer player, EnumHand hand, float hitX, float hitZ) {
-        int slot = getHitSlot(hitX, hitZ);
-        ItemStack held = player.getHeldItem(hand);
-        ItemStack inSlot = cooktopInventory.getStackInSlot(slot);
-        if (inSlot.isEmpty()) {
-            if (!held.isEmpty()) {
-                ItemStack rem = cooktopInventory.insertItem(slot, held, false);
-                if (rem.getCount() < held.getCount()) {
-                    player.setHeldItem(hand, rem);
-                    return true;
-                }
-            }
-        } else if (held.isEmpty()) {
-            ItemStack ext = cooktopInventory.extractItem(slot, Integer.MAX_VALUE, false);
-            if (!ext.isEmpty()) {
-                player.setHeldItem(hand, ext);
-                return true;
-            }
-        } else {
-            int amount = held.getMaxStackSize() - held.getCount();
-            if (amount > 0 && ItemHandlerHelper.canItemStacksStack(held, cooktopInventory.extractItem(slot, amount, true))) {
-                ItemStack ext = cooktopInventory.extractItem(slot, amount, false);
-                if (!ext.isEmpty()) {
-                    held.grow(ext.getCount());
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Helpers.handleHeldItemInteraction(player, hand, cooktopInventory, getHitSlot(hitX, hitZ));
     }
 
     @Override
@@ -127,7 +104,10 @@ public abstract class TileEntityCooktop extends TileEntity {
         @NotNull
         @Override
         public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if (cooktop.getWorld().getBlockState(cooktop.getPos().up()).getBlock() instanceof KitchenwareBlock) {
+            World world = cooktop.getWorld();
+            BlockPos above = cooktop.getPos().up();
+            IBlockState state = world.getBlockState(above);
+            if (state.getBlock() instanceof KitchenwareBlock || state.isSideSolid(world, above, EnumFacing.DOWN)) {
                 return stack;
             }
             return slots[slot].insertItem(stack, simulate);

@@ -16,9 +16,6 @@ import subaraki.exsartagine.tileentity.TileEntityCooktop;
 public class CooktopRenderer extends TileEntitySpecialRenderer<TileEntityCooktop> {
     @Override
     public void render(TileEntityCooktop te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        Minecraft mc = Minecraft.getMinecraft();
-        RenderItem ri = mc.getRenderItem();
-
         BlockPos pos = te.getPos();
         IBlockState state = te.getWorld().getBlockState(pos);
         Comparable<?> dirProp = state.getProperties().get(BlockHorizontal.FACING);
@@ -30,6 +27,7 @@ public class CooktopRenderer extends TileEntitySpecialRenderer<TileEntityCooktop
         GlStateManager.scale(0.4f, 0.4f, 0.4f);
         RenderHelper.enableStandardItemLighting();
 
+        RenderItem ri = Minecraft.getMinecraft().getRenderItem();
         renderSlot(ri, te, 0, 0, 0, dir);
         renderSlot(ri, te, 1, 1, 0, dir);
         renderSlot(ri, te, 2, 0, 1, dir);

@@ -27,6 +27,8 @@ public class ExSartagineBlocks {
 
 	public static Block kettle;
 
+    public static Block cutting_board;
+
 	//todo replace with a tag in 1.13+
 	private static final Supplier<Set<Block>> ranges = () -> Sets.newHashSet(range, range_extended, range_extended_lit);
 	private static final Supplier<Set<Block>> hearths = () -> Sets.newHashSet(hearth, hearth_extended, hearth_extended_lit);
@@ -47,6 +49,8 @@ public class ExSartagineBlocks {
 		hearth_extended_lit = new BlockRangeExtension(true,() -> hearth_extended,() -> hearth_extended_lit,hearths).setRegistryName("hearth_extended_lit").setTranslationKey(ExSartagine.MODID+".hearth_extended_lit");
 
 		kettle = new BlockKettle(Material.IRON).setRegistryName("kettle").setCreativeTab(ExSartagineItems.pots).setTranslationKey(ExSartagine.MODID +".kettle").setHardness(5);
+
+        cutting_board = new BlockCuttingBoard().setRegistryName("cutting_board").setTranslationKey(ExSartagine.MODID + ".cutting_board");
 		register(registry);
 	}
 	
@@ -64,5 +68,6 @@ public class ExSartagineBlocks {
 		registry.register(hearth_extended);
 		registry.register(hearth_extended_lit);
 		registry.register(kettle);
+        registry.register(cutting_board);
 	}
 }

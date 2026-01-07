@@ -293,6 +293,31 @@ public class CraftTweakerSupport {
         CraftTweakerAPI.apply(new RemoveCooktopAction(CraftTweakerMC.getItemStack(output)));
     }
 
+    /**
+     * Adds cutting board recipe
+     * @param input input ingredient
+     * @param knife input knife tool
+     * @param output output items
+     * @param cuts number of cuts required per completed recipe, defaults to 1
+     */
+    @ZenMethod
+    public static void addCuttingBoardRecipe(IIngredient input, IIngredient knife, IItemStack output, @Optional("1") int cuts) {
+        CraftTweakerAPI.apply(new AddCuttingBoardAction(
+                CraftTweakerMC.getIngredient(input),
+                CraftTweakerMC.getIngredient(knife),
+                CraftTweakerMC.getItemStack(output),
+                cuts));
+    }
+
+    /**
+     * Removes cutting board recipe by output
+     * @param output the outputs of the recipe to remove
+     */
+    @ZenMethod
+    public static void removeCuttingBoardRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new RemoveCuttingBoardAction(CraftTweakerMC.getItemStack(output)));
+    }
+
     //////////////////////////////////////////////
 
     /**
@@ -635,7 +660,53 @@ public class CraftTweakerSupport {
 
         @Override
         public void apply() {
-            ModRecipes.removeCooktopRecipe(output);
+            if (!ModRecipes.removeCooktopRecipe(output)) {
+                CraftTweakerAPI.logWarning("No cooktop recipes removed for output " + output);
+            }
+        }
+    }
+
+    private static class AddCuttingBoardAction implements IAction {
+        private final Ingredient input;
+        private final Ingredient knife;
+        private final ItemStack output;
+        private final int cuts;
+        
+        private AddCuttingBoardAction(Ingredient input, Ingredient knife, ItemStack output, int cuts) {
+            this.input = input;
+            this.knife = knife;
+            this.output = output;
+            this.cuts = cuts;
+        }
+
+        @Override
+        public String describe() {
+            return "Adding cutting board recipe with input " + input;
+        }
+
+        @Override
+        public void apply() {
+            ModRecipes.addCuttingBoardRecipe(input, knife, output, cuts);
+        }
+    }
+
+    private static class RemoveCuttingBoardAction implements IAction {
+        private final ItemStack output;
+
+        private RemoveCuttingBoardAction(ItemStack output) {
+            this.output = output;
+        }
+
+        @Override
+        public String describe() {
+            return "Removing cutting board recipe with output " + output;
+        }
+
+        @Override
+        public void apply() {
+            if (!ModRecipes.removeCuttingBoardRecipe(output)) {
+                CraftTweakerAPI.logWarning("No cutting board recipes removed for output " + output);
+            }
         }
     }
 

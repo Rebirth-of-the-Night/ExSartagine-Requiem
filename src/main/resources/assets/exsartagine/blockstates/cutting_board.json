@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "normal": {
+      "model": "exsartagine:cutting_board"
+    },
+    "facing=east": {
+      "model": "exsartagine:cutting_board",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "exsartagine:cutting_board",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "exsartagine:cutting_board",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "exsartagine:cutting_board",
+      "y": 0
+    }
+  }
+}

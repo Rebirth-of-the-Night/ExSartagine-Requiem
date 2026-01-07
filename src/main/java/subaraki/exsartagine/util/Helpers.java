@@ -5,10 +5,13 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -120,4 +123,33 @@ public class Helpers {
         return true;
     }
 
+    public static boolean handleHeldItemInteraction(EntityPlayer player, EnumHand hand, IItemHandler inv, int slot) {
+        ItemStack held = player.getHeldItem(hand);
+        ItemStack inSlot = inv.getStackInSlot(slot);
+        if (inSlot.isEmpty()) {
+            if (!held.isEmpty()) {
+                ItemStack rem = inv.insertItem(slot, held, false);
+                if (rem.getCount() < held.getCount()) {
+                    player.setHeldItem(hand, rem);
+                    return true;
+                }
+            }
+        } else if (held.isEmpty()) {
+            ItemStack ext = inv.extractItem(slot, Integer.MAX_VALUE, false);
+            if (!ext.isEmpty()) {
+                player.setHeldItem(hand, ext);
+                return true;
+            }
+        } else {
+            int amount = held.getMaxStackSize() - held.getCount();
+            if (amount > 0 && ItemHandlerHelper.canItemStacksStack(held, inv.extractItem(slot, amount, true))) {
+                ItemStack ext = inv.extractItem(slot, amount, false);
+                if (!ext.isEmpty()) {
+                    held.grow(ext.getCount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

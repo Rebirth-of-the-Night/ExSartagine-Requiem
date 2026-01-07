@@ -16,6 +16,10 @@ public interface RecipeHost<R extends CustomRecipe<?>> {
         return 1;
     }
 
+    default int getRecipeTimeDecay() {
+        return 1;
+    }
+
     @Nullable
     R findRecipe();
 

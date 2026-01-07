@@ -60,7 +60,7 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
 
         if (!host.canDoWork(runningRecipe)) {
             if (progress > 0) {
-                progress = Math.max(progress - host.getRecipeTimeScale(), 0);
+                progress = Math.max(progress - host.getRecipeTimeDecay(), 0);
                 return true;
             }
             return didWork;
@@ -70,16 +70,20 @@ public class RecipeHandler<R extends CustomRecipe<?>> {
             return didWork;
         }
 
-        if (progress >= runningRecipe.getCookTime() * host.getRecipeTimeScale()) {
-            if (!host.canFitOutputs(runningRecipe) || !host.canFinishRecipe(runningRecipe)) {
-                return didWork;
-            }
-            progress = 0;
-            host.processRecipe(runningRecipe);
-        } else {
-            progress += host.getRecipeTimeIncrement();
+        int maxProgress = runningRecipe.getCookTime() * host.getRecipeTimeScale();
+        if (progress < maxProgress) {
+            progress = Math.min(progress + host.getRecipeTimeIncrement(), maxProgress);
             host.onWorkTick(runningRecipe, progress);
+            if (progress < maxProgress) {
+                return true;
+            }
         }
+
+        if (!host.canFitOutputs(runningRecipe) || !host.canFinishRecipe(runningRecipe)) {
+            return didWork;
+        }
+        progress = 0;
+        host.processRecipe(runningRecipe);
         return true;
     }
 

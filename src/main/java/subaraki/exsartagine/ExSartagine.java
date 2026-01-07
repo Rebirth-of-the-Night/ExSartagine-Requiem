@@ -3,6 +3,7 @@ package subaraki.exsartagine;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,14 +14,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -29,6 +34,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,12 +49,15 @@ import subaraki.exsartagine.init.ModBlockEntities;
 import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.integration.Integration;
 import subaraki.exsartagine.network.PacketHandler;
+import subaraki.exsartagine.network.TransferHeldItemPacket;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.recipe.WokRecipe;
 import subaraki.exsartagine.tileentity.*;
 import subaraki.exsartagine.tileentity.render.CookerRenderer;
 import subaraki.exsartagine.tileentity.render.CooktopRenderer;
+import subaraki.exsartagine.tileentity.render.CuttingBoardRenderer;
 import subaraki.exsartagine.tileentity.render.WokRenderer;
+import subaraki.exsartagine.tileentity.util.HeldItemTransferable;
 import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
 
@@ -93,6 +102,57 @@ public class ExSartagine {
             CooktopRenderer cooktopRenderer = new CooktopRenderer();
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRange.class, cooktopRenderer);
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRangeExtension.class, cooktopRenderer);
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCuttingBoard.class, new CuttingBoardRenderer());
+        }
+
+        @SubscribeEvent
+        public static void onPlayerInteractBlock(PlayerInteractEvent.RightClickBlock event) {
+            if (event.getFace() != EnumFacing.UP) {
+                return;
+            }
+            TileEntity te = event.getWorld().getTileEntity(new BlockPos(event.getHitVec()));
+            if (!(te instanceof TileEntityCuttingBoard)) {
+                return;
+            }
+            ItemStack held = event.getEntityPlayer().getHeldItem(event.getHand());
+            if (!Oredict.checkMatch(Oredict.KNIFE, held)) {
+                return;
+            }
+            event.setUseBlock(Event.Result.ALLOW);
+        }
+
+        @SubscribeEvent
+        public static void onMouseEvent(MouseEvent event) {
+            int dwheel = event.getDwheel();
+            if (dwheel == 0) {
+                return;
+            }
+
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc.player == null || mc.objectMouseOver == null
+                    || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK || !mc.player.isSneaking()) {
+                return;
+            }
+
+            BlockPos pos = mc.objectMouseOver.getBlockPos();
+            TileEntity te = mc.player.world.getTileEntity(pos);
+            if (!(te instanceof HeldItemTransferable)) {
+                return;
+            }
+            event.setCanceled(true);
+
+            HeldItemTransferable target = (HeldItemTransferable) te;
+            boolean isInsert = dwheel > 0;
+            EnumHand hand;
+            if (target.transferFromHeldItem(mc.player, EnumHand.MAIN_HAND, isInsert)) {
+                hand = EnumHand.MAIN_HAND;
+            } else if (target.transferFromHeldItem(mc.player, EnumHand.OFF_HAND, isInsert)) {
+                hand = EnumHand.OFF_HAND;
+            } else {
+                return;
+            }
+
+            PacketHandler.INSTANCE.sendToServer(new TransferHeldItemPacket(pos, hand, isInsert));
         }
 
         @SubscribeEvent

@@ -123,6 +123,10 @@ public class ModRecipes {
         addRecipe(new CooktopRecipe(ingredient, output, cookTime));
     }
 
+    public static void addCuttingBoardRecipe(Ingredient ingredient, Ingredient knife, ItemStack output, int cuts) {
+        addRecipe(new CuttingBoardRecipe(ingredient, knife, output, cuts));
+    }
+
     //note, only the pot and smelter should use this method
 
     private static final ItemStackHandler DUMMY = new ItemStackHandler();
@@ -208,6 +212,10 @@ public class ModRecipes {
 
     public static boolean removeCooktopRecipe(ItemStack output) {
         return getRecipes(RecipeTypes.COOKTOP).removeIf(r -> ItemStack.areItemStacksEqual(output, r.getDisplay()));
+    }
+
+    public static boolean removeCuttingBoardRecipe(ItemStack output) {
+        return getRecipes(RecipeTypes.CUTTING_BOARD).removeIf(r -> ItemStack.areItemStacksEqual(output, r.getDisplay()));
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {

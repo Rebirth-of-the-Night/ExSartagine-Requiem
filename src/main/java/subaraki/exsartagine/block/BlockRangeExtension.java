@@ -9,6 +9,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,6 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import subaraki.exsartagine.Utils;
 import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityRange;
 import subaraki.exsartagine.tileentity.TileEntityRangeExtension;
@@ -107,12 +109,14 @@ public class BlockRangeExtension extends Block {
         if (!(newState.getBlock() instanceof BlockRangeExtension)) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof TileEntityRangeExtension) {
-                BlockPos parentRange = ((TileEntityRangeExtension) tile).getParentRange();
+                TileEntityRangeExtension rext = (TileEntityRangeExtension) tile;
+                BlockPos parentRange = rext.getParentRange();
                 if (parentRange != null) {
                     TileEntity range = worldIn.getTileEntity(parentRange);
                     if (range instanceof TileEntityRange)
                         ((TileEntityRange) range).disconnect(pos);
                 }
+                Utils.scatter(worldIn, pos, rext.getCooktopInventory());
             }
         }
 
@@ -194,6 +198,11 @@ public class BlockRangeExtension extends Block {
     @Override
     public boolean isFullBlock(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
     @SideOnly(Side.CLIENT)

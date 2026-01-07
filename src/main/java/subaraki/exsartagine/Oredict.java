@@ -14,6 +14,7 @@ public class Oredict {
     public static final String SELF_IGNITER = ExSartagine.MODID+":self_igniter_upgrade";
     public static final String CLEANER = "cleaner";
     public static final String WASHER = "washer";
+    public static final String KNIFE = "knife";
     public static final String CHEESE = "itemCheese";
 
     public static void addToOreDict() {

@@ -9,6 +9,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -115,6 +116,7 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
             worldIn.updateComparatorOutputLevel(pos, state.getBlock());
             TileEntityRange range = (TileEntityRange) tileentity;
             Utils.scatter(worldIn, pos, range.getInventory());
+            Utils.scatter(worldIn, pos, range.getCooktopInventory());
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -179,6 +181,11 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
     @Override
     public boolean isFullBlock(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 
     @SideOnly(Side.CLIENT)
