@@ -38,17 +38,25 @@ minecraft {
 }
 
 repositories {
-    maven { url "http://maven.blamejared.com" }
     maven {
+        name "ModMaven"
+        url "https://modmaven.dev"
+    }
+    maven {
+        name "BlameJared"
+        url "http://maven.blamejared.com"
+    }
+    maven {
+        name "progwml6"
         url "http://dvs1.progwml6.com/files/maven" // JEI
     }
-    maven { url "http://maven.amadornes.com/" }
     maven {
-        url "https://cursemaven.com"
-    }
-    jcenter()
-    maven {
+        name "Shadowfacts"
         url "http://maven.shadowfacts.net/"
+    }
+    maven {
+        name "CurseMaven"
+        url "https://cursemaven.com"
     }
 }
 

@@ -5,6 +5,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.TileEntitySmelter;
+import subaraki.exsartagine.util.ConfigHandler;
 import subaraki.exsartagine.util.Reference;
 
 import java.util.Random;
@@ -93,6 +95,10 @@ public class BlockSmelter extends HeatableGuiBlock {
 	public boolean isFullBlock(IBlockState state) {
 		return false;
 	}
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
@@ -100,18 +106,24 @@ public class BlockSmelter extends HeatableGuiBlock {
 		double d1 = (double)pos.getY() + 0.75D;
 		double d2 = (double)pos.getZ() + 0.5D;
 
+        boolean fire = ConfigHandler.smelter_fire_effect;
+
 		if(worldIn.getTileEntity(pos) instanceof TileEntitySmelter)
 		{
 			if(((TileEntitySmelter)worldIn.getTileEntity(pos)).activeHeatSourceBelow() && !((TileEntitySmelter)worldIn.getTileEntity(pos)).getInventory().getStackInSlot(0).isEmpty())
 			{
 				for(int i = 0; i < 25; i++)
 				{
-					worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
-					worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.02D, 0.0D);
+                    if (fire) {
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 5 - 0.1), d1, d2 + (RANDOM.nextDouble() / 5 - 0.1), 0.0D, 0.0D, 0.0D);
+                        worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 5 - 0.1), d1, d2 + (RANDOM.nextDouble() / 5 - 0.1), 0.0D, 0.02D, 0.0D);
+                    }
 
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.0D, 0.0D);
 				}
-				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0+(RANDOM.nextDouble()/5 - 0.1), d1, d2+(RANDOM.nextDouble()/5 - 0.1), 0.0D, 0.05D, 0.0D);
+                if (fire) {
+                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 5 - 0.1), d1, d2 + (RANDOM.nextDouble() / 5 - 0.1), 0.0D, 0.05D, 0.0D);
+                }
 			}
 		}
 	}

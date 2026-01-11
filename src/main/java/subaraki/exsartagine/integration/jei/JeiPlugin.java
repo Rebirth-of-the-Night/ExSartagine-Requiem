@@ -1,9 +1,7 @@
 package subaraki.exsartagine.integration.jei;
 
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.client.Minecraft;
@@ -21,6 +19,7 @@ import subaraki.exsartagine.gui.client.screen.GuiSmelter;
 import subaraki.exsartagine.gui.client.screen.KettleScreen;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.init.ExSartagineBlocks;
+import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.integration.jei.category.*;
 import subaraki.exsartagine.recipe.DirtyingRecipe;
@@ -37,6 +36,8 @@ public class JeiPlugin implements IModPlugin {
 
     private KettleRecipeCategory kettleRecipeCategory;
 
+    private IModRegistry jeiModRegistry;
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
         categories = new ArrayList<>();
@@ -49,6 +50,8 @@ public class JeiPlugin implements IModPlugin {
         kettleRecipeCategory = new KettleRecipeCategory(new ItemStack(ExSartagineBlocks.kettle),helper);
         categories.add(kettleRecipeCategory);
         categories.add(new WokRecipeCategory(new ItemStack(ExSartagineBlocks.wok),helper));
+        categories.add(new CooktopRecipeCategory(new ItemStack(ExSartagineBlocks.range),helper));
+        categories.add(new CuttingBoardRecipeCategory(new ItemStack(ExSartagineBlocks.cutting_board),helper));
 
         for (AbstractCookingRecipeCategory<?> category : categories) {
             reg.addRecipeCategories(category);
@@ -57,12 +60,17 @@ public class JeiPlugin implements IModPlugin {
 
     @Override
     public void register(IModRegistry registry) {
+        jeiModRegistry = registry;
+
         for (AbstractCookingRecipeCategory<?> category : categories)
             category.setup(registry);
 
         if (ExSartagineBlocks.cauldron != null) {
             registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.cauldron), ExSartagine.MODID + "." + RecipeTypes.POT.name());
         }
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.range_extended), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.hearth), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
+        registry.addRecipeCatalyst(new ItemStack(ExSartagineBlocks.hearth_extended), ExSartagine.MODID + "." + RecipeTypes.COOKTOP.name());
 
         //xpos, ypos,width,height
         registry.addRecipeClickArea(GuiPot.class, 80, 32, 26, 23, ExSartagine.MODID+"."+ RecipeTypes.POT.name());
@@ -75,6 +83,12 @@ public class JeiPlugin implements IModPlugin {
         recipeTransferRegistry.addRecipeTransferHandler(ContainerKettle.class,kettleRecipeCategory.getUid(),0,10,10+10,36);
 
         //registry.addGuiScreenHandler(KettleScreen.class, KettleGuiProperties::new);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime runtime) {
+        jeiModRegistry.getIngredientRegistry().removeIngredientsAtRuntime(
+                VanillaTypes.ITEM, Collections.singleton(new ItemStack(ExSartagineItems.boiled_beans)));
     }
 
     private static final ResourceLocation CLEAN_TEXTURE = new ResourceLocation(ExSartagine.MODID, "textures/gui/clean.png");

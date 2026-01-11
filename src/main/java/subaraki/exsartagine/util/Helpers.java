@@ -5,14 +5,19 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -106,4 +111,77 @@ public class Helpers {
         return String.format("%d:%02d:%02d", minutes / 60, minutes % 60, seconds % 60);
     }
 
+    public static boolean areItemStackListsEqual(List<ItemStack> a, List<ItemStack> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        Iterator<ItemStack> iterA = a.iterator(), iterB = b.iterator();
+        while (iterA.hasNext()) {
+            if (!ItemStack.areItemStacksEqual(iterA.next(), iterB.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean handleHeldItemInteraction(EntityPlayer player, EnumHand hand, IItemHandler inv, int slot) {
+        ItemStack held = player.getHeldItem(hand);
+        ItemStack inSlot = inv.getStackInSlot(slot);
+        if (inSlot.isEmpty()) {
+            if (!held.isEmpty()) {
+                ItemStack rem = inv.insertItem(slot, held, false);
+                if (rem.getCount() < held.getCount()) {
+                    player.setHeldItem(hand, rem);
+                    return true;
+                }
+            }
+        } else if (held.isEmpty()) {
+            ItemStack ext = inv.extractItem(slot, Integer.MAX_VALUE, false);
+            if (!ext.isEmpty()) {
+                player.setHeldItem(hand, ext);
+                return true;
+            }
+        } else {
+            int amount = held.getMaxStackSize() - held.getCount();
+            if (amount > 0 && ItemHandlerHelper.canItemStacksStack(held, inv.extractItem(slot, amount, true))) {
+                ItemStack ext = inv.extractItem(slot, amount, false);
+                if (!ext.isEmpty()) {
+                    held.grow(ext.getCount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void damageOrConsumeItem(EntityLivingBase user, ItemStack stack) {
+        if (stack.isItemStackDamageable()) {
+            stack.damageItem(1, user);
+        } else {
+            stack.shrink(1);
+        }
+    }
+
+    public static boolean transferHeldItemToHandler(EntityLivingBase player, EnumHand hand, IItemHandler inv, int slot, boolean insert) {
+        ItemStack held = player.getHeldItem(hand);
+        if (insert) {
+            if (!held.isEmpty() && inv.insertItem(slot, ItemHandlerHelper.copyStackWithSize(held, 1), false).isEmpty()) {
+                held.shrink(1);
+                return true;
+            }
+        } else if (held.isEmpty()) {
+            player.setHeldItem(hand, inv.extractItem(slot, 1, false));
+            return true;
+        } else if (held.getCount() < held.getMaxStackSize()) {
+            ItemStack stack = inv.extractItem(slot, 1, true);
+            if (!stack.isEmpty() && ItemHandlerHelper.canItemStacksStack(held, stack)) {
+                ItemStack ext = inv.extractItem(slot, 1, false);
+                if (!ext.isEmpty()) {
+                    held.grow(ext.getCount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

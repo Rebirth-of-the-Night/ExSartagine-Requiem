@@ -26,6 +26,7 @@ import subaraki.exsartagine.recipe.CustomRecipe;
 import subaraki.exsartagine.recipe.DirtyingRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.util.ConfigHandler;
+import subaraki.exsartagine.util.Helpers;
 
 import javax.annotation.Nullable;
 
@@ -72,7 +73,7 @@ public abstract class KitchenwareBlockEntity<R extends CustomRecipe<?>> extends 
     }
 
     public boolean isSoiled() {
-        return true; //soiledTime > 0;
+        return soiledTime > 0;
     }
 
     public boolean tryClean(EntityPlayer player, EnumHand hand) {
@@ -84,7 +85,7 @@ public abstract class KitchenwareBlockEntity<R extends CustomRecipe<?>> extends 
         if (Oredict.checkMatch(Oredict.CLEANER, stack)) {
             if (!world.isRemote) {
                 player.world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, SoundEvents.BLOCK_GRASS_STEP, SoundCategory.BLOCKS, 0.75F, 0.9F);
-                stack.damageItem(1, player);
+                Helpers.damageOrConsumeItem(player, stack);
                 soiledTime = 0;
                 markDirty();
             }
@@ -122,7 +123,7 @@ public abstract class KitchenwareBlockEntity<R extends CustomRecipe<?>> extends 
         if (!isSoiled()) {
             return true;
         }
-        return recipe instanceof DirtyingRecipe && ((DirtyingRecipe) recipe).getDirtyTime() < 0;
+        return recipe instanceof DirtyingRecipe && ((DirtyingRecipe) recipe).getDirtyTime() != 0;
     }
 
     @Override

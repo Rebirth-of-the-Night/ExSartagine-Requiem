@@ -1,6 +1,8 @@
 package subaraki.exsartagine.recipe;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -10,6 +12,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -26,6 +29,7 @@ import subaraki.exsartagine.init.ExSartagineBlocks;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.init.ExSartagineItems;
 import subaraki.exsartagine.tileentity.util.BlockInfo;
+import subaraki.exsartagine.util.Helpers;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -35,7 +39,7 @@ import java.util.stream.Stream;
 public class ModRecipes {
 
     private static final Map<IBlockState, BlockInfo> placeable = new HashMap<>();
-    protected static final Map<IRecipeType<?>, Map<ResourceLocation,CustomRecipe<?>>> recipes = new HashMap<>();
+    protected static final Map<IRecipeType<?>, Multimap<ResourceLocation,? extends CustomRecipe<?>>> recipes = new HashMap<>();
 
     static int i = 0;
     public static <I extends IItemHandler,T extends CustomRecipe<I>> void addRecipe(T recipe) {
@@ -44,22 +48,21 @@ public class ModRecipes {
         addRecipe(name,recipe);
     }
 
+    @SuppressWarnings("unchecked")
     public static <I extends IItemHandler, R extends CustomRecipe<I>> void addRecipe(ResourceLocation name, R recipe) {
         IRecipeType<R> type = (IRecipeType<R>) recipe.getType();
-        Map<ResourceLocation,CustomRecipe<?>> recs = recipes.get(type);
+        Multimap<ResourceLocation, R> recs = (Multimap<ResourceLocation, R>) recipes.get(type);
 
         if (recs == null) {
-            recipes.put(type, new HashMap<>());
-            recs = recipes.get(type);
+            recs = Multimaps.newListMultimap(new HashMap<>(), ArrayList::new);
+            recipes.put(type, recs);
         }
-        if(recs.put(name,recipe) != null) {
-            throw new RuntimeException("duplicate recipe:" + type + name);
-        }
+        recs.put(name,recipe);
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> boolean removeRecipeByName(ResourceLocation name, IRecipeType<R> type) {
-        Map<ResourceLocation,R> map = getRecipeMap(type);
-        return map.remove(name) != null;
+        Multimap<ResourceLocation,R> map = getRecipeMap(type);
+        return !map.removeAll(name).isEmpty();
     }
 
     public static void addPotRecipe(Ingredient input, ItemStack result) {
@@ -116,6 +119,14 @@ public class ModRecipes {
         addRecipe(new KettleRecipe(ingredients, catalyst, inputFluid,outputFluid, results, cookTime, dirtyTime));
     }
 
+    public static void addCooktopRecipe(Ingredient ingredient, ItemStack output, int cookTime) {
+        addRecipe(new CooktopRecipe(ingredient, output, cookTime));
+    }
+
+    public static void addCuttingBoardRecipe(Ingredient ingredient, Ingredient knife, ItemStack output, int cuts) {
+        addRecipe(new CuttingBoardRecipe(ingredient, knife, output, cuts));
+    }
+
     //note, only the pot and smelter should use this method
 
     private static final ItemStackHandler DUMMY = new ItemStackHandler();
@@ -166,6 +177,10 @@ public class ModRecipes {
         return removeRecipeByName(name,RecipeTypes.WOK);
     }
 
+    public static boolean removeWokRecipeByOutputs(List<ItemStack> outputs) {
+        return getRecipes(RecipeTypes.WOK).removeIf(r -> Helpers.areItemStackListsEqual(outputs, r.getResults(new ItemStackHandler())));
+    }
+
     public static boolean removeSmelterRecipe(ItemStack output) {
         return getRecipes(RecipeTypes.SMELTER).removeIf(r -> ItemStack.areItemStacksEqual(r.getResult(new ItemStackHandler()), output));
     }
@@ -189,6 +204,18 @@ public class ModRecipes {
     
     public static boolean removeKettleRecipeByName(ResourceLocation name) {
         return removeRecipeByName(name,RecipeTypes.KETTLE);
+    }
+
+    public static boolean removeKettleRecipeByOutputs(List<ItemStack> outputs) {
+        return getRecipes(RecipeTypes.KETTLE).removeIf(r -> Helpers.areItemStackListsEqual(outputs, r.getResults(new ItemStackHandler())));
+    }
+
+    public static boolean removeCooktopRecipe(ItemStack output) {
+        return getRecipes(RecipeTypes.COOKTOP).removeIf(r -> ItemStack.areItemStacksEqual(output, r.getDisplay()));
+    }
+
+    public static boolean removeCuttingBoardRecipe(ItemStack output) {
+        return getRecipes(RecipeTypes.CUTTING_BOARD).removeIf(r -> ItemStack.areItemStacksEqual(output, r.getDisplay()));
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> CustomRecipe<I> findRecipe(I handler, IRecipeType<R> type) {
@@ -268,7 +295,7 @@ public class ModRecipes {
     }
 
     public static <I extends IItemHandler, R extends CustomRecipe<I>> Collection<R> getRecipes(IRecipeType<R> type) {
-        Map<ResourceLocation,R> map = getRecipeMap(type);
+        Multimap<ResourceLocation,R> map = getRecipeMap(type);
         if (map != null) {
             return map.values();
         }
@@ -282,8 +309,8 @@ public class ModRecipes {
     }
 
     @SuppressWarnings("unchecked")
-    public static <I extends IItemHandler, R extends CustomRecipe<I>,S extends Map<ResourceLocation,R>> S getRecipeMap(IRecipeType<R> type) {
-        return (S) ModRecipes.recipes.get(type);
+    public static <I extends IItemHandler, R extends CustomRecipe<I>> Multimap<ResourceLocation,R> getRecipeMap(IRecipeType<R> type) {
+        return (Multimap<ResourceLocation, R>) ModRecipes.recipes.get(type);
     }
 
     public static boolean isHeatSource(IBlockState state) {
@@ -322,7 +349,6 @@ public class ModRecipes {
         FurnaceRecipes.instance().addSmelting(ExSartagineItems.bread_veggie_raw, new ItemStack(ExSartagineItems.bread_veggie), 0.6f);
 
         addPotRecipe(Ingredient.fromItem(Items.EGG), new ItemStack(ExSartagineItems.boiled_egg, 1));
-        addPotRecipe(Ingredient.fromItem(Items.BEETROOT_SEEDS), new ItemStack(ExSartagineItems.boiled_beans, 1));
         addPotRecipe(Ingredient.fromItem(Items.POTATO), new ItemStack(ExSartagineItems.boiled_potato, 1));
 
         addPotRecipe(Ingredient.fromItem(Item.getItemFromBlock(Blocks.STONE)), new ItemStack(ExSartagineItems.salt, 1));
@@ -338,19 +364,6 @@ public class ModRecipes {
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.GOLD_ORE)), new ItemStack(Items.GOLD_INGOT));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Items.CLAY_BALL)), new ItemStack(Items.BRICK));
         addSmelterRecipe(Ingredient.fromStacks(new ItemStack(Blocks.NETHERRACK)), new ItemStack(Items.NETHERBRICK));
-
-        FurnaceRecipes.instance().getSmeltingList().entrySet().stream()
-                .filter(entry -> entry.getKey().getItem() instanceof ItemFood)
-                .forEach(entry -> {
-                    List<Ingredient> i = new ArrayList<>();
-                    i.add(Ingredient.fromStacks(entry.getKey()));
-                    List<ItemStack> o = new ArrayList<>();
-                    o.add(entry.getValue());
-                    WokRecipe wokRecipe =  new WokRecipe(i,null,o, 0, 0);
-                    ResourceLocation name = entry.getKey().getItem().getRegistryName();
-                    String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
-                    addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
-                });
 
         addBuiltinKettleRecipe(Lists.newArrayList(Ingredient.fromItem(ExSartagineItems.dry_noodles),Ingredient.fromItem(Items.CHICKEN)
                 ,Ingredient.fromItem(Items.BOWL)),null,new FluidStack(FluidRegistry.WATER,100),
@@ -395,14 +408,27 @@ public class ModRecipes {
                 null,Lists.newArrayList(new ItemStack(ExSartagineItems.spaghetti_veggie)),200);
 
 
-        if (ExSartagine.DEBUG) {
+        if (Boolean.TRUE.equals(Launch.blackboard.get("fml.deobfuscatedEnvironment"))) {
             ExSartagine.DebugStuff.run();
         }
     }
 
     public static Set<Item> validItems = new HashSet<>();
 
-    public static void cacheWokInputs() {
+    public static void lateInit() {
+        for (Map.Entry<ItemStack, ItemStack> entry : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
+            if (entry.getKey().getItem() instanceof ItemFood) {
+                Ingredient ing = Ingredient.fromStacks(entry.getKey());
+
+                WokRecipe wokRecipe =  new WokRecipe(Collections.singletonList(ing), null, Collections.singletonList(entry.getValue()), 0, 0);
+                ResourceLocation name = Objects.requireNonNull(entry.getKey().getItem().getRegistryName());
+                String path = name.getPath() + (entry.getKey().getItem().getHasSubtypes() ? entry.getKey().getMetadata() : "");
+                addRecipe(new ResourceLocation(name.getNamespace(),path),wokRecipe);
+
+                addCooktopRecipe(ing, entry.getValue(), 200);
+            }
+        }
+
         for (WokRecipe wokRecipe : getWokRecipes()) {
             List<Ingredient> ingredients = wokRecipe.getIngredients();
             for (Ingredient ingredient : ingredients) {

@@ -44,4 +44,8 @@ public class ConfigHandler {
 	@Config.RangeInt(min = 0)
 	public static int washer_fluid_amount = 250;
 
+    @Config.Name("smelter_fire_effect")
+    @Config.Comment("Whether or not the fire particle effect should be rendered on the smelter.")
+    public static boolean smelter_fire_effect = true;
+
 }

@@ -12,6 +12,8 @@ public class RecipeTypes {
     public static final IRecipeType<SmelterRecipe> SMELTER = IRecipeType.create("smelter");
     public static final IRecipeType<PotRecipe> POT = IRecipeType.create("pot");
     public static final IRecipeType<CauldronRecipe> CAULDRON = IRecipeType.inherit("cauldron", POT);
+    public static final IRecipeType<CooktopRecipe> COOKTOP = IRecipeType.create("cooktop");
+    public static final IRecipeType<CuttingBoardRecipe> CUTTING_BOARD = IRecipeType.create("cutting_board");
 
     public static final List<IRecipeType<?>> TYPES = Lists.newArrayList(WOK,KETTLE,SMELTER,POT,CAULDRON);
 

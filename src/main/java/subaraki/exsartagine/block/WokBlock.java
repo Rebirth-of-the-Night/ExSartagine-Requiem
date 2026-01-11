@@ -4,6 +4,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -128,6 +129,11 @@ public class WokBlock extends KitchenwareBlock {
         return false;
     }
 
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
+
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         double d0 = (double) pos.getX() + 0.5D;
@@ -142,7 +148,7 @@ public class WokBlock extends KitchenwareBlock {
             if (wokBlockEntity.isWorking()) {
                 worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
                 worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
-                worldIn.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1);
+                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1f, 1f, false);
             }
         }
     }

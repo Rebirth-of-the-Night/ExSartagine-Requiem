@@ -13,7 +13,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
+import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.item.ItemNoodle;
+import subaraki.exsartagine.item.ItemWithTooltip;
 
 import static subaraki.exsartagine.ExSartagine.MODID;
 
@@ -33,8 +35,11 @@ public class ExSartagineItems {
 	public static Item range_extended;
 	public static Item hearth;
 	public static Item hearth_extended;
+    public static Item combustion_chamber;
 
 	public static Item kettle;
+
+    public static Item cutting_board;
 
 	public static ItemFood boiled_egg;
 	public static ItemFood boiled_beans;
@@ -114,9 +119,13 @@ public class ExSartagineItems {
 
 		kettle = new ItemBlock(ExSartagineBlocks.kettle).setRegistryName(ExSartagineBlocks.kettle.getRegistryName()).setCreativeTab(pots);
 
+        cutting_board = new ItemBlock(ExSartagineBlocks.cutting_board).setRegistryName(ExSartagineBlocks.cutting_board.getRegistryName()).setCreativeTab(pots);
+
+        combustion_chamber = new ItemWithTooltip(MODID + ".gui.combustion_chamber_info").setCreativeTab(pots).setRegistryName("combustion_chamber");
 
 		boiled_egg = (ItemFood) new ItemFood(4, 0.5f, false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_egg");
-		boiled_beans = (ItemFood) new ItemFood(3, 0.2f,false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_beans");
+        //noinspection DataFlowIssue
+        boiled_beans = (ItemFood) new ItemFood(20, 10.0f,false).setCreativeTab(null).setRegistryName("boiled_beans");
 		boiled_potato = (ItemFood) new ItemFood(6, 0.5f,false).setCreativeTab(CreativeTabs.FOOD).setRegistryName("boiled_potato");
 
 		flour = new Item().setCreativeTab(CreativeTabs.FOOD).setRegistryName("flour");

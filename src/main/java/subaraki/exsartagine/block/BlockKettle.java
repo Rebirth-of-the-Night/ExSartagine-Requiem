@@ -2,6 +2,7 @@ package subaraki.exsartagine.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,6 +61,11 @@ public class BlockKettle extends HeatableGuiBlock {
     @Override
     public boolean isFullBlock(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
     }
 
     @Override

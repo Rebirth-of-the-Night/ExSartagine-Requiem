@@ -1,5 +1,6 @@
 package subaraki.exsartagine.tileentity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -10,8 +11,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import subaraki.exsartagine.block.BlockRange;
+import subaraki.exsartagine.block.BlockRangeExtension;
 
-public class TileEntityRangeExtension extends TileEntity{
+public class TileEntityRangeExtension extends TileEntityCooktop implements ITickable {
 
 	private BlockPos parentRange;
 	
@@ -60,7 +63,26 @@ public class TileEntityRangeExtension extends TileEntity{
 		return super.hasCapability(capability, facing);
 	}
 
-	@Override
+    @Override
+    public BlockRange.Tier getEffectiveTier() {
+        if (parentRange != null) {
+            TileEntity te = getWorld().getTileEntity(parentRange);
+            if (te instanceof TileEntityRange) {
+                return ((TileEntityRange) te).getEffectiveTier();
+            }
+        }
+        return BlockRange.Tier.HEARTH;
+    }
+
+    @Override
+    public void update() {
+        Block block = getWorld().getBlockState(getPos()).getBlock();
+        if (block instanceof BlockRangeExtension && ((BlockRangeExtension) block).isLit()) {
+            getCooktopInventory().tick();
+        }
+    }
+
+    @Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		if (parentRange != null)

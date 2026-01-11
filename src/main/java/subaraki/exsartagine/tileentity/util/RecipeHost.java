@@ -8,6 +8,18 @@ public interface RecipeHost<R extends CustomRecipe<?>> {
 
     boolean isRemote();
 
+    default int getRecipeTimeScale() {
+        return 1;
+    }
+
+    default int getRecipeTimeIncrement() {
+        return getRecipeTimeScale();
+    }
+
+    default int getRecipeTimeDecay() {
+        return getRecipeTimeScale();
+    }
+
     @Nullable
     R findRecipe();
 

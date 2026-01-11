@@ -1,11 +1,9 @@
 package subaraki.exsartagine.tileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -13,21 +11,32 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.BlockRangeExtension;
+import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.util.Helpers;
 
-public class TileEntityRange extends TileEntity implements ITickable {
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+
+public class TileEntityRange extends TileEntityCooktop implements ITickable {
 
     private final ItemStackHandler inventory = new ItemStackHandler(9);
-    private boolean selfIgnitingUpgrade;
+    private boolean selfIgnitingUpgrade = false;
+    private boolean combustionChamberUpgrade = false;
 
-    private final List<BlockPos> connected = new ArrayList<>();
+    private final Set<BlockPos> connected = new HashSet<>();
 
     /**
      * how much 'cooktime' from the item inserted is left
@@ -39,6 +48,21 @@ public class TileEntityRange extends TileEntity implements ITickable {
     private int maxFuelTimer = 0;
 
     private int sparks;
+
+    private boolean validatingConnections;
+
+    public BlockRange.Tier getActualTier() {
+        Block block = getBlockType();
+        if (block instanceof BlockRange) {
+            return ((BlockRange) block).getTier();
+        }
+        return BlockRange.Tier.HEARTH;
+    }
+
+    @Override
+    public BlockRange.Tier getEffectiveTier() {
+        return combustionChamberUpgrade ? BlockRange.Tier.RANGE : getActualTier();
+    }
 
     @Override
     public void update() {
@@ -62,8 +86,59 @@ public class TileEntityRange extends TileEntity implements ITickable {
                 markDirty();
             }
         }
+
+        // cook foods on the cooktop
+        if (fuelTimer > 0) {
+            getCooktopInventory().tick();
+        }
     }
 
+    public boolean handlePlayerInteraction(EntityPlayer player, EnumHand hand, EnumFacing face, float hitX, float hitY, float hitZ) {
+        if (face == EnumFacing.UP) {
+            return handlePlayerCooktopInteraction(player, hand, hitX, hitZ);
+        }
+
+        if (manualIgnition()) {
+            ItemStack stack = player.getHeldItem(hand);
+            boolean matches = Oredict.checkMatch(Oredict.IGNITER, stack);
+            if (matches) {
+                if (!world.isRemote) {
+                    createSparks();
+                    world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1, player.getRNG().nextFloat() * 0.4F + 0.8F);
+                    Helpers.damageOrConsumeItem(player, stack);
+                }
+                return true;
+            }
+            matches = Oredict.checkMatch(Oredict.SELF_IGNITER, stack);
+            if (matches) {
+                if (!world.isRemote) {
+                    setSelfIgnitingUpgrade(true);
+                    Helpers.damageOrConsumeItem(player, stack);
+                }
+                return true;
+            }
+        }
+
+        if (!combustionChamberUpgrade && getActualTier() == BlockRange.Tier.HEARTH) {
+            ItemStack stack = player.getHeldItem(hand);
+            if (stack.getItem() == ExSartagineItems.combustion_chamber) {
+                if (!world.isRemote) {
+                    setCombustionChamberUpgrade(true);
+                    Helpers.damageOrConsumeItem(player, stack);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean ignite() {
+        if (!world.isRemote && manualIgnition()) {
+            createSparks();
+            return true;
+        }
+        return false;
+    }
 
     public void lookForFuel() {
 
@@ -75,7 +150,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty() && TileEntityFurnace.isItemFuel(stack)) {
-                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * ((BlockRange)getBlockType()).getFuelEfficiency());
+                maxFuelTimer = fuelTimer = (int) (TileEntityFurnace.getItemBurnTime(stack) * getEffectiveTier().getFuelEfficiency());
                 setCooking(true);
                 //shrink after getting fuel timer, or when stack was 1, fueltimer cannot get timer from stack 0
                 inventory.getStackInSlot(i).shrink(1);
@@ -86,8 +161,12 @@ public class TileEntityRange extends TileEntity implements ITickable {
     }
 
     private void setCooking(boolean cooking) {
-        setRangeConnectionsCooking(cooking);
         IBlockState state = world.getBlockState(pos);
+        if (state.getValue(BlockRange.HEATED) == cooking) {
+            return;
+        }
+
+        setRangeConnectionsCooking(cooking);
         IBlockState newState = state.withProperty(BlockRange.HEATED,cooking);
         world.setBlockState(pos,newState);
     }
@@ -95,7 +174,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
     public boolean isHeated() {
         return world.getBlockState(pos).getValue(BlockRange.HEATED);
     }
-
 
     public boolean isFueled() {
         return fuelTimer > 0;
@@ -151,6 +229,7 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void saveCommon(NBTTagCompound compound) {
         compound.setBoolean("self_igniting_upgrade", selfIgnitingUpgrade);
+        compound.setBoolean("combustion_chamber_upgrade", combustionChamberUpgrade);
     }
 
     public NBTTagCompound saveToItemNbt(NBTTagCompound compound) {
@@ -173,15 +252,16 @@ public class TileEntityRange extends TileEntity implements ITickable {
                 connected.add(pos);
             }
         selfIgnitingUpgrade = compound.getBoolean("self_igniting_upgrade");
+        combustionChamberUpgrade = compound.getBoolean("combustion_chamber_upgrade");
     }
 
     public int getMaxExtensions() {
-        return ((BlockRange)getBlockType()).getMaxExtensions();
+        return getEffectiveTier().getMaxExtensions();
     }
 
     //only return true if the block is manual ignition AND the self igniting upgrade is NOT installed
     public boolean manualIgnition() {
-        return ((BlockRange)getBlockType()).isManualIgnition().get() && !selfIgnitingUpgrade;
+        return !selfIgnitingUpgrade && getEffectiveTier().isManualIgnition();
     }
 
     public void createSparks() {
@@ -204,7 +284,10 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void disconnect(BlockPos entry) {
         connected.remove(entry);
-        markDirty();
+        if (!validatingConnections) {
+            validateRangeConnections();
+            markDirty();
+        }
     }
 
     public void setRangeConnectionsCooking(boolean setCooking) {
@@ -226,15 +309,35 @@ public class TileEntityRange extends TileEntity implements ITickable {
             IBlockState state1 = blockNew.getDefaultState().
                     withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
-            world.setBlockState(extPos,state1);
-
-            //setting blockstates generates a new blockentity, make sure it's connected
             TileEntity te = world.getTileEntity(extPos);
-
-            if (te instanceof TileEntityRangeExtension) {
-                TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
-                rangeExtension.setParentRange(pos);
+            world.setBlockState(extPos,state1);
+            if (te instanceof TileEntityRangeExtension && te != world.getTileEntity(extPos)) {
+                te.validate();
+                world.setTileEntity(extPos, te);
             }
+        }
+    }
+
+    public void validateRangeConnections() {
+        validatingConnections = true;
+        try {
+            Set<BlockPos> orphans = new HashSet<>(connected);
+            Deque<BlockPos> frontier = new LinkedList<>();
+            frontier.add(pos);
+            while (!frontier.isEmpty()) {
+                BlockPos here = frontier.remove();
+                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+                    BlockPos there = here.offset(dir);
+                    if (orphans.remove(there)) {
+                        frontier.add(there);
+                    }
+                }
+            }
+            for (BlockPos extPos : orphans) {
+                world.destroyBlock(extPos, true);
+            }
+        } finally {
+            validatingConnections = false;
         }
     }
 
@@ -243,13 +346,6 @@ public class TileEntityRange extends TileEntity implements ITickable {
         if(maxFuelTimer<fuelTimer) { maxFuelTimer=fuelTimer; }
         if(timer>0 && !isHeated()) { setCooking(true); }
         markDirty();
-    }
-
-        @Override
-    public void markDirty() {
-        super.markDirty();
-        IBlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
     }
 
     /////////////////3 METHODS ABSOLUTELY NEEDED FOR CLIENT/SERVER SYNCING/////////////////////
@@ -291,6 +387,11 @@ public class TileEntityRange extends TileEntity implements ITickable {
 
     public void setSelfIgnitingUpgrade(boolean selfIgnitingUpgrade) {
         this.selfIgnitingUpgrade = selfIgnitingUpgrade;
+        markDirty();
+    }
+
+    public void setCombustionChamberUpgrade(boolean combustionChamberUpgrade) {
+        this.combustionChamberUpgrade = combustionChamberUpgrade;
         markDirty();
     }
 }

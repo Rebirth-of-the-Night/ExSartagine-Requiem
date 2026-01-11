@@ -24,6 +24,8 @@ tile.exsartagine.hearth_extended_lit.name=Lit Hearth Cooking Range
 kettle.gui=Kettle
 tile.exsartagine.kettle.name=Bake Kettle
 
+tile.exsartagine.cutting_board.name=Cutting Board
+
 item.exsartagine.boiled_egg.name=Boiled Egg
 item.exsartagine.boiled_beans.name=Cooked "Beans"
 item.exsartagine.boiled_potato.name=Cooked Potato
@@ -76,11 +78,20 @@ item.exsartagine.spaghetti_bolognaise.name=Bolognaise Spaghetti
 item.exsartagine.spaghetti_cheese.name=Bolognaise Spaghetti with cheese
 item.exsartagine.spaghetti_veggie.name=Veggie Spaghetti
 
+item.exsartagine.combustion_chamber.name=Combustion Chamber
+
 exsartagine.gui.dirty=This cookware is dirty!
 exsartagine.gui.void_tank=Void tank contents
 exsartagine.gui.swap_tanks=Swap fluid tanks
 exsartagine.gui.dirty_recipe=Dirties the cookware for %s!
 exsartagine.gui.clean_recipe=Cleans the cookware
+exsartagine.gui.self_igniting_upgrade=Auto Ignition
+exsartagine.gui.combustion_chamber_upgrade=Combustion Chamber
+exsartagine.gui.cutting_board_info_ing=Insert ingredients
+exsartagine.gui.cutting_board_info_cut=Hold knife to make cuts
+exsartagine.gui.cutting_board_info_knife=Store knife on board
+exsartagine.gui.combustion_chamber_info=Use on a hearth to grant it the properties of a stove
+exsartagine.gui.scroll=Scroll
 
 itemGroup.potsnpans=Pots 'n Pans
 itemGroup.exsartaginefoods=Ex Sartagine Foods

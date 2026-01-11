@@ -13,5 +13,6 @@ public class ModBlockEntities {
         GameRegistry.registerTileEntity(TileEntityRange.class, new ResourceLocation(ExSartagine.MODID, "range"));
         GameRegistry.registerTileEntity(TileEntityRangeExtension.class, new ResourceLocation(ExSartagine.MODID, "range_extension"));
         GameRegistry.registerTileEntity(TileEntityKettle.class, new ResourceLocation(ExSartagine.MODID, "kettle"));
+        GameRegistry.registerTileEntity(TileEntityCuttingBoard.class, new ResourceLocation(ExSartagine.MODID, "cutting_board"));
     }
 }
