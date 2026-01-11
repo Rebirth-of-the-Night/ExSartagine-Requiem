@@ -148,7 +148,7 @@ public class WokBlock extends KitchenwareBlock {
             if (wokBlockEntity.isWorking()) {
                 worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
                 worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + (RANDOM.nextDouble() / 1.5 - 0.35), d1, d2 + (RANDOM.nextDouble() / 1.5 - 0.35), 0.0D, 0.0D, 0.0D);
-                worldIn.playSound(null,pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1, 1);
+                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 1f, 1f, false);
             }
         }
     }

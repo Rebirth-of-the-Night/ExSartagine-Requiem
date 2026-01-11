@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
@@ -139,20 +140,28 @@ public class ExSartagine {
             if (!(te instanceof HeldItemTransferable)) {
                 return;
             }
-            event.setCanceled(true);
 
             HeldItemTransferable target = (HeldItemTransferable) te;
+            Vec3d hitVec = mc.objectMouseOver.hitVec;
+            int zone = target.getTransferFromHeldItemZone(
+                    mc.player, EnumHand.MAIN_HAND, mc.objectMouseOver.sideHit,
+                    (float) hitVec.x - pos.getX(), (float) hitVec.y - pos.getY(), (float) hitVec.z - pos.getZ());
+            if (zone < 0) {
+                return;
+            }
+            event.setCanceled(true);
+
             boolean isInsert = dwheel > 0;
             EnumHand hand;
-            if (target.transferFromHeldItem(mc.player, EnumHand.MAIN_HAND, isInsert)) {
+            if (target.transferFromHeldItem(mc.player, EnumHand.MAIN_HAND, isInsert, zone)) {
                 hand = EnumHand.MAIN_HAND;
-            } else if (target.transferFromHeldItem(mc.player, EnumHand.OFF_HAND, isInsert)) {
+            } else if (target.transferFromHeldItem(mc.player, EnumHand.OFF_HAND, isInsert, zone)) {
                 hand = EnumHand.OFF_HAND;
             } else {
                 return;
             }
 
-            PacketHandler.INSTANCE.sendToServer(new TransferHeldItemPacket(pos, hand, isInsert));
+            PacketHandler.INSTANCE.sendToServer(new TransferHeldItemPacket(pos, hand, isInsert, zone));
         }
 
         @SubscribeEvent

@@ -1,8 +1,5 @@
 package subaraki.exsartagine.tileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,6 +23,12 @@ import subaraki.exsartagine.Oredict;
 import subaraki.exsartagine.block.BlockRange;
 import subaraki.exsartagine.block.BlockRangeExtension;
 import subaraki.exsartagine.init.ExSartagineItems;
+import subaraki.exsartagine.util.Helpers;
+
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class TileEntityRange extends TileEntityCooktop implements ITickable {
 
@@ -33,7 +36,7 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
     private boolean selfIgnitingUpgrade = false;
     private boolean combustionChamberUpgrade = false;
 
-    private final List<BlockPos> connected = new ArrayList<>();
+    private final Set<BlockPos> connected = new HashSet<>();
 
     /**
      * how much 'cooktime' from the item inserted is left
@@ -45,6 +48,8 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
     private int maxFuelTimer = 0;
 
     private int sparks;
+
+    private boolean validatingConnections;
 
     public BlockRange.Tier getActualTier() {
         Block block = getBlockType();
@@ -80,11 +85,11 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
                 maxFuelTimer=0;
                 markDirty();
             }
+        }
 
-            // cook foods on the cooktop
-            if (fuelTimer > 0) {
-                getCooktopInventory().tick();
-            }
+        // cook foods on the cooktop
+        if (fuelTimer > 0) {
+            getCooktopInventory().tick();
         }
     }
 
@@ -100,7 +105,7 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
                 if (!world.isRemote) {
                     createSparks();
                     world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1, player.getRNG().nextFloat() * 0.4F + 0.8F);
-                    stack.damageItem(1, player);
+                    Helpers.damageOrConsumeItem(player, stack);
                 }
                 return true;
             }
@@ -108,7 +113,7 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
             if (matches) {
                 if (!world.isRemote) {
                     setSelfIgnitingUpgrade(true);
-                    stack.shrink(1);
+                    Helpers.damageOrConsumeItem(player, stack);
                 }
                 return true;
             }
@@ -119,7 +124,7 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
             if (stack.getItem() == ExSartagineItems.combustion_chamber) {
                 if (!world.isRemote) {
                     setCombustionChamberUpgrade(true);
-                    stack.shrink(1);
+                    Helpers.damageOrConsumeItem(player, stack);
                 }
                 return true;
             }
@@ -156,8 +161,12 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
     }
 
     private void setCooking(boolean cooking) {
-        setRangeConnectionsCooking(cooking);
         IBlockState state = world.getBlockState(pos);
+        if (state.getValue(BlockRange.HEATED) == cooking) {
+            return;
+        }
+
+        setRangeConnectionsCooking(cooking);
         IBlockState newState = state.withProperty(BlockRange.HEATED,cooking);
         world.setBlockState(pos,newState);
     }
@@ -275,7 +284,10 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
 
     public void disconnect(BlockPos entry) {
         connected.remove(entry);
-        markDirty();
+        if (!validatingConnections) {
+            validateRangeConnections();
+            markDirty();
+        }
     }
 
     public void setRangeConnectionsCooking(boolean setCooking) {
@@ -297,15 +309,35 @@ public class TileEntityRange extends TileEntityCooktop implements ITickable {
             IBlockState state1 = blockNew.getDefaultState().
                     withProperty(BlockRangeExtension.FACING, state.getValue(BlockRangeExtension.FACING));
 
-            world.setBlockState(extPos,state1);
-
-            //setting blockstates generates a new blockentity, make sure it's connected
             TileEntity te = world.getTileEntity(extPos);
-
-            if (te instanceof TileEntityRangeExtension) {
-                TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
-                rangeExtension.setParentRange(pos);
+            world.setBlockState(extPos,state1);
+            if (te instanceof TileEntityRangeExtension && te != world.getTileEntity(extPos)) {
+                te.validate();
+                world.setTileEntity(extPos, te);
             }
+        }
+    }
+
+    public void validateRangeConnections() {
+        validatingConnections = true;
+        try {
+            Set<BlockPos> orphans = new HashSet<>(connected);
+            Deque<BlockPos> frontier = new LinkedList<>();
+            frontier.add(pos);
+            while (!frontier.isEmpty()) {
+                BlockPos here = frontier.remove();
+                for (EnumFacing dir : EnumFacing.HORIZONTALS) {
+                    BlockPos there = here.offset(dir);
+                    if (orphans.remove(there)) {
+                        frontier.add(there);
+                    }
+                }
+            }
+            for (BlockPos extPos : orphans) {
+                world.destroyBlock(extPos, true);
+            }
+        } finally {
+            validatingConnections = false;
         }
     }
 

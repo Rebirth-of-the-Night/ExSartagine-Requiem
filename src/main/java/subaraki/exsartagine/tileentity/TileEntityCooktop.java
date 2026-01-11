@@ -21,11 +21,12 @@ import subaraki.exsartagine.block.KitchenwareBlock;
 import subaraki.exsartagine.init.RecipeTypes;
 import subaraki.exsartagine.recipe.CooktopRecipe;
 import subaraki.exsartagine.recipe.ModRecipes;
+import subaraki.exsartagine.tileentity.util.HeldItemTransferable;
 import subaraki.exsartagine.tileentity.util.RecipeHandler;
 import subaraki.exsartagine.tileentity.util.RecipeHost;
 import subaraki.exsartagine.util.Helpers;
 
-public abstract class TileEntityCooktop extends TileEntity {
+public abstract class TileEntityCooktop extends TileEntity implements HeldItemTransferable {
     public static int getHitSlot(float hitX, float hitZ) {
         return hitZ < 0.5f ? (hitX < 0.5f ? 0 : 1) : (hitX < 0.5f ? 2 : 3);
     }
@@ -40,6 +41,19 @@ public abstract class TileEntityCooktop extends TileEntity {
 
     public boolean handlePlayerCooktopInteraction(EntityPlayer player, EnumHand hand, float hitX, float hitZ) {
         return Helpers.handleHeldItemInteraction(player, hand, cooktopInventory, getHitSlot(hitX, hitZ));
+    }
+
+    @Override
+    public int getTransferFromHeldItemZone(EntityPlayer player, EnumHand hand, EnumFacing face, float hitX, float hitY, float hitZ) {
+        return face == EnumFacing.UP ? getHitSlot(hitX, hitZ) : -1;
+    }
+
+    @Override
+    public boolean transferFromHeldItem(EntityPlayer player, EnumHand hand, boolean insert, int zone) {
+        if (zone < 0 || zone >= cooktopInventory.slots.length) {
+            return false;
+        }
+        return Helpers.transferHeldItemToHandler(player, hand, cooktopInventory, zone, insert);
     }
 
     @Override

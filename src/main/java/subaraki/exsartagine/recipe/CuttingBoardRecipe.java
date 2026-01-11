@@ -20,7 +20,7 @@ public class CuttingBoardRecipe implements CustomRecipe<IItemHandler> {
         this.ingredient = ingredient;
         this.knife = knife;
         this.output = output;
-        this.cuts = cuts;
+        this.cuts = Math.max(cuts, 1);
     }
 
     public Ingredient getKnife() {

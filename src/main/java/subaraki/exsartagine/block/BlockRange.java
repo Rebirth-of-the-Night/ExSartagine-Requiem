@@ -201,7 +201,7 @@ public class BlockRange extends Block implements IBlockIgnitableWithIgniterItem,
                 }
             }
             if (range.getCooktopInventory().isWorking()) {
-                worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1);
+                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1f, false);
             }
         }
     }

@@ -2,13 +2,11 @@ package subaraki.exsartagine.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -78,11 +76,9 @@ public class TileEntityRangeExtension extends TileEntityCooktop implements ITick
 
     @Override
     public void update() {
-        if (!world.isRemote) {
-            Block block = getWorld().getBlockState(getPos()).getBlock();
-            if (block instanceof BlockRangeExtension && ((BlockRangeExtension) block).isLit()) {
-                getCooktopInventory().tick();
-            }
+        Block block = getWorld().getBlockState(getPos()).getBlock();
+        if (block instanceof BlockRangeExtension && ((BlockRangeExtension) block).isLit()) {
+            getCooktopInventory().tick();
         }
     }
 

@@ -13,11 +13,11 @@ public interface RecipeHost<R extends CustomRecipe<?>> {
     }
 
     default int getRecipeTimeIncrement() {
-        return 1;
+        return getRecipeTimeScale();
     }
 
     default int getRecipeTimeDecay() {
-        return 1;
+        return getRecipeTimeScale();
     }
 
     @Nullable

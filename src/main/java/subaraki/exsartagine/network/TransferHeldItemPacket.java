@@ -16,19 +16,22 @@ public class TransferHeldItemPacket implements IMessage {
     BlockPos target;
     EnumHand hand;
     boolean insert;
+    int zone;
 
     public TransferHeldItemPacket() {
     }
 
-    public TransferHeldItemPacket(BlockPos target, EnumHand hand, boolean insert) {
+    public TransferHeldItemPacket(BlockPos target, EnumHand hand, boolean insert, int zone) {
         this.target = target;
         this.hand = hand;
         this.insert = insert;
+        this.zone = zone;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         target = BlockPos.fromLong(buf.readLong());
+        zone = buf.readByte();
         byte mask = buf.readByte();
         hand = (mask & 0x1) == 0 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
         insert = (mask & 0x2) != 0;
@@ -37,6 +40,7 @@ public class TransferHeldItemPacket implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(target.toLong());
+        buf.writeByte(zone);
         buf.writeByte(hand.ordinal() | (insert ? 0x2 : 0)); // hopefully nobody's adding a third hand to the game
     }
 
@@ -50,7 +54,7 @@ public class TransferHeldItemPacket implements IMessage {
                 if (player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= reach) {
                     TileEntity te = player.world.getTileEntity(pos);
                     if (te instanceof HeldItemTransferable) {
-                        ((HeldItemTransferable) te).transferFromHeldItem(player, message.hand, message.insert);
+                        ((HeldItemTransferable) te).transferFromHeldItem(player, message.hand, message.insert, message.zone);
                     }
                 }
             });

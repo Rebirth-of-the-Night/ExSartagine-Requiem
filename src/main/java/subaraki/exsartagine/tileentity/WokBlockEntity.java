@@ -60,7 +60,7 @@ public class WokBlockEntity extends KitchenwareBlockEntity<WokRecipe> {
 		flips++;
 
 		if (flips == recipe.getFlips()) {
-			stack.damageItem(1,player);
+            Helpers.damageOrConsumeItem(player, stack);
 		}
 
 		rotation = world.rand.nextDouble() * 360;

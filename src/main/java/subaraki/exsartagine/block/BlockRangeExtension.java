@@ -80,14 +80,27 @@ public class BlockRangeExtension extends Block {
     //check to see if this extension should drop itself when a nearby block is broken
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileEntityRangeExtension) {
-            TileEntityRangeExtension rangeExtension = (TileEntityRangeExtension) te;
-            BlockPos contPos = rangeExtension.getParentRange();
-            if (contPos == null || !canStay(world, pos)) {
-                world.destroyBlock(pos,true);
+        theBlock:
+        {
+            if (!canStay(world, pos)) {
+                break theBlock;
             }
+            TileEntity te = world.getTileEntity(pos);
+            if (!(te instanceof TileEntityRangeExtension)) {
+                break theBlock;
+            }
+            TileEntityRangeExtension ext = (TileEntityRangeExtension) te;
+            BlockPos rangePos = ext.getParentRange();
+            if (rangePos == null) {
+                break theBlock;
+            }
+            TileEntity rangeTe = world.getTileEntity(rangePos);
+            if (!(rangeTe instanceof TileEntityRange) || rangeTe.isInvalid()) {
+                break theBlock;
+            }
+            return;
         }
+        world.destroyBlock(pos, true);
     }
 
     public boolean canStay(World level,BlockPos pos) {
@@ -214,7 +227,7 @@ public class BlockRangeExtension extends Block {
         if (te instanceof TileEntityRangeExtension) {
             TileEntityRangeExtension rext = (TileEntityRangeExtension) te;
             if (rext.getCooktopInventory().isWorking()) {
-                worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1);
+                worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, ModSounds.FRYING, SoundCategory.BLOCKS, 0.75f, 1f, false);
             }
         }
     }

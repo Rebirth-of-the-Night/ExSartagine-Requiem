@@ -54,7 +54,7 @@ public class GuiRange extends GuiContainer {
 			
 			float convert = fuel * scale;
 			
-			this.drawTexturedModalRect(i+114, j+39+28 - (int) convert , 176, 28-(int)convert, 28, (int)convert);
+			this.drawTexturedModalRect(i+116, j+69 - (int) convert , 176, 28-(int)convert, 28, (int)convert);
 		}
 	}
 	

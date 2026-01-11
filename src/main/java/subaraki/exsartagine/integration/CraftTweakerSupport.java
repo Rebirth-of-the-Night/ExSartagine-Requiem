@@ -216,7 +216,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the kettle should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addKettleRecipe(IIngredient[] inputs, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addKettleRecipe(IIngredient[] inputs, ILiquidStack liquid,IItemStack[] outputs, @Optional(valueLong = 200L) int time, @Optional(valueLong = 0L) int dirtyTime) {
         addKettleRecipe(inputs, null, liquid, null, outputs, time, dirtyTime);
     }
 
@@ -229,7 +229,7 @@ public class CraftTweakerSupport {
      * @param dirtyTime the amount of time in ticks the kettle should become soiled for, which defaults to 0
      */
     @ZenMethod
-    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquid,IItemStack[] outputs, @Optional("200") int time, @Optional(valueLong = 0L) int dirtyTime) {
+    public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquid,IItemStack[] outputs, @Optional(valueLong = 200) int time, @Optional(valueLong = 0L) int dirtyTime) {
         addKettleRecipe(inputs, catalyst, liquid, null, outputs, time, dirtyTime);
     }
 
@@ -245,7 +245,7 @@ public class CraftTweakerSupport {
      */
     @ZenMethod
     public static void addKettleRecipe(IIngredient[] inputs, IIngredient catalyst, ILiquidStack liquidInput,
-                                       ILiquidStack liquidOutput,IItemStack[] outputs, @Optional("200") int time, @Optional(valueLong = 0L) int dirtyTime) {
+                                       ILiquidStack liquidOutput,IItemStack[] outputs, @Optional(valueLong = 200) int time, @Optional(valueLong = 0L) int dirtyTime) {
         List<Ingredient> iinputs = Arrays.stream(inputs).map(CraftTweakerMC::getIngredient).collect(Collectors.toList());
         Ingredient iCatalyst = new IIngredientWrapper(catalyst);
         FluidStack iFluidInput = CraftTweakerMC.getLiquidStack(liquidInput);
@@ -280,7 +280,7 @@ public class CraftTweakerSupport {
      * @param time cook time in ticks, defaults to 200 (10 seconds)
      */
     @ZenMethod
-    public static void addCooktopRecipe(IIngredient input, IItemStack output, @Optional("200") int time) {
+    public static void addCooktopRecipe(IIngredient input, IItemStack output, @Optional(valueLong = 200) int time) {
         CraftTweakerAPI.apply(new AddCooktopAction(CraftTweakerMC.getIngredient(input), CraftTweakerMC.getItemStack(output), time));
     }
 
@@ -301,7 +301,7 @@ public class CraftTweakerSupport {
      * @param cuts number of cuts required per completed recipe, defaults to 1
      */
     @ZenMethod
-    public static void addCuttingBoardRecipe(IIngredient input, IIngredient knife, IItemStack output, @Optional("1") int cuts) {
+    public static void addCuttingBoardRecipe(IIngredient input, IIngredient knife, IItemStack output, @Optional(valueLong = 1) int cuts) {
         CraftTweakerAPI.apply(new AddCuttingBoardAction(
                 CraftTweakerMC.getIngredient(input),
                 CraftTweakerMC.getIngredient(knife),

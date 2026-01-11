@@ -60,18 +60,32 @@ public class TileEntityCuttingBoard extends TileEntity implements HeldItemTransf
 
     public boolean handlePlayerInteraction(EntityPlayer player, EnumHand hand) {
         if (player.isSneaking()) {
-            return Helpers.handleHeldItemInteraction(player, hand, inventory, KNIFE);
-        } else if (inventory.getStackInSlot(INPUT).isEmpty()) {
-            ItemStack held = player.getHeldItem(hand);
+            if (Helpers.handleHeldItemInteraction(player, hand, inventory, KNIFE)) {
+                if (!inventory.getStackInSlot(KNIFE).isEmpty()) {
+                    world.playSound(player, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.8f, 0.7f + 0.1f * world.rand.nextFloat());
+                }
+                return true;
+            }
+            return false;
+        }
+
+        ItemStack held = player.getHeldItem(hand);
+        if (inventory.getStackInSlot(INPUT).isEmpty()) {
             if (!held.isEmpty()) {
                 inventory.setStackInSlot(INPUT, held);
                 player.setHeldItem(hand, ItemStack.EMPTY);
                 return true;
             }
             return false;
+        } else if (held.isEmpty()) {
+            ItemStack stack = inventory.extractItem(INPUT, Integer.MAX_VALUE, false);
+            if (!stack.isEmpty()) {
+                player.setHeldItem(hand, stack);
+            }
+            return true;
         } else {
             currentUser = player;
-            currentUserKnife = player.getHeldItem(hand);
+            currentUserKnife = held;
             if (recipeHandler.tick()) {
                 markDirty();
             }
@@ -80,27 +94,13 @@ public class TileEntityCuttingBoard extends TileEntity implements HeldItemTransf
     }
 
     @Override
-    public boolean transferFromHeldItem(EntityPlayer player, EnumHand hand, boolean insert) {
-        ItemStack held = player.getHeldItem(hand);
-        if (insert) {
-            if (!held.isEmpty() && inventory.insertItem(INPUT, ItemHandlerHelper.copyStackWithSize(held, 1), false).isEmpty()) {
-                held.shrink(1);
-                return true;
-            }
-        } else if (held.isEmpty()) {
-            player.setHeldItem(hand, inventory.extractItem(INPUT, 1, false));
-            return true;
-        } else if (held.getCount() < held.getMaxStackSize()) {
-            ItemStack stack = inventory.extractItem(INPUT, 1, true);
-            if (!stack.isEmpty() && ItemHandlerHelper.canItemStacksStack(held, stack)) {
-                ItemStack ext = inventory.extractItem(INPUT, 1, false);
-                if (!ext.isEmpty()) {
-                    held.grow(ext.getCount());
-                    return true;
-                }
-            }
-        }
-        return false;
+    public int getTransferFromHeldItemZone(EntityPlayer player, EnumHand hand, EnumFacing face, float hitX, float hitY, float hitZ) {
+        return face == EnumFacing.UP ? 0 : -1;
+    }
+
+    @Override
+    public boolean transferFromHeldItem(EntityPlayer player, EnumHand hand, boolean insert, int zone) {
+        return Helpers.transferHeldItemToHandler(player, hand, inventory, INPUT, insert);
     }
 
     @Nullable
@@ -126,7 +126,7 @@ public class TileEntityCuttingBoard extends TileEntity implements HeldItemTransf
 
     @Override
     public void onWorkTick(CuttingBoardRecipe recipe, int work) {
-        currentUserKnife.damageItem(1, currentUser);
+        Helpers.damageOrConsumeItem(currentUser, currentUserKnife);
         world.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.75f, 0.9f + 0.2f * world.rand.nextFloat());
 
         if (!(world instanceof WorldServer)) { // shouldn't happen, but better safe than sorry
