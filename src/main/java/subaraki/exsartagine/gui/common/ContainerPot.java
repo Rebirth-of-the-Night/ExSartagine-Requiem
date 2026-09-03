@@ -5,12 +5,15 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import subaraki.exsartagine.gui.common.slot.SlotInput;
 import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.recipe.ModRecipes;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
-public class ContainerPot extends Container {
+import javax.annotation.Nullable;
+
+public class ContainerPot extends Container implements FluidContainer {
 
     private final TileEntityPot pot;
 
@@ -30,6 +33,12 @@ public class ContainerPot extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
         return true;
+    }
+
+    @Nullable
+    @Override
+    public IFluidHandler getFluidContainerTank(int tankIndex) {
+        return tankIndex == 0 ? pot.getFluidTank() : null;
     }
 
     /**

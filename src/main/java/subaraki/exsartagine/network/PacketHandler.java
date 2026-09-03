@@ -20,5 +20,6 @@ public class PacketHandler {
     INSTANCE.registerMessage(SwapTanksPacket.Handler.class, SwapTanksPacket.class, 0, Side.SERVER);
     INSTANCE.registerMessage(ClearTankPacket.Handler.class, ClearTankPacket.class, 1, Side.SERVER);
     INSTANCE.registerMessage(TransferHeldItemPacket.Handler.class, TransferHeldItemPacket.class, 2, Side.SERVER);
+    INSTANCE.registerMessage(ClickGuiTankPacket.Handler.class, ClickGuiTankPacket.class, 3, Side.SERVER);
   }
 }

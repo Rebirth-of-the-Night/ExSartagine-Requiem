@@ -16,6 +16,7 @@ import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.client.SmallButton;
 import subaraki.exsartagine.gui.common.ContainerKettle;
 import subaraki.exsartagine.network.ClearTankPacket;
+import subaraki.exsartagine.network.ClickGuiTankPacket;
 import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.network.SwapTanksPacket;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
@@ -144,5 +145,17 @@ public class KettleScreen extends GuiContainer {
             return;
         }
         super.renderHoveredToolTip(x, y);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (mouseButton == 0 || mouseButton == 1) {
+            if (isPointInRegion(FL_INPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, mouseX, mouseY)) {
+                PacketHandler.INSTANCE.sendToServer(new ClickGuiTankPacket(0));
+            } else if (isPointInRegion(FL_OUTPUT_X, FL_Y, FL_WIDTH, FL_HEIGHT, mouseX, mouseY)) {
+                PacketHandler.INSTANCE.sendToServer(new ClickGuiTankPacket(1));
+            }
+        }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 }

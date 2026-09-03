@@ -12,8 +12,11 @@ import subaraki.exsartagine.ExSartagine;
 import subaraki.exsartagine.RenderUtil;
 import subaraki.exsartagine.gui.client.GuiHelpers;
 import subaraki.exsartagine.gui.common.ContainerPot;
+import subaraki.exsartagine.network.ClickGuiTankPacket;
+import subaraki.exsartagine.network.PacketHandler;
 import subaraki.exsartagine.tileentity.TileEntityPot;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class GuiPot extends GuiContainer {
@@ -98,5 +101,14 @@ public class GuiPot extends GuiContainer {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		if ((mouseButton == 0 || mouseButton == 1) && isPointInRegion(14, 15, 5, 54, mouseX, mouseY)) {
+			PacketHandler.INSTANCE.sendToServer(new ClickGuiTankPacket(0));
+		} else {
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+		}
 	}
 }

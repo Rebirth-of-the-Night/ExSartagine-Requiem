@@ -8,14 +8,16 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.Nullable;
 import subaraki.exsartagine.block.BlockPot;
 import subaraki.exsartagine.gui.common.slot.IFluidHandlerSlot;
 import subaraki.exsartagine.gui.common.slot.SlotOutput;
 import subaraki.exsartagine.init.ModSounds;
 import subaraki.exsartagine.tileentity.TileEntityKettle;
 
-public class ContainerKettle extends Container {
+public class ContainerKettle extends Container implements FluidContainer {
 
     private final TileEntityKettle pot;
 
@@ -52,6 +54,19 @@ public class ContainerKettle extends Container {
 
         if (!playerInventory.player.world.isRemote)
             playLidSound(playerInventory.player);
+    }
+
+    @Nullable
+    @Override
+    public IFluidHandler getFluidContainerTank(int tankIndex) {
+        switch (tankIndex) {
+            case 0:
+                return pot.fluidInputTank;
+            case 1:
+                return pot.fluidOutputTank;
+            default:
+                return null;
+        }
     }
 
     private void playLidSound(EntityPlayer player) {

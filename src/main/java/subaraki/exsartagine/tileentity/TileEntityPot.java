@@ -27,7 +27,12 @@ public class TileEntityPot extends TileEntityCooker<PotRecipe> {
 
     private static final int MAX_PICK_UP_DELAY = 16;
 
-    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY);
+    private final FluidTank fluidTank = new FluidTank(TANK_CAPACITY) {
+        @Override
+        protected void onContentsChanged() {
+            markDirty();
+        }
+    };
 
     // no need to serialize these
     private BlockPot.Variant variant = null;
@@ -51,6 +56,10 @@ public class TileEntityPot extends TileEntityCooker<PotRecipe> {
 
     public IRecipeType<? extends PotRecipe> getRecipeType() {
         return getVariant().recipeType;
+    }
+
+    public FluidTank getFluidTank() {
+        return fluidTank;
     }
 
     public FluidStack getStoredFluid() {
